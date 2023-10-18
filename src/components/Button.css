@@ -24,7 +24,7 @@
     transition: all 0.3s ease-out;
 }
 
-.btn-medium {
+.btn--medium {
     padding: 8px 20px;
     font-size: 20px;
 }
@@ -34,7 +34,7 @@
     font-size: 20px;
 }
 
-.btn-medium:hover, .btn--large:hover {
+.btn--medium:hover, .btn--large:hover {
     background: #fff;
     color: black;
     transition: all 0.3s ease-out
