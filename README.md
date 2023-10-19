@@ -6,11 +6,12 @@ BeaverBuzz is a community-based event-sharing platform that enables clubs and or
 ## How to Use this Repo
 * Pull the Repo: use  `git clone`
 * Set up the virtual environment using the following steps
-    1. `pip install virtualenv`
-    2. `virtualenv venv`
-    3. `source venv/bin/activate`
-    4. `pip install -r requirements.txt`
-* You will need to install yarn to run the apps
+    1. `cd api/`
+    2. `pip install virtualenv`
+    3. `virtualenv venv`
+    4. `source venv/bin/activate` (for windows, use the following command: `.\venv\Scripts\activate`)
+    5. `pip install -r requirements.txt`
+* You will need to install yarn to run the apps: [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/) (you may need to install [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to install yarn)
 * Use `yarn start` to run Frontend React App (the React app uses App.js to show the frontend)
     * This will open at http://localhost:3000/
 * Use `yarn start-api` to run Backend Flask App (the flask app uses api.py to display the backend and interact with the database)
