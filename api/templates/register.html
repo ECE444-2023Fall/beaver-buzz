@@ -15,6 +15,10 @@
 
     {{ wtf.quick_form(form) }}
 
+     {% if error is not none%}
+         <h3>Error: {{ error }}</h3>
+    {% endif %}
+
 </body>
 
 </html>

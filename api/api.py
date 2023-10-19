@@ -73,7 +73,7 @@ class RegisterForm(FlaskForm):
     email = StringField(
         "What is your Email address?", validators=[DataRequired(), Email()]
     )
-    phone = StringField("What is your phone number?", validators=[DataRequired()])
+    phonenumber = StringField("What is your phone number?", validators=[DataRequired()])
     interests = StringField("What are your interests?")
     register = SubmitField("Register")
 
@@ -112,23 +112,36 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegisterForm()
+    error = None
     if form.validate_on_submit():
-        user = User(
-            form.username.data,
-            form.password.data,
-            form.firstname.data,
-            form.lastname.data,
-            form.email.data,
-            form.phone.data,
-            form.interests.data,
-        )
-        db.session.add(user)
-        db.session.commit()
 
-        return redirect(url_for("login"))
-    return render_template("register.html", form=form)
+        error = checkUniqueFields(form)
+
+        if error is None:
+            user = User(
+                form.username.data,
+                form.password.data,
+                form.firstname.data,
+                form.lastname.data,
+                form.email.data,
+                form.phonenumber.data,
+                form.interests.data,
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            return redirect(url_for("login"))
+    return render_template("register.html", form=form, error=error)
 
 
+def checkUniqueFields(form):
+    u = User.query.filter_by(username=form.username.data).all()
+    if len(u) == 1:
+        return "An account with this username already exists"
+    u = User.query.filter_by(email=form.email.data).all()
+    if len(u) == 1:
+        return "An account with this email already exists"
+    return None
 
 
 
