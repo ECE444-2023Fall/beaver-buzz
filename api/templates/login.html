@@ -4,7 +4,7 @@
 
 <body>
 
-    <h3>Users - Flask SQLAlchemy example</h3>
+    <h3>Login</h3>
     <hr />
 
     {%- for category, message in get_flashed_messages(with_categories = true) %}
@@ -14,6 +14,16 @@
     {%- endfor %}
 
     {{ wtf.quick_form(form) }}
+    {% if name is not none%}
+        {% if name == "incorrect" %}
+            <h3>Incorrect username or password</h3>
+        {%  else %}
+        <h3>Welcome, {{ name }}</h3>
+        {% endif %}
+    {%  endif %}
+
+
+
 
 </body>
 
