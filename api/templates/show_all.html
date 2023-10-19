@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head></head>
+
+<body>
+
+    <h3>
+        <a href="{{ url_for('show_all') }}">Comments - Flask
+            SQLAlchemy example</a>
+    </h3>
+
+    <hr />
+    {%- for message in get_flashed_messages() %}
+    {{ message }}
+    {%- endfor %}
+
+    <h3>Users (<a href="{{ url_for('user') }}">Add User
+        </a>)</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Created At</th>
+                <th>Interests</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phonenumber }}</td>
+                <td>{{ user.created_at }}</td>
+                <td>{{ user.interests }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Events (<a href="{{ url_for('event') }}">Add Event
+        </a>)</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Event Name</th>
+                <th>Event Start</th>
+                <th>Event End</th>
+                <th>Event Location</th>
+                <th>One Liner</th>
+                <th>Event Description</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td>{{ event.eventname }}</td>
+                <td>{{ event.eventstart }}</td>
+                <td>{{ event.eventend }}</td>
+                <td>{{ event.eventlocation }}</td>
+                <td>{{ event.oneliner }}</td>
+                <td>{{ event.eventdesc }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+
+</html>
