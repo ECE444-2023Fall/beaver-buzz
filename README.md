@@ -11,7 +11,9 @@ BeaverBuzz is a community-based event-sharing platform that enables clubs and or
     3. `source venv/bin/activate`
     4. `pip install -r requirements.txt`
 * Use `yarn start` to run Frontend React App (the React app uses App.js to show the frontend)
+    * This will open at http://localhost:3000/
 * Use `yarn start-api` to run Backend Flask App (the flask app uses api.py to display the backend and interact with the database)
+    * This will open at http://localhost:5000/ (http://127.0.0.1:5000/)
 
 ## Features
 * **Event information**: date, time, location, additional details, flyer, comment section
