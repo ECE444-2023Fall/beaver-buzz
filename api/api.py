@@ -2,7 +2,7 @@ import time
 import os
 from flask import Flask, render_template, request, url_for, redirect
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DateTimeField
+from wtforms import StringField, SubmitField, DateTimeField, IntegerField
 from wtforms.validators import DataRequired, Email
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
@@ -26,63 +26,79 @@ db = SQLAlchemy(app)
 # add bootstrap
 bootstrap = Bootstrap(app)
 
-
 # Database Models
+# Tracks users and which events they've signed up for
+event_attendance = db.Table(
+    "event_attendance",
+    db.Column("userID", db.Integer, db.ForeignKey("user.id")),
+    db.Column("eventID", db.Integer, db.ForeignKey("event.id")),
+)
+
+
 # Model for user
 class User(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    firstname = db.Column(db.String(100), nullable=False)
-    lastname = db.Column(db.String(100), nullable=False)
+    firstName = db.Column(db.String(100), nullable=False)
+    lastName = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
-    phonenumber = db.Column(db.Unicode(20))
+    phoneNumber = db.Column(db.Unicode(20))
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     interests = db.Column(db.Text)
+    # events that this person has organized (1 to many relationship)
+    organizedEvents = db.relationship("Event", backref="user")
+    # events that this person is attending
+    registeredEvents = db.relationship(
+        "Event", secondary=event_attendance, backref="users"
+    )
 
-    def __init__(self, firstname, lastname, email, phonenumber=None, interests=None):
-        self.firstname = firstname
-        self.lastname = lastname
+    def __init__(self, firstName, lastName, email, phoneNumber=None, interests=None):
+        self.firstName = firstName
+        self.lastName = lastName
         self.email = email
-        self.phonenumber = phonenumber
+        self.phoneNumber = phoneNumber
         self.interests = interests
 
     def __repr__(self):
-        return f"<Student {self.firstname}, {self.lastname}>"
+        return f"<Student {self.firstName}, {self.lastName}>"
 
 
 # Model for Event
 class Event(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    eventname = db.Column(db.String(100), nullable=False)
-    eventstart = db.Column(db.DateTime(timezone=True), nullable=False)
-    eventend = db.Column(db.DateTime(timezone=True), nullable=False)
-    eventlocation = db.Column(db.String(100), nullable=False)
-    oneliner = db.Column(db.String(80), nullable=False)
-    eventdesc = db.Column(db.Text)
-    eventimg = db.Column(db.Text)
-    eventimgtype = db.Column(db.Text)
+    organizerID = db.Column(db.Integer, db.ForeignKey("user.id"))
+    eventName = db.Column(db.String(100), nullable=False)
+    eventStart = db.Column(db.DateTime(timezone=True), nullable=False)
+    eventEnd = db.Column(db.DateTime(timezone=True), nullable=False)
+    eventLocation = db.Column(db.String(100), nullable=False)
+    oneLiner = db.Column(db.String(80), nullable=False)
+    eventDesc = db.Column(db.Text)
+    eventImg = db.Column(db.Text)
+    eventImgType = db.Column(db.Text)
 
     def __init__(
         self,
-        eventname,
-        eventstart,
-        eventend,
-        eventlocation,
-        oneliner,
-        eventdesc=None,
-        eventimg=None,
-        eventimgtype=None,
+        eventName,
+        organizerID,
+        eventStart,
+        eventEnd,
+        eventLocation,
+        oneLiner,
+        eventDesc=None,
+        eventImg=None,
+        eventImgType=None,
     ):
-        self.eventname = eventname
-        self.eventstart = eventstart
-        self.eventend = eventend
-        self.eventlocation = eventlocation
-        self.oneliner = oneliner
-        self.eventdesc = eventdesc
-        self.eventimg = eventimg
-        self.eventimgtype = eventimgtype
+        self.eventName = eventName
+        self.organizerID = organizerID
+        self.eventStart = eventStart
+        self.eventEnd = eventEnd
+        self.eventLocation = eventLocation
+        self.oneLiner = oneLiner
+        self.eventDesc = eventDesc
+        self.eventImg = eventImg
+        self.eventImgType = eventImgType
 
     def __repr__(self):
-        return f"<Event {self.eventname}>"
+        return f"<Event {self.eventName}>"
 
 
 # Temporary form - only for demonstrating the database. should be removed once login/registration is implemented
@@ -100,6 +116,9 @@ class UserForm(FlaskForm):
 # Temporary form - only for demonstrating the database. should be removed once login/registration is implemented
 class EventForm(FlaskForm):
     eventname = StringField("What is the Event Name?", validators=[DataRequired()])
+    organizer = IntegerField(
+        "What is the Organizer ID for this event?", validators=[DataRequired()]
+    )
     eventstart = DateTimeField(
         "When does the event start?", validators=[DataRequired()]
     )
@@ -112,9 +131,13 @@ class EventForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
+# create db on app start
+with app.app_context():
+    db.create_all()
+
+
 @app.route("/")
 def main():
-    db.create_all()
     return "Hello World"
 
 
@@ -147,6 +170,7 @@ def event():
     if form.validate_on_submit():
         event = Event(
             form.eventname.data,
+            form.organizer.data,
             form.eventstart.data,
             form.eventend.data,
             form.eventlocation.data,

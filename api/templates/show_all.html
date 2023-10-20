@@ -27,18 +27,20 @@
                 <th>Phone Number</th>
                 <th>Created At</th>
                 <th>Interests</th>
+                <th>Organized Events</th>
             </tr>
         </thead>
 
         <tbody>
             {% for user in users %}
             <tr>
-                <td>{{ user.firstname }}</td>
-                <td>{{ user.lastname }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.phonenumber }}</td>
+                <td>{{ user.phoneNumber }}</td>
                 <td>{{ user.created_at }}</td>
                 <td>{{ user.interests }}</td>
+                <td>{{ user.organizedEvents }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -51,6 +53,7 @@
         <thead>
             <tr>
                 <th>Event Name</th>
+                <th>Organizer Name</th>
                 <th>Event Start</th>
                 <th>Event End</th>
                 <th>Event Location</th>
@@ -62,12 +65,13 @@
         <tbody>
             {% for event in events %}
             <tr>
-                <td>{{ event.eventname }}</td>
-                <td>{{ event.eventstart }}</td>
-                <td>{{ event.eventend }}</td>
-                <td>{{ event.eventlocation }}</td>
-                <td>{{ event.oneliner }}</td>
-                <td>{{ event.eventdesc }}</td>
+                <td>{{ event.eventName }}</td>
+                <td>{{ event.user }}</td>
+                <td>{{ event.eventStart }}</td>
+                <td>{{ event.eventEnd }}</td>
+                <td>{{ event.eventLocation }}</td>
+                <td>{{ event.oneLiner }}</td>
+                <td>{{ event.eventDesc }}</td>
             </tr>
             {% endfor %}
         </tbody>
