@@ -18,7 +18,7 @@
     <h3>Users (<a href="{{ url_for('user') }}">Add User
         </a>)</h3>
 
-    <table>
+    <table border="1">
         <thead>
             <tr>
                 <th>First Name</th>
@@ -49,14 +49,15 @@
     <h3>Events (<a href="{{ url_for('event') }}">Add Event
         </a>)</h3>
 
-    <table>
+    <table border="1">
         <thead>
             <tr>
                 <th>Event Name</th>
                 <th>Organizer Name</th>
                 <th>Event Start</th>
                 <th>Event End</th>
-                <th>Event Location</th>
+                <th>Event Building</th>
+                <th>Event Room</th>
                 <th>One Liner</th>
                 <th>Event Description</th>
             </tr>
@@ -69,7 +70,8 @@
                 <td>{{ event.user }}</td>
                 <td>{{ event.eventStart }}</td>
                 <td>{{ event.eventEnd }}</td>
-                <td>{{ event.eventLocation }}</td>
+                <td>{{ event.eventBuilding }}</td>
+                <td>{{ event.eventRoom }}</td>
                 <td>{{ event.oneLiner }}</td>
                 <td>{{ event.eventDesc }}</td>
             </tr>

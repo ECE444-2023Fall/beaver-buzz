@@ -69,7 +69,8 @@ class Event(db.Model):
     eventName = db.Column(db.String(100), nullable=False)
     eventStart = db.Column(db.DateTime(timezone=True), nullable=False)
     eventEnd = db.Column(db.DateTime(timezone=True), nullable=False)
-    eventLocation = db.Column(db.String(100), nullable=False)
+    eventBuilding = db.Column(db.String(100), nullable=False)
+    eventRoom = db.Column(db.String(100), nullable=False)
     oneLiner = db.Column(db.String(80), nullable=False)
     eventDesc = db.Column(db.Text)
     eventImg = db.Column(db.Text)
@@ -81,7 +82,8 @@ class Event(db.Model):
         organizerID,
         eventStart,
         eventEnd,
-        eventLocation,
+        eventBuilding,
+        eventRoom,
         oneLiner,
         eventDesc=None,
         eventImg=None,
@@ -91,7 +93,8 @@ class Event(db.Model):
         self.organizerID = organizerID
         self.eventStart = eventStart
         self.eventEnd = eventEnd
-        self.eventLocation = eventLocation
+        self.eventBuilding = eventBuilding
+        self.eventRoom = eventRoom
         self.oneLiner = oneLiner
         self.eventDesc = eventDesc
         self.eventImg = eventImg
@@ -123,8 +126,11 @@ class EventForm(FlaskForm):
         "When does the event start?", validators=[DataRequired()]
     )
     eventend = DateTimeField("When does the event end?", validators=[DataRequired()])
-    eventlocation = StringField(
-        "Where is the event located?", validators=[DataRequired()]
+    eventbuilding = StringField(
+        "Which building is the event located?", validators=[DataRequired()]
+    )
+    eventroom = StringField(
+        "Which room is the event located?", validators=[DataRequired()]
     )
     oneliner = StringField("Event One-Liner", validators=[DataRequired()])
     eventdesc = StringField("What is the event description?")
@@ -173,7 +179,8 @@ def event():
             form.organizer.data,
             form.eventstart.data,
             form.eventend.data,
-            form.eventlocation.data,
+            form.eventbuilding.data,
+            form.eventroom.data,
             form.oneliner.data,
             form.eventdesc.data,
         )
