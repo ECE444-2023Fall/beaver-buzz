@@ -30,3 +30,8 @@
     justify-content: center;
     background-color: #20B2AA;
 }
+
+.textarea-unresizable {
+    resize: none;
+    height: 130px;
+}
