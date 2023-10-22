@@ -12,10 +12,13 @@ BeaverBuzz is a community-based event-sharing platform that enables clubs and or
     4. `source venv/bin/activate` (for windows, use the following command: `.\venv\Scripts\activate`)
     5. `pip install -r requirements.txt`
 * You will need to install yarn to run the apps: [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/) (you may need to install [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to install yarn)
-* Use `yarn start` to run Frontend React App (the React app uses App.js to show the frontend)
+* To run the Frontend React App  (the React app uses App.js to show the frontend):
+    * Use `yarn start`
     * This will open at http://localhost:3000/
-* Use `yarn start-api` to run Backend Flask App (the flask app uses api.py to display the backend and interact with the database)
-    * This will open at http://localhost:5000/ (http://127.0.0.1:5000/)
+* To run Backend Flask App (the flask app uses api.py to display the backend and interact with the database):
+    * Enter your virtual environment: `source venv/bin/activate` (for windows, use the following command: `.\venv\Scripts\activate`)
+    * Then use `yarn start-api` to run
+    * This will open at http://localhost:5000/ (if that doesn't work, try http://127.0.0.1:5000/)
 
 ## Features
 * **Event information**: date, time, location, additional details, flyer, comment section
