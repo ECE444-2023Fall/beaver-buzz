@@ -27,6 +27,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+.idea/
+
 # C extensions
 *.so
 
@@ -142,6 +144,9 @@ celerybeat.pid
 
 # SageMath parsed files
 *.sage.py
+
+# IDE
+.idea/
 
 # Environments
 .env

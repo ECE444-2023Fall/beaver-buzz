@@ -1,0 +1,24 @@
+{% import "bootstrap/wtf.html" as wtf %}
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h3>Register new account</h3>
+    <hr />
+
+    {%- for category, message in get_flashed_messages(with_categories = true) %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+    {%- endfor %}
+
+    {{ wtf.quick_form(form) }}
+
+     {% if error is not none%}
+         <h3>Error: {{ error }}</h3>
+    {% endif %}
+
+</body>
+
+</html>
