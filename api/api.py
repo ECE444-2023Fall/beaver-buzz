@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, session
 from Configuration import Configuration
-from schemas import db, User
+from schemas import db, event_attendance, User, Event
 import bcrypt
 
 app = Flask(__name__)
@@ -11,22 +11,16 @@ with app.app_context():
     db.create_all()
 
 
-
 @app.route("/login", methods=["POST"])
 def login():
     email = request.json["email"]
     password = request.json["password"]
 
     user = User.query.filter_by(email=email).first()
-    if user is None or not bcrypt.checkpw(password.encode('utf-8'), user.password):
+    if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password):
         return jsonify({"error": "Invalid username or password"}), 425
 
-    return jsonify({
-        "greeting": "Welcome, " + user.firstname
-
-    })
-
-
+    return jsonify({"greeting": "Welcome, " + user.firstname})
 
 
 @app.route("/register", methods=["POST"])
@@ -39,19 +33,20 @@ def register():
     interests = request.json["interests"]
 
     user = User.query.filter_by(email=email).first()
-    if user is not None: # An account with this email exists
+    if user is not None:  # An account with this email exists
         return jsonify({"error": "User already exists"}), 420
 
-    passwordHash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
-    newaccount = User(email=email, password=passwordHash, firstname=firstname, lastname=lastname, phonenumber=phonenumber, interests=interests)
+    newaccount = User(
+        email=email,
+        password=passwordHash,
+        firstname=firstname,
+        lastname=lastname,
+        phonenumber=phonenumber,
+        interests=interests,
+    )
     db.session.add(newaccount)
     db.session.commit()
 
-    return jsonify({
-        "greeting": "Welcome, " + newaccount.firstname
-
-    })
-
-
-
+    return jsonify({"greeting": "Welcome, " + newaccount.firstname})
