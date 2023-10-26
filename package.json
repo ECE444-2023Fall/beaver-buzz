@@ -38,13 +38,6 @@
       "react-app/jest"
     ]
   },
-  "options": {
-    "allowedHosts": [
-      "localhost",
-      ".localhost"
-    ],
-    "proxy": "https://localhost:5000"
-  },
   "browserslist": {
     "production": [
       ">0.2%",

@@ -11,7 +11,8 @@ with app.app_context():
     db.create_all()
 
 
-@app.route("/login", methods=["POST"])
+
+@app.route("/api/login", methods=["POST"])
 def login():
     email = request.json["email"]
     password = request.json["password"]
@@ -23,7 +24,7 @@ def login():
     return jsonify({"greeting": "Welcome, " + user.firstname})
 
 
-@app.route("/register", methods=["POST"])
+@app.route("/api/register", methods=["POST"])
 def register():
     email = request.json["email"]
     password = request.json["password"]
