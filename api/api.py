@@ -12,7 +12,7 @@ with app.app_context():
 
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/api/login", methods=["POST"])
 def login():
     email = request.json["email"]
     password = request.json["password"]
@@ -29,7 +29,7 @@ def login():
 
 
 
-@app.route("/register", methods=["POST"])
+@app.route("/api/register", methods=["POST"])
 def register():
     email = request.json["email"]
     password = request.json["password"]
