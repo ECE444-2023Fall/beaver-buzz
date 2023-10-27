@@ -4,15 +4,13 @@ import smtplib, ssl
 from email_validator import validate_email, EmailNotValidError
 import pandas as pd
 import logging
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import imaplib
 
 pwd = os.path.dirname(__file__)
 emails_path = os.path.join(pwd,'../../emails')
 sys.path.append(emails_path)
 
-from mailing import Mailer, Inbox
+from mailing import Mailer, Inbox, get_login, format_email, print_dir
 
 
 smtp_local = 'localhost'
@@ -24,56 +22,55 @@ goog_imap = 'imap.gmail.com'
 goog_ports_imap = [993]
 
 
-def get_login(f_path, account):
-    if not os.path.isfile(f_path):
-        logging.error('File does not exist')
-    else:
-        with open(f_path) as f:
-            lines = f.read().splitlines()
-
-        for l in lines:
-            l = l.split(' ')
-            if l[0] == account:
-                return tuple(l[1:])
-
-
-def format_email(sender, recipient, subject, html):
-    msg = MIMEMultipart()
-    msg['From'] = sender
-    msg['To'] = recipient
-    msg['Subject'] = subject
-    msg.attach(MIMEText(html, 'html'))
-    return msg
-
-
-def test_reg_email(mailer, mailing_list):
+def test_reg_email(mailer, recipient):
     subject = 'Registration Confirmation'
+    html = open(os.path.join(emails_path,'registration.html')).read().format(
+        subject=subject,firstname=recipient['firstname'],lastname=recipient['lastname'],
+        email=recipient['email'],phonenumber=recipient['phonenumber'],interests=recipient['interests'],
+        potatoemail=mailer.sender)
+    msg = format_email(mailer.sender, recipient['email'], subject, html)
+    mailer.send_mail(recipient['email'],msg.as_string())
 
-    for i,entry in mailing_list.iterrows():
-        html = open(os.path.join(emails_path,'registration.html')).read().format(
-            subject=subject,firstname=entry['firstname'],lastname=entry['lastname'],
-            email=entry['email'],phonenumber=entry['phonenumber'],interests=entry['interests'],
-            potatoemail=mailer.sender)
-        msg = format_email(mailer.sender, entry['email'], subject, html)
-        mailer.send_mail(entry['email'],msg.as_string())
+    mail = inbox.read_dir('Inbox')
+    assert any([m["subject"] == subject for m in mail])
+    print('Test Registration Email Detected in Inbox')
+
+    print_dir(inbox.read_dir('Inbox', f'(SUBJECT "{subject}")'))
+
+    inbox.delete_email('Inbox', f'(SUBJECT "{subject}")')
+    assert ~any([m["subject"] == subject for m in mail])
+    print('Test Emails Cleared from Inbox\nTest Passed\n')
+
+
+def test_sender_login(server, port, login):
+    mailer = Mailer(server, port, login)
+    verif = mailer.server.verify(server)
+    assert verif[0] in [250,251,252]
+    print('Successful Sender Connection Established\nTest Passed\n')
+    return mailer
+
+def test_inbox_login(server, port, login):
+    inbox = Inbox(server, port, login)
+    print('Successful Inbox Connection Established')
+    inbox.server.select('Inbox')
+    assert inbox.server.check()
+    print('Inbox Selection Successful')
+    inbox.server.close()
+    print('Inbox Cloesd\nTest Passed\n')
+    return inbox
+
+    
 
 if '__main__' == __name__:
     login = get_login(os.path.join(emails_path, 'credentials.txt'), 'app_login')
 
-    mailer = Mailer(goog_smtp, goog_ports_smtp[0], login)
-    inbox = Inbox(goog_imap, goog_ports_imap[0], login)
+    mailer = test_sender_login(goog_smtp, goog_ports_smtp[0], login)
+    inbox = test_inbox_login(goog_imap, goog_ports_imap[0], login)
 
     mailing_list = pd.read_csv(f'{pwd}/mailing_test_data.csv')
+    recipient = mailing_list.iloc[0]
 
-    test_reg_email(mailer, mailing_list)
-
-    mail = inbox.read_dir('Inbox')
-    print('Inbox Mail:')
-    for m in mail:
-        print(f'Subject:{m["subject"]}')
-        print(f'From:{m["from"]}')
-        print(f'To:{m["to"]}')
-        print(f'Date:{m["date"]}\n')
+    test_reg_email(mailer, recipient)
 
     inbox.kill()
     mailer.kill()
