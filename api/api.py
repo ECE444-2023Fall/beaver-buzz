@@ -11,7 +11,8 @@ with app.app_context():
     db.create_all()
 
 
-@app.route("/login", methods=["POST"])
+
+@app.route("/api/login", methods=["POST"])
 def login():
     email = request.json["email"]
     password = request.json["password"]
@@ -20,10 +21,15 @@ def login():
     if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password):
         return jsonify({"error": "Invalid username or password"}), 425
 
-    return jsonify({"greeting": "Welcome, " + user.firstname})
+    return jsonify({
+        "greeting": "Welcome, " + user.firstname
+
+    })
 
 
-@app.route("/register", methods=["POST"])
+
+
+@app.route("/api/register", methods=["POST"])
 def register():
     email = request.json["email"]
     password = request.json["password"]
