@@ -19,7 +19,7 @@ const RegisterPage=()=>{
         },
         body:JSON.stringify(data)
         }
-        fetch('/register', requestOptions)
+        fetch('/api/register', requestOptions)
         .then(response => response.json())
         .then(data => {
         if(data.greeting) {
