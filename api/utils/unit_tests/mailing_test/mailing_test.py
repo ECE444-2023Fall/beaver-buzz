@@ -24,6 +24,7 @@ goog_ports_imap = [993]
 class TestEmail:
     """
     Tests basic read/send email system using Gmail SMTP and IMAP4 servers.
+    By @ChNgineer | Ryan Chen
     """
     def test_sender_login(self):
         """
