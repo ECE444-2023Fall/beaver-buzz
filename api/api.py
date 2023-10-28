@@ -11,7 +11,6 @@ with app.app_context():
     db.create_all()
 
 
-
 @app.route("/api/login", methods=["POST"])
 def login():
     email = request.json["email"]
@@ -88,8 +87,8 @@ def createEvent():
 
 @app.route("/api/events/<eventid>/register/<userid>", methods=["POST"])
 def registerEvent(eventid, userid):
-    event = Event.query.filter_by(id=eventid).first()
-    user = User.query.filter_by(id=userid).first()
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
     event.users.append(user)
     event.registered += 1
     db.session.commit()
@@ -104,7 +103,7 @@ def unregisterEvent(eventid, userid):
     db.session.commit()
     return jsonify(event.serialize())
 
-# TODO: below functions to be implemented / changed by Vishnu and Tracy
+# TODO: below functions to be further implemented and used by Vishnu and Tracy for discover page
 
 @app.route("/api/events/all", methods=["GET"])
 def getEvents():
