@@ -12,6 +12,9 @@ from tqdm import tqdm
 logging.basicConfig(filename='mail.log', encoding='utf-8', level=logging.DEBUG)
 
 class Mailer:
+    """
+    Mailer class handles sending emails to recipients via google's smtp server. Login credentials required for SSL authentication.
+    """
     def __init__(self, smtp: str, port: int, login: tuple[str, str]) -> None:
         self.context = ssl.create_default_context()
         self.server = smtplib.SMTP_SSL(smtp, port, context=self.context)
@@ -22,6 +25,12 @@ class Mailer:
         return str(self.server.helo())
 
     def send_mail(self, recipient: str, content: str, validate: bool=True) -> None:
+        """
+        Sends email from account linked to login credentials using google smtp servers.
+        Contents can be specified per email using email.message.Message() in string form.
+        See format_email function listed below for email structure and inserting html templates.
+        Validation flag checks if email address of recipient exists and is valid.
+        """
         if validate:
             try:
                 validate_email(recipient) # This may be redundant, but in the event emails need to be sent to people outside our db
@@ -33,20 +42,37 @@ class Mailer:
             self.server.sendmail(self.sender, recipient, content)
 
     def mass_mail(self, recipients: Iterable[str], content: str, validate: bool=True) -> None:
+        """
+        Runs send_mail method over an interable of recipients.
+        Useful for mass emailing general announcements.
+        """
         for r in tqdm(recipients):
             send_mail(r, content, validate)
 
     def kill(self) -> None:
+        """
+        Terminates connection to smtp server.
+        """
         return logging.info(self.server.quit())
 
 
 class Inbox:
+    """
+    Inbox class links to Gmail account mailboxes to read and delete emails.
+    """
     def __init__(self, imap: str, port: int, login: tuple[str,str]) -> None:
         self.server = imaplib.IMAP4_SSL(imap, port)
         self.addr = login[0]
         self.server.login(self.addr, login[1])
 
     def read_dir(self, _dir: str, search_cond: str='ALL') -> email.message.Message | None:
+        """
+        Reads a mailbox directory and returns email data.
+        Can take in a search parameter in the form of string '(<LABEL> "<name>")' to perform
+        boolean filter on selected mailbox contents.
+        If no search parameter is specified, all mail in mailbox will be returned.
+        If mailbox status is not 'OK', methods returns None.
+        """
         ret = []
         self.server.select(_dir)
         status, email_ids = self.server.search(None, search_cond)
@@ -63,6 +89,10 @@ class Inbox:
         return None
 
     def delete_email(self, _dir: str, search_cond: str) -> None:
+        """
+        Deletes email in specified directory with respect to search_cond.
+        search_cond is a string in the form of '(<LABEL> "<name>")'.
+        """
         self.server.select(_dir)
         results, email_ids = self.server.search(None, search_cond)
         for em_id in tqdm(email_ids[0].split(), desc='Flagging Emails for Deletion...'):
@@ -75,6 +105,9 @@ class Inbox:
 
 
 def get_login(f_path, account):
+    """
+    Reads login credentials from a textfile.
+    """
     if not os.path.isfile(f_path):
         logging.error('File does not exist')
     else:
@@ -88,6 +121,9 @@ def get_login(f_path, account):
 
 
 def format_email(sender, recipient, subject, html):
+    """
+    Default email format.
+    """
     msg = MIMEMultipart()
     msg['From'] = sender
     msg['To'] = recipient
@@ -97,6 +133,9 @@ def format_email(sender, recipient, subject, html):
 
 
 def print_dir(mail_data: email.message.Message) -> None:
+    """
+    Prints the subject, recipient, sender, and date of mail_data provided.
+    """
     print('Inbox Mail:')
     for m in mail_data:
         print(f'Subject:{m["subject"]}')
