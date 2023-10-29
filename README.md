@@ -21,7 +21,7 @@ BeaverBuzz is a community-based event-sharing platform that enables clubs and or
     * This will open at http://localhost:5000/ (if that doesn't work, try http://127.0.0.1:5000/)
 * To deploy to Heroku:
     * Make sure you have the Heroku CLI installed: [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
-    * git push heroku `git subtree split --prefix api steven_dev`:refs/heads/master --force 
+    * git push backend `git subtree split --prefix api steven_dev`:refs/heads/master --force 
       * Replace steven_dev with the branch you wish to deploy
     * git push frontend main:main
 
