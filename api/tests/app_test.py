@@ -1,7 +1,10 @@
 import pytest
 import psycopg2
 
-# Check if the database is connected.
+
+
+# Checks if the database is connected.
+# This test case was made by Steven Zhang.
 def test_postgres_connection():
     try:
         connection = psycopg2.connect(
@@ -32,7 +35,9 @@ def test_postgres_connection():
             connection.close()
             print("PostgreSQL connection is closed")
 
-# Check if 'users' table exists within the database.
+# Checks if 'users' table exists within the database.
+# This test case was made by Steven Zhang.
+
 def test_users_table_existence():
     try:
         connection = psycopg2.connect(
@@ -55,7 +60,8 @@ def test_users_table_existence():
         cursor.close()
         connection.close()
 
-# Check if 'email' column exists within the 'users' table.
+# Checks if 'email' column exists within the 'users' table.
+# This test case was made by Steven Zhang.
 def test_column_existence():
     try:
         connection = psycopg2.connect(
