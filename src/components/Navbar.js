@@ -33,13 +33,18 @@ function Navbar() {
                         </Link>
                     </li>
                     <li className='nav-item'>
-                        <Link to='/host' className='nav-links' onClick={closeMobileMenu}>
-                            Host
+                        <Link to='/events' className='nav-links' onClick={closeMobileMenu}>
+                            Events
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to='/discover' className='nav-links' onClick={closeMobileMenu}>
+                            Discover
                         </Link>
                     </li>
                     <li className='nav-item'>
-                        <Link to='/events' className='nav-links' onClick={closeMobileMenu}>
-                            Events
+                        <Link to='/login' className='nav-links' onClick={closeMobileMenu}>
+                            Login
                         </Link>
                     </li>
                     

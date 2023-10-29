@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import LoginPage from "./login";
 import RegisterPage from "./register";
 import EventPage from './Event';
+import DiscoverPage from "./discover";
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {UserContext} from './UserContext';
 import { UserProvider } from './UserContext';
@@ -17,6 +18,7 @@ function App() {
         <Router>
           <Navbar />
           <Routes>
+             <Route exact path='/discover' element={<DiscoverPage/>}/>
              <Route exact path='/login' element={<LoginPage/>}/>
               <Route exact path='/register' element={<RegisterPage/>}/>
               <Route exact path='/events' element={<EventPage/>}/> 

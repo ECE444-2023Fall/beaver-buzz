@@ -1,10 +1,13 @@
+from re import T
 from flask import Flask, request, jsonify, session
+from flask_cors import CORS, cross_origin
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event
 import bcrypt
 
 app = Flask(__name__)
 app.config.from_object(Configuration)
+app.config['CORS_HEADERS'] =  'Content-Type'
 db.init_app(app)
 
 with app.app_context():
@@ -165,3 +168,56 @@ def getEventsByUser(userid):
     user = User.query.filter_by(id=userid).first()
     events = user.events
     return jsonify([e.serialize() for e in events])
+
+# @app.route('/api/searchtest', methods=['GET'])
+# @cross_origin()
+# def search_test():
+#     from datetime import datetime
+#     import pandas as pd
+
+#     # Create a dictionary with data for the DataFrame
+#     data = {
+#         'EventName': ['Halloween', 'Christmas', 'Diwali', 'Holi', 'Resume Workshop', 'ECE444 Study Session'],
+#         'Location': ['Bahen', 'Bahen', 'Queens Park', 'Trinity Bellwoods', 'Sanford Fleming', 'Galbraith'],
+#         'Organizer': ['UserA', 'UserB', 'UserC', 'UserC', 'UserD', 'UserE'],
+#         'Academic': [False, False,False,False,True,True]
+#     }
+
+#     possible_results = pd.DataFrame(data)
+#     Event.query.delete()
+#     db.session.commit()
+#     for i in range(len(data['EventName'])):
+#         newevent = Event(eventName=data['EventName'][i],
+#             organizerID=i,
+#             eventStart=datetime.now(),
+#             eventEnd=datetime.now(),
+#             eventBuilding=data['Location'][i],
+#             eventRoom="2155",
+#             oneLiner="have fun!")
+        
+#         db.session.add(newevent)
+#     db.session.commit()
+
+
+@app.route('/api/search', methods=['GET'])
+@cross_origin()
+def search():
+    query = request.args.get('searchbar')
+    location_filters = request.args.get('filters').split(',')
+    print(location_filters)
+    if location_filters[0] == "":
+        location_filters = []
+    filtered_results = []
+    if query != '' and len(location_filters)!=0:
+        filtered_results = Event.query.filter(Event.eventBuilding.in_(location_filters), Event.eventName.contains(query)).all()
+    elif len(location_filters)!=0:
+        filtered_results = Event.query.filter(Event.eventBuilding.in_(location_filters)).all()
+    elif len(location_filters)==0 and query!="":
+        filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
+    else:
+        filtered_results = Event.query.all()
+    
+    print(filtered_results)
+
+    return jsonify([e.serialize() for e in filtered_results])
+
