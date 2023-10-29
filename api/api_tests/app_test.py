@@ -22,7 +22,7 @@ def client():
         yield app.test_client()  # tests run here
         db.drop_all()  # teardown
 
-
+# Created by Filip Kostic
 def test_invalid_login(client):
     """Login helper function"""
     response = client.post('/api/login',
@@ -32,6 +32,7 @@ def test_invalid_login(client):
     expected = {'error': 'Invalid username or password'}
     assert(responseJson == expected)
 
+# Created by Filip Kostic
 def test_register(client):
     """Login helper function"""
     string = '123-456-235'
@@ -43,6 +44,7 @@ def test_register(client):
     expected = {'greeting': 'Welcome, filip'}
     assert(expected == responseJson)
 
+# Created by Filip Kostic
 def test_valid_login(client):
 
     string = '123-456-235'
