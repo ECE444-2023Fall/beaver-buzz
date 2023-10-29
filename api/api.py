@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, session
-from Configuration import Configuration
-from schemas import db, User
+from api.Configuration import Configuration
+from api.schemas import db, User
 import bcrypt
 
 app = Flask(__name__)
