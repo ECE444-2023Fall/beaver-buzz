@@ -96,8 +96,8 @@ def registerEvent(eventid, userid):
 
 @app.route("/api/events/<eventid>/unregister/<userid>", methods=["POST"])
 def unregisterEvent(eventid, userid):
-    event = Event.query.filter_by(id=eventid).first()
-    user = User.query.filter_by(id=userid).first()
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
     event.users.remove(user)
     event.registered -= 1
     db.session.commit()

@@ -50,45 +50,13 @@ def test_registerEvent(client, populate_db):
     assert(res.status_code == 404)
 
 
-# class TestAPI():
-#     def setup_class(self):
-#         self.app = Flask(__name__)
-#         self.app.config.from_object(Configuration)
-#         self.app.config["TESTING"] = True
-#         db.init_app(self.app)
-#         with self.app.app_context():
-#             db.create_all()
+def test_unregisterEvent(client, populate_db):
+    # create a test user and event, register the user for the event
+    res = client.post("/api/events/1/register/1")
+    assert(res.status_code == 200)
 
-#             # newaccount = User(
-#             #     email="prempotat@gmail.com",
-#             #     password="password",
-#             #     firstname="Prem",
-#             #     lastname="Potat",
-#             # )
-#         # Event(
-#         #     eventName="Test Event",
-#         #     organizerID=0,
-#         #     eventStart="2020-04-20 12:00:00",
-#         #     eventEnd="2020-04-20 13:00:00",
-#         #     eventBuilding="Test Building",
-#         #     eventRoom="Test Room",
-#         #     oneLiner="Test One Liner",
-#         # )
-#         # db.session.add(newaccount)
-#         # db.session.commit()
+    res = client.post("/api/events/1/unregister/1")
+    assert(res.status_code == 200)
 
-#     def teardown_class(self):
-#         self.app = Flask(__name__)
-#         self.app.config.from_object(Configuration)
-#         self.app.config["TESTING"] = True
-#         db.init_app(self.app)
-#         with self.app.app_context():
-#             db.session.rollback()
-
-#     def test_registerEvent(self):
-#         # create a test user and event, register the user for the event
-#         with self.app.app_context():
-#             with self.app.test_client() as client:
-#                 res = client.post("/api/events/1/register/1")
-#                 assert(res is None)
-#                 db.session.rollback()
+    res = client.post("/api/events/2/unregister/2")
+    assert(res.status_code == 404)
