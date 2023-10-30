@@ -7,7 +7,7 @@ import json
 
 TEST_DB = "test.db"
 
-
+#Done by Julia Wang
 @pytest.fixture
 def client():
     BASE_DIR = Path(__file__).resolve().parent
@@ -19,7 +19,7 @@ def client():
         db.create_all()  # setup
         yield app.test_client()  # tests run here
         db.drop_all()  # teardown
-
+#Done by Vishnu Akundi, Julia Wang
 @pytest.fixture
 def populate_db():
     newaccount = User(
@@ -50,7 +50,7 @@ def populate_db():
     db.session.add(newaccount)
     db.session.add(newevent)
     db.session.commit()
-
+#Done by Julia Wang
 def test_registerEvent(client, populate_db):
     # create a test user and event, register the user for the event
     res = client.post("/api/events/1/register/1")
@@ -60,7 +60,7 @@ def test_registerEvent(client, populate_db):
     res = client.post("/api/events/2/register/2")
     assert(res.status_code == 404)
 
-
+#Done by Julia Wang
 def test_unregisterEvent(client, populate_db):
     # create a test user and event, register the user for the event
     res = client.post("/api/events/1/register/1")
@@ -72,6 +72,7 @@ def test_unregisterEvent(client, populate_db):
     res = client.post("/api/events/2/unregister/2")
     assert(res.status_code == 404)
 
+#Done by Vishnu Akundi
 def test_search(client, populate_db):
     # create a test user and event, register the user for the event
     res = client.get("/api/search?searchbar=&filters=Sanford Fleming")
