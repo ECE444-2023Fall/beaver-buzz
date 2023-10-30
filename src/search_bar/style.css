@@ -1,0 +1,14 @@
+/* Basic CSS styles for the page */
+body {
+    font-family: Arial, sans-serif;
+}
+
+#search-container {
+    text-align: center;
+    padding: 20px;
+}
+
+#results {
+    margin-top: 20px;
+    text-align: center;
+}

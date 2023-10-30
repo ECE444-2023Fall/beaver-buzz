@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Discover Page</title>
+    <style>
+        /* Basic CSS styles for the page */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #search-container {
+            text-align: center;
+            padding: 20px;
+        }
+        #results {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Discover Page</h1>
+    
+    <div id="search-container">
+        <label for="eventSearch">Search by event name:</label>
+        <input type="text" id="eventSearch" placeholder="Enter event name">
+        <button onclick="searchEvents()">Search</button>
+    </div>
+
+    <div id="results">
+        <!-- Search results will be displayed here -->
+    </div>
+
+    <script>
+        function searchEvents() {
+            const query = document.getElementById('eventSearch').value;
+            
+            // Send the search query to the server
+            fetch(`/search?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function displayResults(results) {
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<p>No matching events found.</p>';
+            } else {
+                results.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = 'event-result';
+                    eventDiv.innerHTML = `<p>Event Name: ${event.name}</p>`;
+                    resultsContainer.appendChild(eventDiv);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
