@@ -7,7 +7,8 @@ import datetime
 TEST_DB = "test.db"
 BASE_DIR = Path(__file__).resolve().parent
 
-
+"""Unit test functions made to initialize and test the database"""
+"""Made by Himanish Jindal"""
 @pytest.fixture
 def client():
     app.config["TESTING"] = True
