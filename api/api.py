@@ -13,7 +13,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-
 @app.route("/api/login", methods=["POST"])
 def login():
     email = request.json["email"]
@@ -58,6 +57,7 @@ def register():
     db.session.commit()
 
     return jsonify({"greeting": "Welcome, " + newaccount.firstname})
+
 
 # route /events/<id> to get a specific event
 @app.route("/api/events/<id>", methods=["GET"])
@@ -220,4 +220,3 @@ def search():
     print(filtered_results)
 
     return jsonify([e.serialize() for e in filtered_results])
-
