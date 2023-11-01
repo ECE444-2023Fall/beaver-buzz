@@ -1,6 +1,6 @@
 import pytest
 import psycopg2
-
+import os
 
 
 # Checks if the database is connected.
@@ -8,11 +8,11 @@ import psycopg2
 def test_postgres_connection():
     try:
         connection = psycopg2.connect(
-            user="zsitdxsagpsldt",
-            password="16d14b5c5bdabc1b38c5b5d435757f84f7afcf0bf1f5d93db76f34b069e6a77c",
-            host="ec2-34-193-110-25.compute-1.amazonaws.com",
-            port="5432",
-            database="df4cpci37ne0rp"
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            host=os.environ.get("DB_HOST"),
+            port=os.environ.get("DB_PORT"),
+            database=os.environ.get("DB_NAME")
         )
 
         cursor = connection.cursor()
@@ -41,12 +41,13 @@ def test_postgres_connection():
 def test_users_table_existence():
     try:
         connection = psycopg2.connect(
-            dbname='df4cpci37ne0rp',
-            user='zsitdxsagpsldt',
-            password='16d14b5c5bdabc1b38c5b5d435757f84f7afcf0bf1f5d93db76f34b069e6a77c',
-            host='ec2-34-193-110-25.compute-1.amazonaws.com',
-            port='5432'
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            host=os.environ.get("DB_HOST"),
+            port=os.environ.get("DB_PORT"),
+            database=os.environ.get("DB_NAME")
         )
+
         cursor = connection.cursor()
         cursor.execute("""
             SELECT EXISTS (
@@ -62,15 +63,17 @@ def test_users_table_existence():
 
 # Checks if 'email' column exists within the 'users' table.
 # This test case was made by Steven Zhang.
+
 def test_column_existence():
     try:
         connection = psycopg2.connect(
-            dbname='df4cpci37ne0rp',
-            user='zsitdxsagpsldt',
-            password='16d14b5c5bdabc1b38c5b5d435757f84f7afcf0bf1f5d93db76f34b069e6a77c',
-            host='ec2-34-193-110-25.compute-1.amazonaws.com',
-            port='5432'
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            host=os.environ.get("DB_HOST"),
+            port=os.environ.get("DB_PORT"),
+            database=os.environ.get("DB_NAME")
         )
+
         cursor = connection.cursor()
         cursor.execute("""
             SELECT EXISTS (
