@@ -20,15 +20,42 @@
     margin-top: 50px;
 }
 
+.form-title{
+    color: #000;
+    font-family: Poppins;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+
+}
+
+.form-button{
+    color: #FFF;
+    font-family: Poppins;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;  
+}
+
+.form-name{
+    color: #000;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
 
 .form-center {
-    width: 250px;
-    padding: 75px;
-    border-radius: 10px;
-    text-align: center;
-    margin: auto;
-    justify-content: center;
-    background-color: #20B2AA;
+    display: flex;
+    width: 405px;
+    height: 696px;
+    padding-bottom: 0px;
+    align-items: flex-start;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
 .textarea-unresizable {

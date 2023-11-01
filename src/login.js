@@ -41,9 +41,9 @@ const LoginPage=()=>{
         <div className ="container">
             <div className="form-center">
 
-                <h1>Login</h1><br/>
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <label htmlFor="email">Email</label>
+                        <h1 className="form-title">Get Started Now</h1>
+                        <h1 className="form-name">Email</h1>
                         <Form.Group>
                             <Form.Control type="email"
                                 placeholder="Email"
@@ -54,7 +54,7 @@ const LoginPage=()=>{
                         </Form.Group>
                          {errors.email && <p className="error">{"Please enter your email"}</p>}
                         <br></br>
-                        <label htmlFor="password">Password</label>
+                        <h1 className="form-name">Password</h1>
                         <Form.Group>
                             <Form.Control type="password"
                                 placeholder="Password"
@@ -66,10 +66,10 @@ const LoginPage=()=>{
                          {errors.password && <p className="error">{"Please enter your password"}</p>}
                         <br></br>
                         {credentialsValid ? <p>{greeting}</p> : <p className="error">Invalid email or password</p>}
-                        <Button type='submit' className="submitButton">Login</Button>
-
+                        <Button type='submit' className="submitButton"><h1 className="form-button">Login</h1></Button>
+                        <h1 className="form-name">Don't have an account?</h1><Link to='/register'><h1 className="form-name">Sign up here</h1></Link>
                     </Form>
-                    <p>Don't have an account?</p><Link to='/register'>Register here</Link>
+                    
 
             </div>
 
