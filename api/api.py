@@ -10,8 +10,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-
-
 @app.route("/api/login", methods=["POST"])
 def login():
     email = request.json["email"]
