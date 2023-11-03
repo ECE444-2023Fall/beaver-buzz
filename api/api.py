@@ -10,7 +10,7 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-    
+
 @app.route("/api/login", methods=["POST"])
 def login():
     email = request.json["email"]
@@ -20,10 +20,7 @@ def login():
     if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password):
         return jsonify({"error": "Invalid username or password"}), 425
 
-    return jsonify({
-        "greeting": "Welcome, " + user.firstname,
-        "id": user.id
-    })
+    return jsonify({"greeting": "Welcome, " + user.firstname, "id": user.id})
 
 
 @app.route("/api/register", methods=["POST"])
@@ -54,6 +51,7 @@ def register():
 
     return jsonify({"greeting": "Welcome, " + newaccount.firstname})
 
+
 # route /events/<id> to get a specific event
 @app.route("/api/events/<id>", methods=["GET"])
 def getEvent(id):
@@ -64,6 +62,7 @@ def getEvent(id):
         event.organizerID = user.firstname + " " + user.lastname
         return jsonify(event.serialize())
     return jsonify({"error": "Event not found"}), 420
+
 
 @app.route("/api/events/new", methods=["POST"])
 def createEvent():
@@ -76,17 +75,20 @@ def createEvent():
     eventRoom = n["eventRoom"]
     oneLiner = n["oneLiner"]
 
-    newevent = Event(eventName=eventName,
+    newevent = Event(
+        eventName=eventName,
         organizerID=organizerID,
         eventStart=eventStart,
         eventEnd=eventEnd,
         eventBuilding=eventBuilding,
         eventRoom=eventRoom,
-        oneLiner=oneLiner)
-    
+        oneLiner=oneLiner,
+    )
+
     db.session.add(newevent)
     db.session.commit()
     return jsonify(newevent.serialize())
+
 
 @app.route("/api/events/<eventid>/register/<userid>", methods=["POST"])
 def registerEvent(eventid, userid):
@@ -97,6 +99,7 @@ def registerEvent(eventid, userid):
     db.session.commit()
     return jsonify(event.serialize())
 
+
 @app.route("/api/events/<eventid>/unregister/<userid>", methods=["POST"])
 def unregisterEvent(eventid, userid):
     event = db.get_or_404(Event, eventid)
@@ -106,12 +109,15 @@ def unregisterEvent(eventid, userid):
     db.session.commit()
     return jsonify(event.serialize())
 
+
 # TODO: below functions to be further implemented and used by Vishnu and Tracy for discover page
+
 
 @app.route("/api/events/all", methods=["GET"])
 def getEvents():
     events = Event.query.all()
     return jsonify([e.serialize() for e in events])
+
 
 @app.route("/api/events/<eventid>/update", methods=["POST"])
 def updateEvent(eventid, name, date, time, location):
@@ -123,6 +129,7 @@ def updateEvent(eventid, name, date, time, location):
     db.session.commit()
     return jsonify(event.serialize())
 
+
 @app.route("/api/events/<eventid>/delete", methods=["POST"])
 def deleteEvent(eventid):
     event = Event.query.filter_by(id=eventid).first()
@@ -130,11 +137,13 @@ def deleteEvent(eventid):
     db.session.commit()
     return jsonify(event.serialize())
 
+
 @app.route("/api/users/<userid>/events", methods=["GET"])
 def getRegisteredEvents(userid):
     user = User.query.filter_by(id=userid).first()
     events = user.events
     return jsonify([e.serialize() for e in events])
+
 
 @app.route("/api/events/<eventid>/registered", methods=["GET"])
 def getRegisteredUsers(eventid):
@@ -142,26 +151,31 @@ def getRegisteredUsers(eventid):
     users = event.users
     return jsonify([u.serialize() for u in users])
 
+
 # route get events by date
 @app.route("/api/events/dates", methods=["GET"])
 def getEventsByDate(date):
     events = Event.query.filter_by(date=date).all()
     return jsonify([e.serialize() for e in events])
 
+
 @app.route("/api/events/location", methods=["GET"])
 def getEventsByLocation(location):
     events = Event.query.filter_by(location=location).all()
     return jsonify([e.serialize() for e in events])
+
 
 @app.route("/api/events/interest", methods=["GET"])
 def getEventsByInterest(interest):
     events = Event.query.filter(Event.interests.like("%" + interest + "%")).all()
     return jsonify([e.serialize() for e in events])
 
+
 @app.route("/events/category", methods=["GET"])
 def getEventsByCategory(category):
     events = Event.query.filter(Event.categories.any(name=category)).all()
     return jsonify([e.serialize() for e in events])
+
 
 @app.route("/api/users/<userid>/events", methods=["GET"])
 def getEventsByUser(userid):
