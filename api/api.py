@@ -58,6 +58,8 @@ def register():
 @app.route("/api/events/<id>", methods=["GET"])
 def getEvent(id):
     event = Event.query.filter_by(id=id).first()
+    user = User.query.filter_by(id=event.organizerID).first()
+    event.organizerID = user.firstname + " " + user.lastname
     return jsonify(event.serialize())
 
 @app.route("/api/events/new", methods=["POST"])
