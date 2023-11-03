@@ -47,7 +47,7 @@ export default function EventPage() {
         });
     }
 
-    // Currently eventImage is set to the default. Change to data.eventImg after implementing images in database
+    // eventImage uses default event image when the event data doesn't contain an event image
     return (
         <div>
             <head>
@@ -57,7 +57,7 @@ export default function EventPage() {
                 <div id="eventContainer">
                     <h1 id="eventTitle">{data.eventName}</h1>
                     <p id="eventDescription">{data.eventDesc}</p>
-                    <img id="eventImage" src={eventDefault} alt="Event"></img>
+                    <img id="eventImage" src={data.eventImg ? data.eventImg : eventDefault} alt="Event"></img>
                     <div id="eventInfo">
                         <p><strong>Organizer: </strong>{data.organizerID}</p>
                         <p><strong>Date and Time: </strong>{data.eventStart}</p>
