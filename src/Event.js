@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Button } from './components/Button';
 import UserContext from './UserContext';
 import './event.css';
+import eventDefault from './images/event-default.jpg';
 
 const EVENTID = 1; //TODO: replace with actual event ID
 
@@ -46,6 +47,7 @@ export default function EventPage() {
         });
     }
 
+    // Currently eventImage is set to the default. Change to data.eventImg after implementing images in database
     return (
         <div>
             <head>
@@ -55,7 +57,7 @@ export default function EventPage() {
                 <div id="eventContainer">
                     <h1 id="eventTitle">{data.eventName}</h1>
                     <p id="eventDescription">{data.eventDesc}</p>
-                    <img id="eventImage" src="event-image.jpg" alt="Event"></img>
+                    <img id="eventImage" src={eventDefault} alt="Event"></img>
                     <div id="eventInfo">
                         <p><strong>Organizer: </strong>{data.organizerID}</p>
                         <p><strong>Date and Time: </strong>{data.eventStart}</p>
