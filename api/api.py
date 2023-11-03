@@ -57,10 +57,13 @@ def register():
 # route /events/<id> to get a specific event
 @app.route("/api/events/<id>", methods=["GET"])
 def getEvent(id):
+    print(id)
     event = Event.query.filter_by(id=id).first()
-    user = User.query.filter_by(id=event.organizerID).first()
-    event.organizerID = user.firstname + " " + user.lastname
-    return jsonify(event.serialize())
+    if event is not None:
+        user = User.query.filter_by(id=event.organizerID).first()
+        event.organizerID = user.firstname + " " + user.lastname
+        return jsonify(event.serialize())
+    return jsonify({"error": "Event not found"}), 420
 
 @app.route("/api/events/new", methods=["POST"])
 def createEvent():
