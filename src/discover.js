@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Form,Button} from 'react-bootstrap'
 import "./form.css"
 import {Grid, Item} from "semantic-ui-react"
@@ -6,9 +6,12 @@ import {Link} from "react-router-dom"
 import {useForm} from "react-hook-form";
 import Card from './components/Card';
 import CardGrid from './components/CardGrid';
+import {useUserContext} from "./UserContext";
 const DiscoverPage=()=>{
     const[searchitems, setsearchitems] = useState([])
     const { register, handleSubmit, formState: { errors } } = useForm();
+
+
     const onSubmit = (data) => {
         console.log(data);
         var temp_data = {"filters": []}
