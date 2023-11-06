@@ -43,6 +43,9 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<Student {self.firstname}, {self.lastname}>"
+    
+    def serialize(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def serialize(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -63,7 +66,6 @@ class Event(db.Model):
     eventImgType = db.Column(db.Text)
     # eventUsers = db.relationship(db.Integer, secondary=event_attendance)
     registered = db.Column(db.Integer, default=0)
-
 
     def __init__(
         self,
@@ -91,6 +93,5 @@ class Event(db.Model):
 
     def __repr__(self):
         return f"<Event {self.eventName}>"
-
     def serialize(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

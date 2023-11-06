@@ -37,7 +37,7 @@ function Navbar() {
                             Events
                         </Link>
                     </li>
-                    <li>
+                    <li className='nav-item'>
                         <Link to='/discover' className='nav-links' onClick={closeMobileMenu}>
                             Discover
                         </Link>
