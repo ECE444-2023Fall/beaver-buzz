@@ -4,18 +4,23 @@ import './App.css';
 import Navbar from './components/Navbar';
 import LoginPage from "./login";
 import RegisterPage from "./register";
+import EventPage from './Event';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {UserContext} from './UserContext';
+import { UserProvider } from './UserContext';
 
 function App() {
 
-
   return (
+    <UserProvider>
     <div className="App">
         <Router>
           <Navbar />
           <Routes>
              <Route exact path='/login' element={<LoginPage/>}/>
               <Route exact path='/register' element={<RegisterPage/>}/>
+              <Route exact path='/events' element={<EventPage/>}/> 
+              {/* The above is a temp page to display event info */}
             <Route path='/' exact />
           </Routes>
         </Router>
@@ -38,6 +43,7 @@ function App() {
         <p>The current time is {currentTime}.</p>
       </header> */}
     </div>
+    </UserProvider>
   );
 }
 
