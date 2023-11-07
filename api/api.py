@@ -32,7 +32,7 @@ def login():
         "id": user.id
     })
 
-@app.route("/api/getInfo", methods=["POST"])
+@app.route("/api/getUserInfo", methods=["POST"])
 def getInfo():
     id = request.json["id"]
 
@@ -54,7 +54,7 @@ def setEmail():
     user = User.query.filter_by(id=id).first()
 
     otherUser = User.query.filter_by(email=email).first()
-    if otherUser:
+    if otherUser is not None and otherUser != user:
         return jsonify({
             "error": "email already in use"
         })
@@ -101,6 +101,12 @@ def setPhone():
     id = request.json["id"]
     phone = request.json["phone"]
     user = User.query.filter_by(id=id).first()
+
+    otherUser = User.query.filter_by(phonenumber=phone).first()
+    if otherUser is not None and otherUser != user:
+        return jsonify({
+            "error": "phone number is already in use"
+        })
 
     user.phonenumber = phone
 
@@ -170,8 +176,6 @@ def createEvent():
     eventStart = eastern.localize(datetime.strptime(n["eventStart"], date_format))
     eventEnd = eastern.localize(datetime.strptime(n["eventEnd"], date_format))
 
-    print(eventStart)
-    print(eventStart)
 
     eventBuilding = n["eventBuilding"]
     eventRoom = n["eventRoom"]
@@ -281,7 +285,6 @@ def getEventsByUser(userid):
     else:
         for event in events:
             dt = datetime.now();
-            print(dt, event.eventEnd)
             if dt <= event.eventEnd:
                 final.append(event.serialize())
 
@@ -323,7 +326,6 @@ def getEventsByUser(userid):
 def search():
     query = request.args.get('searchbar')
     location_filters = request.args.get('filters').split(',')
-    print(location_filters)
     if location_filters[0] == "":
         location_filters = []
     filtered_results = []
@@ -336,7 +338,7 @@ def search():
     else:
         filtered_results = Event.query.all()
     
-    print(filtered_results)
+
 
     return jsonify([e.serialize() for e in filtered_results])
 

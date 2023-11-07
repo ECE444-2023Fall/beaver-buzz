@@ -13,10 +13,7 @@ function Navbar() {
         userId,
         setUserId
     } = useUserContext()
-    useEffect(() => {
-        console.log("hi")
-        console.log(userId)
-    });
+
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);

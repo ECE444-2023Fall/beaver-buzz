@@ -75,13 +75,10 @@ const UserPage=()=> {
                     data[i].organizerID,
                     data[i].registered
                 );
-                console.log(event);
                 eventsArray.push(event);
 
             }
             setEvents(eventsArray);
-            console.log("above print");
-            console.log(events);
         });
 
 
@@ -99,7 +96,7 @@ const UserPage=()=> {
                     },
                     body: JSON.stringify({id: userId})
                 }
-                fetch('/api/getInfo', requestOptions)
+                fetch('/api/getUserInfo', requestOptions)
                     .then(response => response.json())
                     .then(data => {
                         setEmail(data.emailaddr)
@@ -116,7 +113,6 @@ const UserPage=()=> {
 
         fetchUser();
         fetchEvents("Attending", showPastEvents);
-        console.log(events);
 
     }, []);
     const firstNameRef = useRef(null);
@@ -136,7 +132,6 @@ const UserPage=()=> {
             fetch('/api/setFirstname', requestOptions)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
                 });
                         event.target.value = newValue
             setFirstName(newValue)
@@ -161,7 +156,6 @@ const UserPage=()=> {
             fetch('/api/setLastname', requestOptions)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
                 });
             //event.target.value = newValue
             setLastName(newValue)
@@ -174,7 +168,7 @@ const UserPage=()=> {
     const submitEmail = event => {
         setEmailDisabled(true)
         const newValue = emailRef.current.value;
-        if (newValue !== lastName) {
+        if (newValue !== lastName && newValue != email) {
             const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (emailRegex.test(newValue)) {
                 const requestOptions = {
@@ -187,7 +181,14 @@ const UserPage=()=> {
                 fetch('/api/setEmail', requestOptions)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data)
+                        if(data.error != null) {
+                            alert("Error: " + data.error)
+                            event.target.value = email;
+                        }
+                        else {
+                            event.target.value = newValue
+                            setEmail(newValue);
+                        }
                     });
 
             } else {
@@ -204,7 +205,7 @@ const UserPage=()=> {
         setPhoneDisabled(true)
         const phoneNumberRegex = /^\d{3}-\d{3}-\d{4}$/;
         const newValue = event.target.value
-        if (phoneNumberRegex.test(newValue)) {
+        if (phoneNumberRegex.test(newValue) && newValue != phone) {
 
             const requestOptions = {
                 method: "POST",
@@ -216,10 +217,15 @@ const UserPage=()=> {
             fetch('/api/setPhone', requestOptions)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
-                    if (data.status) {
-                        event.target.value = newValue
+                    if(data.error != null) {
+                        alert("Error: " + data.error)
+                        event.target.value = phone;
                     }
+                    else {
+                        event.target.value = newValue
+                        setPhone(newValue);
+                    }
+
                 });
             // this is a valid email address
             // call setState({email: email}) to update the email
@@ -246,7 +252,6 @@ const UserPage=()=> {
             fetch('/api/setInterests', requestOptions)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
                     if (data.status) {
                         event.target.value = newValue
                     }
@@ -292,8 +297,6 @@ const UserPage=()=> {
 
     async function onOptionChange(value) {
         setEvents([]);
-        console.log(value);
-        console.log(showPastEvents);
         fetchEvents(value, showPastEvents)
         await setValue(value);
     }
@@ -301,8 +304,6 @@ const UserPage=()=> {
     async function onCheck() {
         setEvents([]);
          await setShowPastEvents(!showPastEvents);
-         console.log(value);
-        console.log(!showPastEvents);
         fetchEvents(value, !showPastEvents);
 
 
