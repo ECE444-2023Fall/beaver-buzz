@@ -12,7 +12,7 @@ const DiscoverPage=()=>{
     const onSubmit = (data) => {
         console.log(data);
         var temp_data = {"filters": []}
-        var filters = ["Bahen", "Myhal", "Sanford Fleming", "Robarts", "Rotman"]
+        var filters = ["Bahen", "Myhal", "Sanford Fleming", "Robarts", "Rotman", "Galbraith", "Trinity Bellwoods", "Queens Park"]
         for (const key in data) { 
             console.log(key)
             if(key == "searchbar"){
@@ -87,7 +87,7 @@ const DiscoverPage=()=>{
                             <Form.Check
                                 type={"checkbox"}
                                 id={`default-checkbox`}
-                                label={`Galbtaith`}
+                                label={`Galbraith`}
                                 {...register("Galbraith", { required: false})}
                             />
                             <Form.Check
