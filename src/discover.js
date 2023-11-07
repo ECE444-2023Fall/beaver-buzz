@@ -15,7 +15,7 @@ const DiscoverPage=()=>{
     const onSubmit = (data) => {
         console.log(data);
         var temp_data = {"filters": []}
-        var filters = ["Bahen", "Myhal", "Sanford Fleming", "Robarts", "Rotman"]
+        var filters = ["Bahen", "Myhal", "Sanford Fleming", "Robarts", "Rotman", "Galbraith", "Trinity Bellwoods", "Queens Park"]
         for (const key in data) { 
             console.log(key)
             if(key == "searchbar"){
@@ -89,10 +89,29 @@ const DiscoverPage=()=>{
                             />
                             <Form.Check
                                 type={"checkbox"}
+                                id={`default-checkbox`}
+                                label={`Galbraith`}
+                                {...register("Galbraith", { required: false})}
+                            />
+                            <Form.Check
+                                type={"checkbox"}
+                                id={`default-checkbox`}
+                                label={`Trinity Bellwoods`}
+                                {...register("Trinity Bellwoods", { required: false})}
+                            />
+                            <Form.Check
+                                type={"checkbox"}
+                                id={`default-checkbox`}
+                                label={`Queen's Park`}
+                                {...register("Queens Park", { required: false})}
+                            />
+                            <Form.Check
+                                type={"checkbox"}
                                 label={`Rotman`}
                                 id={`disabled-default-checkbox`}
                                 {...register("Rotman", { required: false})}
                             />
+                            
                         </div>
                     </Form>
             </div>

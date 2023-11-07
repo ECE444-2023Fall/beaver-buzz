@@ -1,0 +1,34 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+
+#eventContainer {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin: 50px auto;
+    padding: 20px;
+    max-width: 600px;
+}
+
+#eventTitle {
+    font-size: 30px;
+    color: #333;
+}
+
+#eventDescription {
+    font-size: 18px;
+    color: #666;
+}
+
+#eventImage {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+#eventInfo {
+    font-size: 16px;
+    text-align: left;
+}

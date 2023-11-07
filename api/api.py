@@ -131,7 +131,6 @@ def setInterests():
         "status": "updated interests"
     })
 
-
 @app.route("/api/register", methods=["POST"])
 def register():
     email = request.json["email"]
@@ -159,12 +158,16 @@ def register():
     db.session.commit()
 
     return jsonify({"greeting": "Welcome, " + newaccount.firstname})
-
 # route /events/<id> to get a specific event
 @app.route("/api/events/<id>", methods=["GET"])
 def getEvent(id):
     event = Event.query.filter_by(id=id).first()
-    return jsonify(event.serialize())
+    if event is not None:
+        user = User.query.filter_by(id=event.organizerID).first()
+        event.organizerID = user.firstname + " " + user.lastname
+        return jsonify(event.serialize())
+    return jsonify({"error": "Event not found"}), 420
+
 
 @app.route("/api/events/new", methods=["POST"])
 def createEvent():
@@ -181,6 +184,7 @@ def createEvent():
     eventRoom = n["eventRoom"]
     oneLiner = n["oneLiner"]
 
+
     organizer = User.query.filter_by(id=organizerID).first()
     if not organizer:
         return jsonify({"Error": "Organizer does not exist"})
@@ -191,11 +195,13 @@ def createEvent():
         eventEnd=eventEnd,
         eventBuilding=eventBuilding,
         eventRoom=eventRoom,
-        oneLiner=oneLiner)
-    
+        oneLiner=oneLiner,
+    )
+
     db.session.add(newevent)
     db.session.commit()
     return jsonify(newevent.serialize())
+
 
 @app.route("/api/events/<eventid>/register/<userid>", methods=["POST"])
 def registerEvent(eventid, userid):
@@ -206,6 +212,7 @@ def registerEvent(eventid, userid):
     db.session.commit()
     return jsonify(event.serialize())
 
+
 @app.route("/api/events/<eventid>/unregister/<userid>", methods=["POST"])
 def unregisterEvent(eventid, userid):
     event = db.get_or_404(Event, eventid)
@@ -215,12 +222,15 @@ def unregisterEvent(eventid, userid):
     db.session.commit()
     return jsonify(event.serialize())
 
+
 # TODO: below functions to be further implemented and used by Vishnu and Tracy for discover page
+
 
 @app.route("/api/events/all", methods=["GET"])
 def getEvents():
     events = Event.query.all()
     return jsonify([e.serialize() for e in events])
+
 
 @app.route("/api/events/<eventid>/update", methods=["POST"])
 def updateEvent(eventid, name, date, time, location):
@@ -232,6 +242,7 @@ def updateEvent(eventid, name, date, time, location):
     db.session.commit()
     return jsonify(event.serialize())
 
+
 @app.route("/api/events/<eventid>/delete", methods=["POST"])
 def deleteEvent(eventid):
     event = Event.query.filter_by(id=eventid).first()
@@ -239,11 +250,13 @@ def deleteEvent(eventid):
     db.session.commit()
     return jsonify(event.serialize())
 
+
 @app.route("/api/users/<userid>/events", methods=["GET"])
 def getRegisteredEvents(userid):
     user = User.query.filter_by(id=userid).first()
     events = user.events
     return jsonify([e.serialize() for e in events])
+
 
 @app.route("/api/events/<eventid>/registered", methods=["GET"])
 def getRegisteredUsers(eventid):
@@ -251,21 +264,25 @@ def getRegisteredUsers(eventid):
     users = event.users
     return jsonify([u.serialize() for u in users])
 
+
 # route get events by date
 @app.route("/api/events/dates", methods=["GET"])
 def getEventsByDate(date):
     events = Event.query.filter_by(date=date).all()
     return jsonify([e.serialize() for e in events])
 
+
 @app.route("/api/events/location", methods=["GET"])
 def getEventsByLocation(location):
     events = Event.query.filter_by(location=location).all()
     return jsonify([e.serialize() for e in events])
 
+
 @app.route("/api/events/interest", methods=["GET"])
 def getEventsByInterest(interest):
     events = Event.query.filter(Event.interests.like("%" + interest + "%")).all()
     return jsonify([e.serialize() for e in events])
+
 
 @app.route("/events/category", methods=["GET"])
 def getEventsByCategory(category):
@@ -273,6 +290,7 @@ def getEventsByCategory(category):
     return jsonify([e.serialize() for e in events])
 
 @app.route("/api/users/<userid>/events", methods=["POST"])
+
 def getEventsByUser(userid):
     request_value = request.json
     user = User.query.filter_by(id=userid).first()
@@ -291,36 +309,6 @@ def getEventsByUser(userid):
 
     return jsonify(final)
 
-# @app.route('/api/searchtest', methods=['GET'])
-# @cross_origin()
-# def search_test():
-#     from datetime import datetime
-#     import pandas as pd
-
-#     # Create a dictionary with data for the DataFrame
-#     data = {
-#         'EventName': ['Halloween', 'Christmas', 'Diwali', 'Holi', 'Resume Workshop', 'ECE444 Study Session'],
-#         'Location': ['Bahen', 'Bahen', 'Queens Park', 'Trinity Bellwoods', 'Sanford Fleming', 'Galbraith'],
-#         'Organizer': ['UserA', 'UserB', 'UserC', 'UserC', 'UserD', 'UserE'],
-#         'Academic': [False, False,False,False,True,True]
-#     }
-
-#     possible_results = pd.DataFrame(data)
-#     Event.query.delete()
-#     db.session.commit()
-#     for i in range(len(data['EventName'])):
-#         newevent = Event(eventName=data['EventName'][i],
-#             organizerID=i,
-#             eventStart=datetime.now(),
-#             eventEnd=datetime.now(),
-#             eventBuilding=data['Location'][i],
-#             eventRoom="2155",
-#             oneLiner="have fun!")
-        
-#         db.session.add(newevent)
-#     db.session.commit()
-
-
 @app.route('/api/search', methods=['GET'])
 @cross_origin()
 def search():
@@ -337,8 +325,5 @@ def search():
         filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
     else:
         filtered_results = Event.query.all()
-    
-
 
     return jsonify([e.serialize() for e in filtered_results])
-

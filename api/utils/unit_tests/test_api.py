@@ -87,3 +87,4 @@ def test_search(client, populate_db):
         assert("ECE444" in temp[i]['eventName'])
 
 
+
