@@ -24,6 +24,7 @@ export default function EventPage() {
                         return response.json();
                     }
                     return response.json().then((error) => {
+                        console.log("Event does not exist.")
                         throw new Error(error);
                     })
                 })
