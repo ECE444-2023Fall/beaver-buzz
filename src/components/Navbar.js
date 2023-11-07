@@ -33,13 +33,13 @@ function Navbar() {
                             </Link>
                         </li>
                         <li className='nav-item'>
-                            <Link to='/host' className='nav-links' onClick={closeMobileMenu}>
-                                Host
+                            <Link to='/new_event' className='nav-links' onClick={closeMobileMenu}>
+                                New Event
                             </Link>
                         </li>
                         <li className='nav-item'>
-                            <Link to='/blah' className='nav-links' onClick={closeMobileMenu}>
-                                Blah
+                            <Link to='/profile' className='nav-links' onClick={closeMobileMenu}>
+                                Profile
                             </Link>
                         </li>
 
