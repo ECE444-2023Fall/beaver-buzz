@@ -3,6 +3,23 @@
 ## About
 BeaverBuzz is a community-based event-sharing platform that enables clubs and organizers to post events and reach out to the University of Toronto (UofT) student community. It also allows UofT students to explore new communities and discover new interests and activities. This app aims to create a better-connected student body at UofT and provide access to a range of extracurricular activities. 
 
+## How to Use this Repo
+* Pull the Repo: use  `git clone`
+* Set up the virtual environment using the following steps
+    1. `cd api/`
+    2. `pip install virtualenv`
+    3. `virtualenv venv`
+    4. `source venv/bin/activate` (for windows, use the following command: `.\venv\Scripts\activate`)
+    5. `pip install -r requirements.txt`
+* You will need to install yarn to run the apps: [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/) (you may need to install [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to install yarn)
+* To run the Frontend React App  (the React app uses App.js to show the frontend):
+    * Use `yarn start`
+    * This will open at http://localhost:3000/
+* To run Backend Flask App (the flask app uses api.py to display the backend and interact with the database):
+    * Enter your virtual environment: `source venv/bin/activate` (for windows, use the following command: `.\venv\Scripts\activate`)
+    * Then use `yarn start-api` to run
+    * This will open at http://localhost:5000/ (if that doesn't work, try http://127.0.0.1:5000/)
+
 ## Features
 * **Event information**: date, time, location, additional details, flyer, comment section
 * **Events discovery:** see events users with similar interests have RSVPed and trending events
