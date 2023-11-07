@@ -55,7 +55,6 @@ def register():
 # route /events/<id> to get a specific event
 @app.route("/api/events/<id>", methods=["GET"])
 def getEvent(id):
-    print(id)
     event = Event.query.filter_by(id=id).first()
     if event is not None:
         user = User.query.filter_by(id=event.organizerID).first()
