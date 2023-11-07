@@ -8,7 +8,7 @@ import {useUserContext} from './UserContext'
 import {Button, Image} from "react-bootstrap";
 import UploadAvatar from "./components/Avatar";
 import defaultImage from "./images/defaultEvent.png"
-import moment from "moment-timezone";
+import { useNavigate } from "react-router-dom";
 
 export class Event {
     constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
@@ -29,10 +29,13 @@ export class Event {
 
 
 const ProfilePage=()=> {
+    const navigate = useNavigate();
     const {
         userId,
         setUserId
     } = useUserContext()
+
+
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [interests, setInterests] = useState("")
@@ -82,12 +85,17 @@ const ProfilePage=()=> {
             setEvents(eventsArray);
         });
 
-
-
+        }
+        else {
+            navigate('/login')
         }
     }
 
     useEffect( () => {
+        if(userId == 'null') {
+            navigate('/login');
+            return;
+        }
         function fetchUser() {
             if (userId != null) {
                 const requestOptions = {

@@ -16,10 +16,14 @@ import defaultImage from "./images/defaultEvent.png"
 const UserPage=()=> {
     const params = useParams();
     const requestedUserId = params.id;
+    const navigate = useNavigate();
     const {
         userId,
         setUserId
     } = useUserContext()
+
+
+
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [interests, setInterests] = useState("")
@@ -27,10 +31,7 @@ const UserPage=()=> {
     const [lastName, setLastName] = useState("")
     const [events, setEvents] = useState([]);
 
-    const navigate = useNavigate();
-
     function fetchEvents() {
-    //if (userId != null) {
         if(requestedUserId == userId){
             navigate('/profile');
             return;
@@ -72,16 +73,17 @@ const UserPage=()=> {
             }
             setEvents(eventsArray);
         });
-        //}
-        // else {
-        //     navigate('/login')
-        // }
     }
 
     useEffect( () => {
+
+        if(userId == 'null') {
+            navigate('/login');
+            return;
+        }
         function fetchUser() {
-            console.log(requestedUserId);
-            //if (userId != null) {
+
+
                 const requestOptions = {
                     method: "POST",
                     headers: {
@@ -98,7 +100,6 @@ const UserPage=()=> {
                         setLastName(data.lastname)
                         setInterests(data.interests)
                     });
-            //}
         }
 
 
