@@ -1,7 +1,0 @@
-id,password,firstname,lastname,email,phonenumber,created_at,interests
-0,password123,Shurui,Zhou,preempotatoes@gmail.com,1112223333,,ECE444
-1,passwordabc,Alan,Du,preempotatoes@gmail.com,1234567890,,microservices
-2,password456,Shashank,Motepalli,preempotatoes@gmail.com,0246810121,,agile development
-3,passworddef,Keerthi,Nelaturu,preempotatoes@gmail.com,1357911131,,flask
-4,password789,Rohith,Pudari,preempotatoes@gmail.com,0123456789,,docker
-5,passwordghi,Jiayi,Sun,preempotatoes@gmail.com,9876543210,,Unit Tests
