@@ -4,6 +4,10 @@ from flask_cors import CORS, cross_origin
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event
 import bcrypt
+from datetime import datetime
+from pytz import timezone
+
+eastern = timezone('EST')
 
 app = Flask(__name__)
 app.config.from_object(Configuration)
@@ -23,8 +27,109 @@ def login():
     if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password):
         return jsonify({"error": "Invalid username or password"}), 425
 
-    return jsonify({"greeting": "Welcome, " + user.firstname, "id": user.id})
+    return jsonify({
+        "greeting": "Welcome, " + user.firstname,
+        "id": user.id
+    })
 
+@app.route("/api/getUserInfo", methods=["POST"])
+def getInfo():
+    id = request.json["id"]
+
+    user = User.query.filter_by(id=id).first()
+
+    return jsonify({
+        "firstname": user.firstname,
+        "lastname": user.lastname,
+        "phonenumber": user.phonenumber,
+        "emailaddr": user.email,
+        "interests": user.interests,
+    })
+
+
+@app.route("/api/setEmail", methods=["POST"])
+def setEmail():
+    id = request.json["id"]
+    email = request.json["email"]
+    user = User.query.filter_by(id=id).first()
+
+    otherUser = User.query.filter_by(email=email).first()
+    if otherUser is not None and otherUser != user:
+        return jsonify({
+            "error": "email already in use"
+        })
+    user.email = email
+    db.session.commit()
+
+    return jsonify({
+        "status": "updated email"
+    })
+
+
+
+
+@app.route("/api/setLastname", methods=["POST"])
+def setLastname():
+    id = request.json["id"]
+    lastname = request.json["lastname"]
+    user = User.query.filter_by(id=id).first()
+
+    user.lastname = lastname
+    db.session.commit()
+
+    return jsonify({
+        "status": "updated last name"
+    })
+
+
+@app.route("/api/setFirstname", methods=["POST"])
+def setFirstname():
+    id = request.json["id"]
+    firstname = request.json["firstname"]
+    user = User.query.filter_by(id=id).first()
+
+    user.firstname = firstname
+    db.session.commit()
+
+    return jsonify({
+        "status": "updated first name"
+    })
+
+
+@app.route("/api/setPhone", methods=["POST"])
+def setPhone():
+    id = request.json["id"]
+    phone = request.json["phone"]
+    user = User.query.filter_by(id=id).first()
+
+    otherUser = User.query.filter_by(phonenumber=phone).first()
+    if otherUser is not None and otherUser != user:
+        return jsonify({
+            "error": "phone number is already in use"
+        })
+
+    user.phonenumber = phone
+
+    db.session.commit()
+
+    return jsonify({
+        "status": "updated phone"
+    })
+
+
+@app.route("/api/setInterests", methods=["POST"])
+def setInterests():
+    id = request.json["id"]
+    interests = request.json["interests"]
+    user = User.query.filter_by(id=id).first()
+
+    user.interests = interests
+
+    db.session.commit()
+
+    return jsonify({
+        "status": "updated interests"
+    })
 
 @app.route("/api/register", methods=["POST"])
 def register():
@@ -69,14 +174,22 @@ def createEvent():
     n = request.json
     eventName = n["eventName"]
     organizerID = n["organizerID"]
-    eventStart = n["eventStart"]
-    eventEnd = n["eventEnd"]
+    tz = timezone('EST')
+    date_format = "%Y-%m-%d %H:%M:%S"
+    eventStart = eastern.localize(datetime.strptime(n["eventStart"], date_format))
+    eventEnd = eastern.localize(datetime.strptime(n["eventEnd"], date_format))
+
+
     eventBuilding = n["eventBuilding"]
     eventRoom = n["eventRoom"]
     oneLiner = n["oneLiner"]
 
-    newevent = Event(
-        eventName=eventName,
+
+    organizer = User.query.filter_by(id=organizerID).first()
+    if not organizer:
+        return jsonify({"Error": "Organizer does not exist"})
+
+    newevent = Event(eventName=eventName,
         organizerID=organizerID,
         eventStart=eventStart,
         eventEnd=eventEnd,
@@ -176,12 +289,25 @@ def getEventsByCategory(category):
     events = Event.query.filter(Event.categories.any(name=category)).all()
     return jsonify([e.serialize() for e in events])
 
+@app.route("/api/users/<userid>/events", methods=["POST"])
 
-@app.route("/api/users/<userid>/events", methods=["GET"])
 def getEventsByUser(userid):
+    request_value = request.json
     user = User.query.filter_by(id=userid).first()
-    events = user.events
-    return jsonify([e.serialize() for e in events])
+    events = user.registeredEvents if request_value['option'] == 'Attending' else user.organizedEvents
+    final = []
+    if request_value['showPastEvents']:
+        for event in events:
+            final.append(event.serialize())
+
+    else:
+        for event in events:
+            dt = datetime.now();
+            if dt <= event.eventEnd:
+                final.append(event.serialize())
+
+
+    return jsonify(final)
 
 @app.route('/api/search', methods=['GET'])
 @cross_origin()
@@ -199,4 +325,5 @@ def search():
         filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
     else:
         filtered_results = Event.query.all()
+
     return jsonify([e.serialize() for e in filtered_results])

@@ -2,15 +2,18 @@ import React, {useState} from 'react'
 import {Form,Button} from 'react-bootstrap'
 import "./form.css"
 import {Grid} from "semantic-ui-react"
-import {Link} from "react-router-dom"
+import {Link, redirect, useNavigate} from "react-router-dom"
 import {useForm} from "react-hook-form";
-import UserContext from './UserContext';
-import { useContext } from 'react';
+import {useUserContext} from "./UserContext";
 
 const LoginPage=()=>{
     const[credentialsValid, setCredentials] = useState(true)
     const[greeting, setGreeting] = useState('')
-    const[userId, setUserId] = useContext(UserContext);
+    const navigate = useNavigate();
+    const  {
+        userId,
+        setUserId
+    } = useUserContext()
 
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = (data) => {
@@ -35,6 +38,9 @@ const LoginPage=()=>{
             }
             if (data.id) {
                 setUserId(data.id);
+                console.log(data.id)
+                console.log(userId)
+                navigate("/profile")
             }
             console.log(data)
         });
