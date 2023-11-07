@@ -14,21 +14,21 @@ function App() {
 
   return (
     <UserProvider>
-    <div className="App">
+      <div className="App">
         <Router>
           <Navbar />
           <Routes>
              <Route exact path='/' element={<DiscoverPage/>}/>
-             <Route exact path='/login' element={<LoginPage/>}/>
-              <Route exact path='/register' element={<RegisterPage/>}/>
-              <Route exact path='/events' element={<EventPage/>}/> 
-              {/* The above is a temp page to display event info */}
+            <Route exact path='/login' element={<LoginPage />} />
+            <Route exact path='/register' element={<RegisterPage />} />
+            <Route path='/events/:id' element={<EventPage />} />
+            {/* The above is a temp page to display event info */}
             <Route path='/' exact />
           </Routes>
         </Router>
-      
-      
-      {/* <header className="App-header">
+
+
+        {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -44,7 +44,7 @@ function App() {
         </a>
         <p>The current time is {currentTime}.</p>
       </header> */}
-    </div>
+      </div>
     </UserProvider>
   );
 }
