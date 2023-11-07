@@ -86,10 +86,29 @@ const DiscoverPage=()=>{
                             />
                             <Form.Check
                                 type={"checkbox"}
+                                id={`default-checkbox`}
+                                label={`Galbtaith`}
+                                {...register("Galbraith", { required: false})}
+                            />
+                            <Form.Check
+                                type={"checkbox"}
+                                id={`default-checkbox`}
+                                label={`Trinity Bellwoods`}
+                                {...register("Trinity Bellwoods", { required: false})}
+                            />
+                            <Form.Check
+                                type={"checkbox"}
+                                id={`default-checkbox`}
+                                label={`Queen's Park`}
+                                {...register("Queens Park", { required: false})}
+                            />
+                            <Form.Check
+                                type={"checkbox"}
                                 label={`Rotman`}
                                 id={`disabled-default-checkbox`}
                                 {...register("Rotman", { required: false})}
                             />
+                            
                         </div>
                     </Form>
             </div>

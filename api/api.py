@@ -169,42 +169,11 @@ def getEventsByUser(userid):
     events = user.events
     return jsonify([e.serialize() for e in events])
 
-# @app.route('/api/searchtest', methods=['GET'])
-# @cross_origin()
-# def search_test():
-#     from datetime import datetime
-#     import pandas as pd
-
-#     # Create a dictionary with data for the DataFrame
-#     data = {
-#         'EventName': ['Halloween', 'Christmas', 'Diwali', 'Holi', 'Resume Workshop', 'ECE444 Study Session'],
-#         'Location': ['Bahen', 'Bahen', 'Queens Park', 'Trinity Bellwoods', 'Sanford Fleming', 'Galbraith'],
-#         'Organizer': ['UserA', 'UserB', 'UserC', 'UserC', 'UserD', 'UserE'],
-#         'Academic': [False, False,False,False,True,True]
-#     }
-
-#     possible_results = pd.DataFrame(data)
-#     Event.query.delete()
-#     db.session.commit()
-#     for i in range(len(data['EventName'])):
-#         newevent = Event(eventName=data['EventName'][i],
-#             organizerID=i,
-#             eventStart=datetime.now(),
-#             eventEnd=datetime.now(),
-#             eventBuilding=data['Location'][i],
-#             eventRoom="2155",
-#             oneLiner="have fun!")
-        
-#         db.session.add(newevent)
-#     db.session.commit()
-
-
 @app.route('/api/search', methods=['GET'])
 @cross_origin()
 def search():
     query = request.args.get('searchbar')
     location_filters = request.args.get('filters').split(',')
-    print(location_filters)
     if location_filters[0] == "":
         location_filters = []
     filtered_results = []
@@ -216,8 +185,5 @@ def search():
         filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
     else:
         filtered_results = Event.query.all()
-    
-    print(filtered_results)
-
     return jsonify([e.serialize() for e in filtered_results])
 
