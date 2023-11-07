@@ -3,10 +3,17 @@ import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from './Button';
 import './Navbar.css';
+import {useUserContext} from "../UserContext";
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
+
+  const  {
+        userId,
+        setUserId
+    } = useUserContext()
+
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -43,13 +50,16 @@ function Navbar() {
                         </Link>
                     </li>
                     <li className='nav-item'>
-                        <Link to='/login' className='nav-links' onClick={closeMobileMenu}>
+                        {!userId ? <Link to='/login' className='nav-links' onClick={closeMobileMenu}>
                             Login
-                        </Link>
+                        </Link> : <Link className='nav-links' onClick={() =>{closeMobileMenu(); setUserId(null)}} to={'/'}>
+                            Logout
+                        </Link>}
+
                     </li>
                     
                 </ul>
-                {button && <Button buttonStyle='btn--outline' linkTo='/register'>SIGN UP</Button>}
+                {button && !userId && <Button buttonStyle='btn--outline' linkTo='/register'>SIGN UP</Button>}
             </div>
         </nav>
     </>
