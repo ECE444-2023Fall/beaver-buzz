@@ -66,8 +66,9 @@ export default function EventPage() {
                     <body>
                         <div id="eventContainer">
                             <h1 id="eventTitle">{data.eventName}</h1>
-                            <p id="eventDescription">{data.eventDesc}</p>
+                            <p id="eventOneLiner">{data.oneLiner}</p>
                             <img id="eventImage" src={data.eventImg ? data.eventImg : eventDefault} alt="Event"></img>
+                            <p id="eventDescription">{data.eventDesc}</p>
                             <div id="eventInfo">
                                 <p><strong>Organizer: </strong>{data.organizerID}</p>
                                 <p><strong>Date and Time: </strong>{data.eventStart}</p>
