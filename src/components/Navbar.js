@@ -52,7 +52,7 @@ function Navbar() {
                     <li className='nav-item'>
                         {!userId ? <Link to='/login' className='nav-links' onClick={closeMobileMenu}>
                             Login
-                        </Link> : <Link className='nav-links' onClick={() =>{closeMobileMenu(); setUserId(null); localStorage.setItem('user', null)}} to={'/'}>
+                        </Link> : <Link className='nav-links' onClick={() =>{closeMobileMenu(); setUserId(null)}} to={'/'}>
                             Logout
                         </Link>}
 
