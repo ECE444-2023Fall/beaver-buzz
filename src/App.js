@@ -8,7 +8,7 @@ import DiscoverPage from "./discover";
 import {BrowserRouter as Router, Routes, Route, BrowserRouter} from 'react-router-dom';
 import { UserProvider } from './UserContext';
 import ProfilePage from "./Profile";
-import UserPage from './UserProfile';
+import UserPage from './userProfile';
 
 function App() {
 
