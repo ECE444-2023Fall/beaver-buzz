@@ -2,13 +2,20 @@ import React, {useState} from 'react'
 import {Form,Button} from 'react-bootstrap'
 import "./form.css"
 import {Grid} from "semantic-ui-react"
-import {Link} from "react-router-dom"
+import {Link, redirect, useNavigate} from "react-router-dom"
 import {useForm} from "react-hook-form";
+import {useUserContext} from "./UserContext";
+
 const LoginPage=()=>{
     const[credentialsValid, setCredentials] = useState(true)
     const[greeting, setGreeting] = useState('')
+    const navigate = useNavigate();
+    const  {
+        userId,
+        setUserId
+    } = useUserContext()
 
-     const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = (data) => {
         console.log(data);
         const requestOptions={
@@ -21,15 +28,21 @@ const LoginPage=()=>{
         fetch('/api/login', requestOptions)
         .then(response => response.json())
         .then(data => {
-        if(data.greeting) {
-            setCredentials(true);
-            setGreeting(data.greeting);
-        }
-        else {
-            setCredentials(false);
-            setGreeting('');
-        }
-        console.log(data)
+            if(data.greeting) {
+                setCredentials(true);
+                setGreeting(data.greeting);
+            }
+            else {
+                setCredentials(false);
+                setGreeting('');
+            }
+            if (data.id) {
+                setUserId(data.id);
+                console.log(data.id)
+                console.log(userId)
+                navigate("/profile")
+            }
+            console.log(data)
         });
     }
 
