@@ -9,6 +9,7 @@ import {Button, Image} from "react-bootstrap";
 import UploadAvatar from "./components/Avatar";
 import defaultImage from "./images/defaultEvent.png"
 import { useNavigate } from "react-router-dom";
+import Multiselect from "multiselect-react-dropdown";
 
 export class Event {
     constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
@@ -43,6 +44,14 @@ const ProfilePage=()=> {
     const [lastName, setLastName] = useState("")
 
     const [events, setEvents] = useState([]);
+    const [privacy, setPrivacy] = useState({})
+
+
+    const state = {
+        options: [{name: 'Show contact information', id: 1},{name: 'Show events you are attending', id: 2}]
+    };
+
+    const [selectedValues, setSelectedValues] = useState([])
 
     function fetchEvents(option, showPastEvents) {
     if (userId != null) {
@@ -53,7 +62,7 @@ const ProfilePage=()=> {
         headers:{
            'content-type':'application/json'
         },
-        body:JSON.stringify({option: option, showPastEvents: showPastEvents})
+        body:JSON.stringify({option: option, showPastEvents: showPastEvents, myID: userId})
         }
 
         fetch('/api/users/' + userId + '/events', requestOptions)
@@ -103,7 +112,7 @@ const ProfilePage=()=> {
                     headers: {
                         'content-type': 'application/json'
                     },
-                    body: JSON.stringify({id: userId})
+                    body: JSON.stringify({id: userId, myID: userId})
                 }
                 fetch('/api/getUserInfo', requestOptions)
                     .then(response => response.json())
@@ -113,6 +122,15 @@ const ProfilePage=()=> {
                         setFirstName(data.firstname)
                         setLastName(data.lastname)
                         setInterests(data.interests)
+                        setPrivacy(data.privacy);
+                        var values = []
+                        if(data.privacy['showContactInformation']) {
+                            values.push(state.options[0])
+                        }
+                        if(data.privacy['showRegisteredEvents']) {
+                            values.push(state.options[1])
+                        }
+                        setSelectedValues(values)
                     });
             }
         }
@@ -315,11 +333,49 @@ const ProfilePage=()=> {
          await setShowPastEvents(!showPastEvents);
         fetchEvents(value, !showPastEvents);
 
+    }
+    function privacyChanged(value) {
+        var showContactInformation = false;
+        var showRegisteredEvents = false;
+        for (var v in value) {
+            if(value[v].name == 'Show contact information') {
+                showContactInformation = true;
+            }
+            else if(value[v].name == 'Show events you are attending') {
+                showRegisteredEvents = true;
+            }
+        }
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({id: userId, showContactInfo: showContactInformation, showRegisteredEvents: showRegisteredEvents})
+        }
+        fetch('/api/setPrivacy', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    console.log('success');
+                }
+            });
 
     }
 
     return(
         <div className="mainFlexBox">
+                <div className="privacy">
+                    <Multiselect    
+                    options={state.options} // Options to display in the dropdown
+                    selectedValues={selectedValues} // Preselected value to persist in dropdown
+                    showCheckbox='true'
+                    placeholder='Privacy settings'
+                    
+                    onSelect={privacyChanged} // Function will trigger on select event
+                    onRemove={privacyChanged} // Function will trigger on remove event
+                    displayValue="name" // Property name to display in the dropdown options
+                    />
+                </div>
             <div className="flexbox-user-container">
                 <UploadAvatar/>
                 <div className="person-name-font">{firstName} {lastName}</div>
@@ -419,6 +475,9 @@ const ProfilePage=()=> {
                                 }} className="pencilButton"><img src={pencilIcon} alt={"broken"}/></Button>
                             </div>
                     </div>
+
+            
+
             </div>
 
             <div className="event-wish-list-table">

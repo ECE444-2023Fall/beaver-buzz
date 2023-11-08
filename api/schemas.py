@@ -26,6 +26,9 @@ class User(db.Model):
     interests = db.Column(db.Text)
     # events that this person has organized (1 to many relationship)
     organizedEvents = db.relationship("Event", backref="user")
+    showContactInfo = db.Column(db.Boolean, default=True)
+    showRegisteredEvents = db.Column(db.Boolean, default=True)
+
     # events that this person is attending
     registeredEvents = db.relationship(
         "Event", secondary=event_attendance, backref="users"
@@ -43,10 +46,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<Student {self.firstname}, {self.lastname}>"
-    
+
     def serialize(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
+    def serialize(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 # Database Schema for Event Model
 class Event(db.Model):
@@ -91,6 +96,5 @@ class Event(db.Model):
 
     def __repr__(self):
         return f"<Event {self.eventName}>"
-    
     def serialize(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
