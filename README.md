@@ -18,7 +18,7 @@ BeaverBuzz is a community-based event-sharing platform that enables clubs and or
 * To run Backend Flask App (the flask app uses api.py to display the backend and interact with the database):
     * Enter your virtual environment: `source venv/bin/activate` (for windows, use the following command: `.\venv\Scripts\activate`)
     * Then use `yarn start-api` to run
-    * This will open at http://localhost:5000/ (if that doesn't work, try http://127.0.0.1:5000/)
+    * This will open at http://localhost:8000/ (if that doesn't work, try http://127.0.0.1:8000/)
 * To deploy to Heroku:
     * Make sure you have the Heroku CLI installed: [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
     * git push heroku `git subtree split --prefix api steven_dev`:refs/heads/master --force 
@@ -30,9 +30,8 @@ BeaverBuzz is a community-based event-sharing platform that enables clubs and or
 * **Events discovery:** see events users with similar interests have RSVPed and trending events
 * **Search**: by event name, organizer, category, and time
 * **Subcriptions**: users can subscribe to organizers
-*** User information**: users can see the list of their registered events, subscribed organizers, categories on their profile
+* ** User information**: users can see the list of their registered events, subscribed organizers, categories on their profile
 * **Notifications**: choice of email or push notifications prior to events
-* **Calendar**: events users are registered for are downloadable as calendar events
 
 ## Built With
 
