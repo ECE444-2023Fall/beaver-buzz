@@ -34,7 +34,7 @@ export default function EventPage() {
         fetchInfo();
     }, [id]);
 
-    const [userId] = useContext(UserContext);
+    const {userId} = useContext(UserContext);
 
     const register = () => {
         fetch(`/api/events/${id}/register/${userId}`, {

@@ -6,29 +6,38 @@ import '../Login/form.css'
 import {useNavigate} from "react-router-dom";
 import UserContext from '../UserContext';
 
+const getBase64 = blob => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
 export default function HostPage() {
     const { register, handleSubmit } = useForm();
     const [tags, setTags] = useState([]);
     const navigate = useNavigate();
     const {userId} = useContext(UserContext);
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
         data['organizerID'] = userId;
+        data['image'] = await getBase64(data['image'].item(0));
+        console.log(data);
         const requestOptions={
             method:"POST",
             headers:{
                'content-type':'application/json'
             },
             body:JSON.stringify(data)
-            }
-            fetch('/api/events/new', requestOptions)
+        }
+        
+        fetch('/api/events/new', requestOptions)
             .then(response => response.json())
             .then(data => {
-            if(data.event_id) {
-                navigate("/events/" + data.event_id);
-            }
-            console.log(data)
+                if(data['event_id']) {
+                    navigate("/events/" + data.event_id);
+                }
+                console.log(data)
             });
 
     };

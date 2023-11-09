@@ -20,6 +20,11 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
+.host-form div {
+  width: 100%;
+  margin-bottom: .5rem;
+}
+
 .host-button {
   width: 100%;
   padding: 0.5rem;

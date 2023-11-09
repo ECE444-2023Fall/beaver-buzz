@@ -184,8 +184,8 @@ def createEvent():
     eventRoom = n["room"]
     oneLiner = n["oneLiner"]
     eventDesc = n["description"]
-    eventImg = n["eventImg"] #TODO upload their image
-
+    eventImg = n["image"] 
+    
     organizer = User.query.filter_by(id=organizerID).first()
     if not organizer:
         return jsonify({"Error": "Please log in first!"})
