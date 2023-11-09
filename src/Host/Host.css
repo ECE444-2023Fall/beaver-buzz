@@ -40,3 +40,8 @@
 .host-button:hover {
   background-color: #388e3c;
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}

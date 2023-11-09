@@ -5,6 +5,8 @@ import './Host.css';
 import '../Login/form.css'
 import {useNavigate} from "react-router-dom";
 import UserContext from '../UserContext';
+import { MultiSelect } from 'primereact/multiselect';
+        
 
 const getBase64 = blob => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -15,13 +17,28 @@ const getBase64 = blob => new Promise((resolve, reject) => {
 
 export default function HostPage() {
     const { register, handleSubmit } = useForm();
-    const [tags, setTags] = useState([]);
+    const [selectedTags, setTags] = useState(null);
     const navigate = useNavigate();
     const {userId} = useContext(UserContext);
 
+    const tags = [
+        {name: 'Academic'},
+        {name: 'Arts'},
+        {name: 'Career'},
+        {name: 'Cultural'},
+        {name: 'Food'},
+        {name: 'Health'},
+        {name: 'Music'},
+        {name: 'Social'},
+        {name: 'Sports'},
+        {name: 'Technology'},
+        {name: 'Other'}
+    ];
+
     const onSubmit = async (data) => {
+        console.log(data);
         data['organizerID'] = userId;
-        data['image'] = await getBase64(data['image'].item(0));
+        data['image'] = data['image'].length == 0 ? '../images/defaultEvent.png' : await getBase64(data['image'].item(0));
         console.log(data);
         const requestOptions={
             method:"POST",
@@ -40,11 +57,6 @@ export default function HostPage() {
                 console.log(data)
             });
 
-    };
-
-    const handleTagChange = (e) => {
-        const selectedTags = Array.from(e.target.selectedOptions, (option) => option.value);
-        setTags(selectedTags);
     };
 
     return (
@@ -100,19 +112,16 @@ export default function HostPage() {
                 </Form.Group>
 
                 <Form.Group controlId="tags">
-                    <Form.Label>Tags</Form.Label>
-                    <select class="form-control" id="exampleFormControlSelect1" onChange={handleTagChange}>
-                        <option>Tag1</option>
-                        <option>Tag2</option>
-                        <option>Tag3</option>
-                        <option>Tag4</option>
-                    </select>
-                    {/* <Form.Control as="select" multiple onChange={handleTagChange}>
-                        <option value="music">Music</option>
-                        <option value="food">Food</option>
-                        <option value="sports">Sports</option>
-                        <option value="art">Art</option>
-                    </Form.Control> */}
+                    <Form.Label>Select related topics</Form.Label>
+                    <div className="dropdown">
+                     <MultiSelect 
+                        value={selectedTags} 
+                        onChange={(e) => setTags(e.value)} 
+                        options={tags} 
+                        optionLabel="name" 
+                        placeholder="Select topics" className="w-full md:w-20rem" />
+                    </div>
+                    
                 </Form.Group>
 
                 <Button variant="primary" type="submit" className='host-button'>
