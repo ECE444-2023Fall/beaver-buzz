@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {Form,Button} from 'react-bootstrap'
-import "./form.css"
+import "./Form.css"
 import {Link, redirect, useNavigate} from "react-router-dom"
 import {useForm} from "react-hook-form";
 import {useUserContext} from "../UserContext";

@@ -1,7 +1,7 @@
 import './App.css';
 import Navbar from './components/Navbar';
-import LoginPage from "./Login/login";
-import RegisterPage from "./Login/register";
+import LoginPage from "./Login/Login";
+import RegisterPage from "./Login/Register";
 import EventPage from './Event/Event';
 import DiscoverPage from "./Discover/Discover";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {Form,Button} from 'react-bootstrap'
-import "./form.css"
+import "./Form.css"
 import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 const RegisterPage=()=>{
