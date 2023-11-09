@@ -54,57 +54,65 @@ export default function HostPage() {
             <Form onSubmit={handleSubmit(onSubmit)} className='host-form'>
                 <Form.Group controlId="eventName">
                     <Form.Label>Event Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter event name" {...register("eventName", { required: true })} />
+                    <Form.Control type="text" placeholder="Enter event name" maxLength={50}{...register("eventName", { required: true })} />
                 </Form.Group>
 
                 <Form.Group controlId="oneLiner">
                     <Form.Label>One-liner</Form.Label>
-                    <Form.Control type="text" placeholder="Enter one-liner" {...register("oneLiner")} />
+                    <Form.Control type="text" placeholder="Enter one-liner" maxLength={75} {...register("oneLiner")} />
                 </Form.Group>
 
                 <Form.Group controlId="eventDate">
                     <Form.Label>Date</Form.Label>
                     <Form.Control type="date" placeholder="Enter date" {...register("eventDate", { required: true })} />
                 </Form.Group>
-
+                <div class="form-row">
+                <div class="col">
                 <Form.Group controlId="eventStart">
-                    <Form.Label>Time</Form.Label>
+                    <Form.Label>Start Time</Form.Label>
                     <Form.Control type="time" placeholder="Enter start time" {...register("eventStart", { required: true })} />
-                </Form.Group>
-
+                </Form.Group></div>
+                <div class="col">
                 <Form.Group controlId="eventEnd">
-                    <Form.Label>Time</Form.Label>
+                    <Form.Label>End Time</Form.Label>
                     <Form.Control type="time" placeholder="Enter end time" {...register("eventEnd", { required: true })} />
-                </Form.Group>
+                </Form.Group></div>
+                </div>
 
                 <Form.Group controlId="building">
                     <Form.Label>Building</Form.Label>
-                    <Form.Control type="text" placeholder="Enter building name" {...register("building", { required: true })} />
+                    <Form.Control type="text" placeholder="Enter building name" maxLength={25} {...register("building", { required: true })} />
                 </Form.Group>
 
                 <Form.Group controlId="room">
                     <Form.Label>Room</Form.Label>
-                    <Form.Control type="text" placeholder="Enter building room" {...register("room", { required: true })} />
+                    <Form.Control type="text" placeholder="Enter building room" maxLength={10} {...register("room", { required: true })} />
                 </Form.Group>
 
                 <Form.Group controlId="description">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows={3} placeholder="Enter description" {...register("description")} />
+                    <Form.Control as="textarea" rows={3} maxLength={256} placeholder="Enter description" {...register("description")} />
                 </Form.Group>
 
                 <Form.Group controlId="image">
                     <Form.Label>Upload Image</Form.Label>
-                    <Form.Control type="file" {...register("image")} />
+                    <Form.Control type="file" accept=".jpg,.gif,.png" {...register("image")} />
                 </Form.Group>
 
                 <Form.Group controlId="tags">
                     <Form.Label>Tags</Form.Label>
-                    <Form.Control as="select" multiple onChange={handleTagChange}>
+                    <select class="form-control" id="exampleFormControlSelect1" onChange={handleTagChange}>
+                        <option>Tag1</option>
+                        <option>Tag2</option>
+                        <option>Tag3</option>
+                        <option>Tag4</option>
+                    </select>
+                    {/* <Form.Control as="select" multiple onChange={handleTagChange}>
                         <option value="music">Music</option>
                         <option value="food">Food</option>
                         <option value="sports">Sports</option>
                         <option value="art">Art</option>
-                    </Form.Control>
+                    </Form.Control> */}
                 </Form.Group>
 
                 <Button variant="primary" type="submit" className='host-button'>
