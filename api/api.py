@@ -163,8 +163,9 @@ def register():
 def getEvent(id):
     event = Event.query.filter_by(id=id).first()
     if event is not None:
-        user = User.query.filter_by(id=event.organizerID).first()
-        event.organizerID = user.firstname + " " + user.lastname
+        # print("timezone is:", event.eventStart.tzname())
+        event.eventStart = event.eventStart.astimezone(eastern)
+        event.eventEnd = event.eventEnd.astimezone(eastern)
         return jsonify(event.serialize())
     return jsonify({"error": "Event not found"}), 420
 
@@ -172,20 +173,20 @@ def getEvent(id):
 @app.route("/api/events/new", methods=["POST"])
 def createEvent():
     n = request.json
-    print(n)
     eventName = n["eventName"]
 
     organizerID = n["organizerID"]
     date_format = "%Y-%m-%d %H:%M"
     eventStart = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
     eventEnd = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
+    # print("new event created in tz:", eventStart.tzname())
 
     eventBuilding = n["building"]
     eventRoom = n["room"]
     oneLiner = n["oneLiner"]
     eventDesc = n["description"]
     eventImg = n["image"] 
-    
+
     organizer = User.query.filter_by(id=organizerID).first()
     if not organizer:
         return jsonify({"Error": "Please log in first!"})
