@@ -8,6 +8,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { UserProvider } from './UserContext';
 import ProfilePage from './Profile/Profile';
 import UserPage from './Profile/UserProfile';
+import HostPage from './Host/Host';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
                     <Route exact path='/register' element={<RegisterPage/>}/>
                     <Route exact path='/events/:id' element={<EventPage/>}/>
                     <Route exact path='/user/:id' element={<UserPage/>}/>
+                    <Route exact path='post-event' element={<HostPage/>}/>
                 </Routes>
             </Router>
         </UserProvider>
