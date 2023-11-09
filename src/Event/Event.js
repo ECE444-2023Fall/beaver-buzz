@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Button } from './components/Button';
-import UserContext from './UserContext';
-import './event.css';
-import eventDefault from './images/event-default.jpg';
+import { Button } from '../components/Button';
+import UserContext from '../UserContext';
+import './Event.css';
+import eventDefault from '.././images/event-default.jpg';
 import { useParams } from "react-router-dom";
 
 export default function EventPage() {

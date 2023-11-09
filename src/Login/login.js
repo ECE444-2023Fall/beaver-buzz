@@ -1,10 +1,9 @@
 import React, {useState} from 'react'
 import {Form,Button} from 'react-bootstrap'
 import "./form.css"
-import {Grid} from "semantic-ui-react"
 import {Link, redirect, useNavigate} from "react-router-dom"
 import {useForm} from "react-hook-form";
-import {useUserContext} from "./UserContext";
+import {useUserContext} from "../UserContext";
 
 const LoginPage=()=>{
     const[credentialsValid, setCredentials] = useState(true)

@@ -3,14 +3,14 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import "./UserProfile.css"
-import mailIcon from "./images/email.svg"
-import phoneIcon from "./images/phone.svg"
-import pencilIcon from "./images/pencil.svg"
+import mailIcon from "../images/email.svg"
+import phoneIcon from "../images/phone.svg"
+import pencilIcon from "../images/pencil.svg"
 import {Divider} from "semantic-ui-react";
-import {useUserContext} from './UserContext'
+import {useUserContext} from '../UserContext'
 import {Button, Image} from "react-bootstrap";
-import UploadAvatar from "./components/Avatar";
-import defaultImage from "./images/defaultEvent.png"
+import UploadAvatar from "../components/Avatar";
+import defaultImage from "../images/defaultEvent.png"
 
 
 const UserPage=()=> {
