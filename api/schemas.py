@@ -1,5 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
+from datetime import datetime
+from pytz import timezone
+
+tz = timezone("US/Eastern")
 
 db = SQLAlchemy()
 
@@ -30,7 +34,7 @@ class User(db.Model):
     lastname = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     phonenumber = db.Column(db.Unicode(20))
-    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    created_at = db.Column(db.DateTime(timezone=True), default=datetime.now(tz))
     interests = db.Column(db.Text)
     userImg = db.Column(db.Text)
     userImgType = db.Column(db.Text)
@@ -42,8 +46,15 @@ class User(db.Model):
     )
     # users that this person is subscribed to
     subscribed_to_users = db.relationship(
-        "User", secondary=user_subscribed_to, backref="subscribers"
+        "User",
+        secondary=user_subscribed_to,
+        primaryjoin=(user_subscribed_to.c.userID == id),
+        secondaryjoin=(user_subscribed_to.c.subscriberID == id),
+        backref=db.backref("subscribers", lazy="dynamic"),
+        lazy="dynamic",
     )
+    # reference user's subscribers with user.subscribed_to_users.all()
+    # reference people who have subscribed to user with user.subscribers.all()
 
     def __init__(
         self,
@@ -71,9 +82,6 @@ class User(db.Model):
     def serialize(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-    def serialize(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
 
 # Database Schema for Event Model
 class Event(db.Model):
@@ -89,7 +97,7 @@ class Event(db.Model):
     eventDesc = db.Column(db.Text)
     eventImg = db.Column(db.Text)
     eventImgType = db.Column(db.Text)
-    eventCategories = db.Column(db.Text)
+    eventCategories = db.Column(db.Text)  # tags
     registered = db.Column(db.Integer, default=0)
 
     def __init__(
