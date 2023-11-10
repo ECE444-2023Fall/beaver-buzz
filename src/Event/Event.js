@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Button } from '../components/Button';
-import UserContext from '../UserContext';
+import { useUserContext } from '../UserContext';
 import './Event.css';
 import eventDefault from '.././images/event-default.jpg';
 import { useParams } from "react-router-dom";
@@ -37,6 +37,11 @@ export default function EventPage() {
     const [data, setData] = useState([]);
     const { id } = useParams();
 
+    const {
+        userId,
+        setUserId
+    } = useUserContext()
+
     useEffect(() => {
         const fetchInfo = () => {
             return fetch(`/api/events/${id}`, {
@@ -63,8 +68,6 @@ export default function EventPage() {
         };
         fetchInfo();
     }, [id]);
-
-    const userId = useContext(UserContext);
 
     const register = () => {
         fetch(`/api/events/${id}/register/${userId}`, {
