@@ -163,8 +163,9 @@ def register():
 def getEvent(id):
     event = Event.query.filter_by(id=id).first()
     if event is not None:
-        user = User.query.filter_by(id=event.organizerID).first()
-        event.organizerID = user.firstname + " " + user.lastname
+        # print("timezone is:", event.eventStart.tzname())
+        event.eventStart = event.eventStart.astimezone(eastern)
+        event.eventEnd = event.eventEnd.astimezone(eastern)
         return jsonify(event.serialize())
     return jsonify({"error": "Event not found"}), 420
 
@@ -173,34 +174,41 @@ def getEvent(id):
 def createEvent():
     n = request.json
     eventName = n["eventName"]
+
     organizerID = n["organizerID"]
-    tz = timezone('EST')
-    date_format = "%Y-%m-%d %H:%M:%S"
-    eventStart = eastern.localize(datetime.strptime(n["eventStart"], date_format))
-    eventEnd = eastern.localize(datetime.strptime(n["eventEnd"], date_format))
+    date_format = "%Y-%m-%d %H:%M"
+    eventStart = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
+    eventEnd = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
+    # print("new event created in tz:", eventStart.tzname())
 
-
-    eventBuilding = n["eventBuilding"]
-    eventRoom = n["eventRoom"]
+    eventBuilding = n["building"]
+    eventRoom = n["room"]
     oneLiner = n["oneLiner"]
-
+    eventDesc = n["description"]
+    eventImg = n["image"] 
 
     organizer = User.query.filter_by(id=organizerID).first()
     if not organizer:
-        return jsonify({"Error": "Organizer does not exist"})
+        return jsonify({"Error": "Please log in first!"})
+    
+    
 
-    newevent = Event(eventName=eventName,
+    newevent = Event(
+        eventName=eventName,
         organizerID=organizerID,
         eventStart=eventStart,
         eventEnd=eventEnd,
         eventBuilding=eventBuilding,
         eventRoom=eventRoom,
         oneLiner=oneLiner,
+        eventDesc=eventDesc, 
+        eventImg=eventImg,
+        eventImgType="image/jpeg",
     )
 
     db.session.add(newevent)
     db.session.commit()
-    return jsonify(newevent.serialize())
+    return jsonify({"event_id": newevent.id})
 
 
 @app.route("/api/events/<eventid>/register/<userid>", methods=["POST"])
