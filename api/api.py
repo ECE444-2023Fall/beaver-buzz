@@ -47,8 +47,10 @@ def getInfo():
         "lastname": user.lastname,
         "phonenumber": user.phonenumber if user.showContactInfo or id == requestingUser else "Private",
         "emailaddr": user.email if user.showContactInfo or id == requestingUser else "Private",
-        "interests": ast.literal_eval(user.interests),
-        "privacy": {"showContactInformation": user.showContactInfo, "showRegisteredEvents": user.showRegisteredEvents}
+        "interests": user.interests,
+        "privacy": {"showContactInformation": user.showContactInfo, "showRegisteredEvents": user.showRegisteredEvents},
+        "avatar": user.userImg
+
     })
 
 
@@ -150,6 +152,20 @@ def setInterests():
 
     return jsonify({
         "status": "updated interests"
+    })
+
+@app.route("/api/setAvatar", methods=["POST"])
+def setAvatar():
+    id = request.json["id"]
+    avatar = request.json["avatar"]
+    user = db.get_or_404(User, id)
+
+    user.userImg = avatar
+
+    db.session.commit()
+
+    return jsonify({
+        "status": "updated avatar"
     })
 
 @app.route("/api/register", methods=["POST"])

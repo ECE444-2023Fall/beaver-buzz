@@ -62,6 +62,7 @@ const UserPage=()=> {
     const [interests, setInterests] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
+    const [avatar, setAvatar] = useState(null);
 
     const [events, setEvents] = useState([]);
     const [privacy, setPrivacy] = useState({})
@@ -134,6 +135,7 @@ const UserPage=()=> {
                         setLastName(data.lastname)
                         setInterests(data.interests)
                         setPrivacy(data.privacy)
+                        setAvatar(data.avatar);
                     });
             }
         }
@@ -193,7 +195,7 @@ const UserPage=()=> {
     return(
         <div className="alternateFlexBox">
             <div className="flexbox-user-container">
-                <UploadAvatar/>
+            <UploadAvatar id={userId} avatar={avatar}/>
                 <div className="person-name-font">{firstName} {lastName}</div>
                  <div className= "person-table">
                         <div className="sectionFont">First name</div>
