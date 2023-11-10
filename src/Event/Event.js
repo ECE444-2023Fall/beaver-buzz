@@ -57,13 +57,14 @@ export default function EventPage() {
                 })
                 .then((d) => {
                     // console.log(d);
-                    setData(d)})
+                    setData(d)
+                })
                 .catch((error) => { console.log(error); setData(-1); })
         };
         fetchInfo();
     }, [id]);
 
-    const {userId} = useContext(UserContext);
+    const userId = useContext(UserContext);
 
     const register = () => {
         fetch(`/api/events/${id}/register/${userId}`, {
