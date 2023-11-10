@@ -40,7 +40,7 @@ const ProfilePage=()=> {
 
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
-    const [interests, setInterests] = useState("")
+    const [interests, setInterests] = useState(null)
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [avatar, setAvatar] = useState(null);
@@ -121,6 +121,7 @@ const ProfilePage=()=> {
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
+                        console.log(data.interests)
                         setEmail(data.emailaddr)
                         setPhone(data.phonenumber)
                         setFirstName(data.firstname)

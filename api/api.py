@@ -39,15 +39,17 @@ def getInfo():
     requestingUser = request.json["myID"]
 
     user = User.query.filter_by(id=id).first()
-
-    print(user.showContactInfo)
+    
+    interestArray = ast.literal_eval(user.interests)
+    print(user.interests)
+    print(interestArray)
 
     return jsonify({
         "firstname": user.firstname,
         "lastname": user.lastname,
         "phonenumber": user.phonenumber if user.showContactInfo or id == requestingUser else "Private",
         "emailaddr": user.email if user.showContactInfo or id == requestingUser else "Private",
-        "interests": user.interests,
+        "interests": ast.literal_eval(user.interests),
         "privacy": {"showContactInformation": user.showContactInfo, "showRegisteredEvents": user.showRegisteredEvents},
         "avatar": user.userImg
 
@@ -175,7 +177,10 @@ def register():
     firstname = request.json["firstname"]
     lastname = request.json["lastname"]
     phonenumber = request.json["phonenumber"]
+
     interests = str(request.json["interests"])
+    print(interests)
+    print(type(interests))
 
     user = User.query.filter_by(email=email).first()
     if user is not None:  # An account with this email exists
