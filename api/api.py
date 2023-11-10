@@ -7,6 +7,8 @@ import bcrypt
 from datetime import datetime
 from pytz import timezone
 
+from utils.emails.mailing import Mailer, get_login, format_email
+
 eastern = timezone('EST')
 
 app = Flask(__name__)
@@ -154,6 +156,18 @@ def register():
         phonenumber=phonenumber,
         interests=interests,
     )
+
+    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
+    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    subject = 'Registration Confirmation'
+    html = open('./utils/emails/registration.html').read().format(
+            subject=subject,firstname=firstname,lastname=lastname,
+            email=email,phonenumber=phonenumber,interests=interests,
+            potatoemail=mailer.sender)
+    msg = format_email(mailer.sender, email, subject, html)
+    mailer.send_mail(email,msg.as_string())
+    mailer.kill()
+
     db.session.add(newaccount)
     db.session.commit()
 
