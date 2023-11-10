@@ -9,6 +9,10 @@
    text-align: center;
  }
 
+ .interests {
+  background-color: white;
+ }
+
  .form {
    background: white;
    border: 1px solid #dedede;

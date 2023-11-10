@@ -10,6 +10,8 @@ import UploadAvatar from "../components/Avatar";
 import defaultImage from "../images/defaultEvent.png"
 import moment from "moment-timezone";
 import { useNavigate, useParams } from "react-router";
+import Multiselect from "multiselect-react-dropdown";
+import { CATEGORIES } from "../constants/Constants";
 
 class Event {
     constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
@@ -143,154 +145,8 @@ const UserPage=()=> {
         fetchEvents(value, showPastEvents);
 
     }, []);
-    const firstNameRef = useRef(null);
-    const [firstNameDisabled, setFirstNameDisabled] = useState('true')
-
-     const submitFirstName = event => {
-        setFirstNameDisabled(true)
-        const newValue = firstNameRef.current.value;
-        if (newValue !== firstName) {
-                        const requestOptions = {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({id: userId, firstname: newValue})
-            }
-            fetch('/api/setFirstname', requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                });
-                        event.target.value = newValue
-            setFirstName(newValue)
-        }
-    }
-
-    const lastNameRef = useRef(null);
-    const [lastNameDisabled, setLastNameDisabled] = useState('true')
-
-    const submitLastName = event => {
-        setLastNameDisabled(true)
-        const newValue = lastNameRef.current.value;
-        if (newValue !== lastName) {
-
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({id: userId, lastname: newValue})
-            }
-            fetch('/api/setLastname', requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                });
-            //event.target.value = newValue
-            setLastName(newValue)
-        }
-    }
-
-    const emailRef = useRef(null);
-    const [emailDisabled, setEmailDisabled] = useState('true')
-
-    const submitEmail = event => {
-        setEmailDisabled(true)
-        const newValue = emailRef.current.value;
-        if (newValue !== lastName && newValue != email) {
-            const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (emailRegex.test(newValue)) {
-                const requestOptions = {
-                    method: "POST",
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify({id: userId, email: newValue})
-                }
-                fetch('/api/setEmail', requestOptions)
-                    .then(response => response.json())
-                    .then(data => {
-                        if(data.error != null) {
-                            alert("Error: " + data.error)
-                            event.target.value = email;
-                        }
-                        else {
-                            event.target.value = newValue
-                            setEmail(newValue);
-                        }
-                    });
-
-            } else {
-                event.target.value = email;
-            }
-        }
-    }
-
-
-    const phoneRef = useRef(null);
-    const [phoneDisabled, setPhoneDisabled] = useState('true')
-
-    const submitPhone = event => {
-        setPhoneDisabled(true)
-        const phoneNumberRegex = /^\d{3}-\d{3}-\d{4}$/;
-        const newValue = event.target.value
-        if (phoneNumberRegex.test(newValue) && newValue != phone) {
-
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({id: userId, phone: newValue})
-            }
-            fetch('/api/setPhone', requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                    if(data.error != null) {
-                        alert("Error: " + data.error)
-                        event.target.value = phone;
-                    }
-                    else {
-                        event.target.value = newValue
-                        setPhone(newValue);
-                    }
-
-                });
-            // this is a valid email address
-            // call setState({email: email}) to update the email
-            // or update the data in redux store.
-        } else {
-            event.target.value = phone;
-        }
-    }
-
-    const interestsRef = useRef(null);
-    const [interestsDisabled, setInterestsDisabled] = useState('true')
-
-    const submitInterests = event => {
-        setInterestsDisabled(true)
-        const newValue = event.target.value
-        if (newValue !== lastName) {
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({id: userId, interests: newValue})
-            }
-            fetch('/api/setInterests', requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status) {
-                        event.target.value = newValue
-                    }
-                });
-            // this is a valid email address
-            // call setState({email: email}) to update the email
-            // or update the data in redux store.
-        } else {
-            event.target.value = phone;
-        }
-    }
+    
+    
 
 
     const arrayDataItems = events.map((event) =>
@@ -342,37 +198,15 @@ const UserPage=()=> {
                  <div className= "person-table">
                         <div className="sectionFont">First name</div>
                         <div className="flexbox-horizontal-container">
-                            <input className="inputField"
-                                   onKeyDown={(e) => {
-                                    if(e.keyCode === 13) {
-                                        submitFirstName(e);
-                                    }
-                                }}
-                                   onBlur={submitFirstName}  onFocus={(e)=>e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)} disabled = {firstNameDisabled? "disabled" : ""}   defaultValue={firstName} ref={firstNameRef}/>
-                            <div className="pencil">
-                                <Button onClick={async () => {
-                                    await setFirstNameDisabled(false);
-                                    firstNameRef.current.focus()
-                                }} className="pencilButton"><img src={pencilIcon} alt={"broken"}/></Button>
-                            </div>
+                            <input className="inputField" disabled='disabled' defaultValue={firstName}/>
                         </div>
 
                      <div className="sectionFont">Last name</div>
                         <div className="flexbox-horizontal-container">
 
-                            <input className="inputField"
-                                onKeyDown={(e) => {
-                                    if(e.keyCode === 13) {
-                                        submitLastName(e);
-                                    }
-                                }}
-                                   onBlur={submitLastName}  onFocus={(e)=>e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)} disabled = {lastNameDisabled? "disabled" : ""}   defaultValue={lastName} ref={lastNameRef}/>
-                            <div className="pencil">
-                                <Button onClick={async () => {
-                                    await setLastNameDisabled(false);
-                                    lastNameRef.current.focus()
-                                }} className="pencilButton"><img src={pencilIcon} alt={"broken"} /></Button>
-                            </div>
+                            <input className="inputField" disabled='disabled' defaultValue={lastName}/>
+          
+        
                         </div>
 
                         <Divider></Divider>
@@ -383,19 +217,8 @@ const UserPage=()=> {
                             <div>
                                 <img src={mailIcon}/>
                             </div>
-                            <input className="inputField"
-                                   onKeyDown={(e) => {
-                                    if(e.keyCode === 13) {
-                                        submitEmail(e);
-                                        }
-                                    }}
-                                   onBlur={submitEmail}  onFocus={(e)=>e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)} disabled = {emailDisabled? "disabled" : ""}   defaultValue={email} ref={emailRef}/>
-                            <div className="pencil">
-                                <Button onClick={async () => {
-                                    await setEmailDisabled(false);
-                                    emailRef.current.focus()
-                                }} className="pencilButton"><img src={pencilIcon} alt={"broken"} /></Button>
-                            </div>
+                            <input className="inputField" disabled='disabled' defaultValue={email}/>
+
                         </div>
 
                         <div className="horizontal_divider"></div>
@@ -404,36 +227,24 @@ const UserPage=()=> {
                             <div>
                                 <img src={phoneIcon}/>
                             </div>
-                            <input className="inputField"
-                                   onKeyDown={(e) => {
-                                    if(e.keyCode === 13) {
-                                        submitPhone(e);
-                                    }
-                                }}
-
-                                   onBlur={submitPhone}  onFocus={(e)=>e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)} disabled = {phoneDisabled? "disabled" : ""} defaultValue={phone} ref={phoneRef}/>
-                            <div className="pencil">
-                                <Button onClick={async () => {
-                                    await setPhoneDisabled(false);
-                                    phoneRef.current.focus()
-                                }} className="pencilButton"><img src={pencilIcon}  alt={"broken"}/></Button>
-                            </div>
+                            <input className="inputField" disabled='disabled' defaultValue={phone}/>
                         </div>
 
                         <Divider></Divider>
                         <div className="sectionFont">Interests</div>
                         <Divider></Divider>
-                            <textarea rows = "8" className="textAreaField" onKeyDown={(e) => {
-                                if(e.keyCode === 13) {
-                                    submitInterests(e);
-                                }
-                            }} onBlur={submitInterests}  onFocus={(e)=>e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)} disabled = {interestsDisabled? "disabled" : ""}  defaultValue={interests}  ref={interestsRef}/>
-                            <div className="pencil">
-                                <Button onClick={async () => {
-                                    await setInterestsDisabled(false);
-                                    interestsRef.current.focus()
-                                }} className="pencilButton"><img src={pencilIcon} alt={"broken"}/></Button>
-                            </div>
+                        <Multiselect   
+                                //options={CATEGORIES} // Options to display in the dropdown
+                                selectedValues = {interests}
+                                showCheckbox='true'
+                                className='interests'
+                                //disablePreSelectedValues='true'
+                                placeholder=""
+                                disable='true'
+                                displayValue="name" // Property name to display in the dropdown options
+                            />
+                            
+          
                     </div>
             </div>
 

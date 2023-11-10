@@ -10,6 +10,7 @@ import UploadAvatar from "../components/Avatar";
 import defaultImage from "../images/defaultEvent.png"
 import { useNavigate } from "react-router-dom";
 import Multiselect from "multiselect-react-dropdown";
+import { CATEGORIES } from "../constants/Constants";
 
 export class Event {
     constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
@@ -52,6 +53,7 @@ const ProfilePage=()=> {
     };
 
     const [selectedValues, setSelectedValues] = useState([])
+
 
     function fetchEvents(option, showPastEvents) {
     if (userId != null) {
@@ -263,32 +265,20 @@ const ProfilePage=()=> {
     }
 
     const interestsRef = useRef(null);
-    const [interestsDisabled, setInterestsDisabled] = useState('true')
 
     const submitInterests = event => {
-        setInterestsDisabled(true)
-        const newValue = event.target.value
-        if (newValue !== lastName) {
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({id: userId, interests: newValue})
-            }
-            fetch('/api/setInterests', requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status) {
-                        event.target.value = newValue
-                    }
-                });
-            // this is a valid email address
-            // call setState({email: email}) to update the email
-            // or update the data in redux store.
-        } else {
-            event.target.value = phone;
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({id: userId, interests: event})
         }
+        fetch('/api/setInterests', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+            });
+
     }
 
     const [value, setValue] = useState("Attending")
@@ -463,17 +453,27 @@ const ProfilePage=()=> {
                         <Divider></Divider>
                         <div className="sectionFont">Interests</div>
                         <Divider></Divider>
-                            <textarea rows = "8" className="textAreaField" onKeyDown={(e) => {
-                                if(e.keyCode === 13) {
+                            <Multiselect   
+                                options={CATEGORIES} // Options to display in the dropdown
+                                selectedValues = {interests}
+                                showCheckbox='true'
+                                placeholder='Your interests'
+                                className='interests'
+                                hidePlaceholder='true'
+                                onSelect={(e) => {
+                                    setInterests(e);
                                     submitInterests(e);
-                                }
-                            }} onBlur={submitInterests}  onFocus={(e)=>e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)} disabled = {interestsDisabled? "disabled" : ""}  defaultValue={interests}  ref={interestsRef}/>
-                            <div className="pencil">
-                                <Button onClick={async () => {
-                                    await setInterestsDisabled(false);
-                                    interestsRef.current.focus()
-                                }} className="pencilButton"><img src={pencilIcon} alt={"broken"}/></Button>
-                            </div>
+
+                                }} // Function will trigger on select event
+                                onRemove={(e) => {;
+                                    setInterests(e);
+                                    submitInterests(e);
+                                }} // Function will trigger on remove event
+                                displayValue="name" // Property name to display in the dropdown options
+                            />
+                            
+
+ 
                     </div>
 
             
