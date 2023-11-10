@@ -3,15 +3,19 @@ import {Form,Button} from 'react-bootstrap'
 import "./Form.css"
 import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
+import Multiselect from 'multiselect-react-dropdown';
+import { CATEGORIES } from '../constants/Constants';
 const RegisterPage=()=>{
     const[emailTaken, setTaken] = useState(false)
     const[greeting, setGreeting] = useState('')
+    const[interests, setInterests] = useState(null);
 
     const navigate = useNavigate();
 
      const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = (data) => {
-        console.log(data);
+        data.interests = interests;
+
         const requestOptions={
         method:"POST",
         headers:{
@@ -103,7 +107,23 @@ const RegisterPage=()=>{
                             <br></br>
 
                             <label htmlFor="interests">What are your interests? (Optional)</label>
-                            <Form.Group>
+
+                            <Multiselect   
+                            options={CATEGORIES} // Options to display in the dropdown
+                            showCheckbox='true'
+                            placeholder='Your interests'
+                            className='interests'
+                            hidePlaceholder='true'
+                            onSelect={(e) => {
+                                setInterests(e);
+
+                            }} // Function will trigger on select event
+                            onRemove={(e) => {;
+                                setInterests(e);
+                            }} // Function will trigger on remove event
+                            displayValue="name" // Property name to display in the dropdown options
+                            />
+                            {/* <Form.Group>
                                 <Form.Control as="textarea"
                                         rows={3}
                                         placeholder="Tell us about your interests!"
@@ -113,8 +133,8 @@ const RegisterPage=()=>{
                                               width = "100px"
                                         {...register("interests", { required: false})}
                                 />
-                            </Form.Group>
-                        {!emailTaken ? <p>{greeting}</p> : <p className="error">There is already an account registered with this email</p>}
+                            </Form.Group>*/}
+                        {!emailTaken ? <p>{greeting}</p> : <p className="error">There is already an account registered with this email</p>} 
                         <Button type='submit' className="submitButton">Register</Button>
 
                     </Form>
