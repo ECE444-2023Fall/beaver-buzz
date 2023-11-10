@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import './Host.css';
-import '../Login/form.css'
+import '../Login/Form.css'
 import {useNavigate} from "react-router-dom";
 import UserContext from '../UserContext';
 import { MultiSelect } from 'primereact/multiselect';
