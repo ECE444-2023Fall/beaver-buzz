@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Form,Button} from 'react-bootstrap'
-import "../Login/Form.css";
+import "../LoginSignup/Form.css";
 import {useForm} from "react-hook-form";
 import Card from '../components/Card';
 import CardGrid from '../components/CardGrid';
