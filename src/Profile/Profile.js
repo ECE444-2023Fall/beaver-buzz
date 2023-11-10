@@ -42,6 +42,7 @@ const ProfilePage=()=> {
     const [interests, setInterests] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
+    const [avatar, setAvatar] = useState(null);
 
     const [events, setEvents] = useState([]);
     const [privacy, setPrivacy] = useState({})
@@ -117,12 +118,14 @@ const ProfilePage=()=> {
                 fetch('/api/getUserInfo', requestOptions)
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data);
                         setEmail(data.emailaddr)
                         setPhone(data.phonenumber)
                         setFirstName(data.firstname)
                         setLastName(data.lastname)
                         setInterests(data.interests)
                         setPrivacy(data.privacy);
+                        setAvatar(data.avatar);
                         var values = []
                         if(data.privacy['showContactInformation']) {
                             values.push(state.options[0])
@@ -377,7 +380,7 @@ const ProfilePage=()=> {
                     />
                 </div>
             <div className="flexbox-user-container">
-                <UploadAvatar/>
+                <UploadAvatar editable={true} id={userId} avatar={avatar}/>
                 <div className="person-name-font">{firstName} {lastName}</div>
                  <div className= "person-table">
                         <div className="sectionFont">First name</div>
