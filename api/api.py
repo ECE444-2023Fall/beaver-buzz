@@ -6,6 +6,8 @@ from schemas import db, event_attendance, User, Event
 import bcrypt
 from datetime import datetime
 from pytz import timezone
+from sqlalchemy import or_
+import random
 
 eastern = timezone('EST')
 
@@ -322,16 +324,66 @@ def getEventsByUser(userid):
 def search():
     query = request.args.get('searchbar')
     location_filters = request.args.get('filters').split(',')
+    org_filter = request.args.get('Organizer')
+    if org_filter:
+        if len(query.split(' '))>1:
+            fn = query.split(' ')[0]
+            ln = query.split(' ')[1]
+        else:
+            fn = query.split(' ')[0]
+            ln = query.split(' ')[0]
+    #type_filter = request.args.get('type_filter')
+    if not org_filter:
+        org_filter= False
     if location_filters[0] == "":
         location_filters = []
     filtered_results = []
+    users_dict = {}
+
     if query != '' and len(location_filters)!=0:
-        filtered_results = Event.query.filter(Event.eventBuilding.in_(location_filters), Event.eventName.contains(query)).all()
+
+
+
+        if org_filter == False:
+            filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]), Event.eventName.contains(query)).all()
+        else:
+            if fn == ln:
+                users = User.query.filter(or_(User.firstname.contains(fn),User.lastname.contains(ln))).all()
+            else:
+                users = User.query.filter(User.firstname.contains(fn),User.lastname.contains(ln)).all()
+
+            user_ids = [user.id for user in users]
+            for u in users:
+                users_dict[u.id] = u.firstname + " " + u.lastname
+
+
+            filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]), Event.organizerID.in_(user_ids)).all()
     elif len(location_filters)!=0:
-        filtered_results = Event.query.filter(Event.eventBuilding.in_(location_filters)).all()
+        filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))])).all()
     elif len(location_filters)==0 and query!="":
-        filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
+        if org_filter == False:
+            filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
+        else:
+            if fn == ln:
+                users = User.query.filter(or_(User.firstname.contains(fn),User.lastname.contains(ln))).all()
+            else:
+                users = User.query.filter(User.firstname.contains(fn),User.lastname.contains(ln)).all()
+
+            user_ids = [user.id for user in users]
+            for u in users:
+                users_dict[u.id] = u.firstname + " " + u.lastname
+
+            filtered_results = Event.query.filter(Event.organizerID.in_(user_ids)).all()
     else:
         filtered_results = Event.query.all()
 
-    return jsonify([e.serialize() for e in filtered_results])
+    results = [e.serialize() for e in filtered_results]
+    for result in results:
+        if result['organizerID'] in users_dict.keys():
+            name = users_dict[result['organizerID']]
+            result['organizerName'] =  name
+        else:
+            u = User.query.get(result['organizerID'])
+            result['organizerName'] = u.firstname + " " + u.lastname
+    return jsonify(results)
+
