@@ -23,6 +23,14 @@ user_subscribed_to = db.Table(
     db.Column("userID", db.Integer, db.ForeignKey("users.id")),
     db.Column("subscriberID", db.Integer, db.ForeignKey("users.id")),
 )
+# Tracks a user's ratings for each event
+# Many-to-many relationship
+user_ratings = db.Table(
+    "user_ratings",
+    db.Column("userID", db.Integer, db.ForeignKey("users.id")),
+    db.Column("eventID", db.Integer, db.ForeignKey("events.id")),
+    db.Column("ratingValue", db.Integer, nullable=False),
+)
 
 
 # Database Schema for User model
@@ -60,6 +68,8 @@ class User(db.Model):
     # numReviewers stores the total number of reviews on all events hosted by this user
     rating = db.Column(db.Integer, default=None)
     numReviewers = db.Column(db.Integer, default=0)
+    # Stores all of the ratings that the user has given out to events
+    eventRatings = db.relationship("Event", secondary=user_ratings, backref="reviewers")
 
     def __init__(
         self,
