@@ -56,6 +56,11 @@ class User(db.Model):
     # reference user's subscribers with user.subscribed_to_users.all()
     # reference people who have subscribed to user with user.subscribers.all()
 
+    # Rating value from 0-5 for all of this user's events.
+    # numReviewers stores the total number of reviews on all events hosted by this user
+    rating = db.Column(db.Integer, default=None)
+    numReviewers = db.Column(db.Integer, default=0)
+
     def __init__(
         self,
         password,
@@ -98,6 +103,10 @@ class Event(db.Model):
     eventImg = db.Column(db.Text)
     eventImgType = db.Column(db.Text)
     eventCategories = db.Column(db.Text)  # tags
+    # Rating value from 0-5 for a given event. numReviewers stores the number of people who have made a review
+    rating = db.Column(db.Integer, default=None)
+    numReviewers = db.Column(db.Integer, default=0)
+    # number of registered attendees
     registered = db.Column(db.Integer, default=0)
 
     def __init__(
