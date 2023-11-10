@@ -23,14 +23,6 @@ user_subscribed_to = db.Table(
     db.Column("userID", db.Integer, db.ForeignKey("users.id")),
     db.Column("subscriberID", db.Integer, db.ForeignKey("users.id")),
 )
-# Tracks a user's ratings for each event
-# Many-to-many relationship
-user_ratings = db.Table(
-    "user_ratings",
-    db.Column("userID", db.Integer, db.ForeignKey("users.id")),
-    db.Column("eventID", db.Integer, db.ForeignKey("events.id")),
-    db.Column("ratingValue", db.Integer, nullable=False),
-)
 
 
 # Database Schema for User model
@@ -68,8 +60,6 @@ class User(db.Model):
     # numReviewers stores the total number of reviews on all events hosted by this user
     rating = db.Column(db.Integer, default=None)
     numReviewers = db.Column(db.Integer, default=0)
-    # Stores all of the ratings that the user has given out to events
-    eventRatings = db.relationship("Event", secondary=user_ratings, backref="reviewers")
 
     def __init__(
         self,
@@ -147,6 +137,26 @@ class Event(db.Model):
 
     def __repr__(self):
         return f"<Event {self.eventName}>"
+
+    def serialize(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+# Tracks a user's ratings for each event
+class UserRatings(db.Model):
+    __tablename__ = "User Ratings"
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey("users.id"))
+    eventID = db.Column(db.Integer, db.ForeignKey("events.id"))
+    ratingValue = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, userID, eventID, ratingValue):
+        self.userID = userID
+        self.eventID = eventID
+        self.ratingValue = ratingValue
+
+    def __repr__(self):
+        return f"<Rating by userID: {self.userID}, for eventID: {self.eventID}, rating: {self.ratingValue}>"
 
     def serialize(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
