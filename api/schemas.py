@@ -50,8 +50,6 @@ class User(db.Model):
     def serialize(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-    def serialize(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 # Database Schema for Event Model
 class Event(db.Model):
