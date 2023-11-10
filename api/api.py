@@ -6,6 +6,7 @@ from schemas import db, event_attendance, User, Event
 import bcrypt
 from datetime import datetime
 from pytz import timezone
+import ast
 
 from utils.emails.mailing import Mailer, get_login, format_email
 
@@ -37,17 +38,39 @@ def login():
 @app.route("/api/getUserInfo", methods=["POST"])
 def getInfo():
     id = request.json["id"]
+    requestingUser = request.json["myID"]
 
     user = User.query.filter_by(id=id).first()
+
+    print(user.showContactInfo)
 
     return jsonify({
         "firstname": user.firstname,
         "lastname": user.lastname,
-        "phonenumber": user.phonenumber,
-        "emailaddr": user.email,
+        "phonenumber": user.phonenumber if user.showContactInfo or id == requestingUser else "Private",
+        "emailaddr": user.email if user.showContactInfo or id == requestingUser else "Private",
         "interests": user.interests,
+        "privacy": {"showContactInformation": user.showContactInfo, "showRegisteredEvents": user.showRegisteredEvents},
+        "avatar": user.userImg
+
     })
 
+
+@app.route("/api/setPrivacy", methods=["POST"])
+def setPrivacy():
+    id = request.json["id"]
+    showContactInfo = request.json["showContactInfo"]
+    showRegisteredEvents = request.json["showRegisteredEvents"]
+    user = User.query.filter_by(id=id).first()
+
+
+    user.showContactInfo = showContactInfo
+    user.showRegisteredEvents = showRegisteredEvents
+    db.session.commit()
+
+    return jsonify({
+        "status": "updated privacy"
+    })
 
 @app.route("/api/setEmail", methods=["POST"])
 def setEmail():
@@ -125,12 +148,26 @@ def setInterests():
     interests = request.json["interests"]
     user = User.query.filter_by(id=id).first()
 
-    user.interests = interests
+    user.interests = str(interests)
 
     db.session.commit()
 
     return jsonify({
         "status": "updated interests"
+    })
+
+@app.route("/api/setAvatar", methods=["POST"])
+def setAvatar():
+    id = request.json["id"]
+    avatar = request.json["avatar"]
+    user = db.get_or_404(User, id)
+
+    user.userImg = avatar
+
+    db.session.commit()
+
+    return jsonify({
+        "status": "updated avatar"
     })
 
 @app.route("/api/register", methods=["POST"])
@@ -140,13 +177,14 @@ def register():
     firstname = request.json["firstname"]
     lastname = request.json["lastname"]
     phonenumber = request.json["phonenumber"]
-    interests = request.json["interests"]
+    interests = str(request.json["interests"])
 
     user = User.query.filter_by(email=email).first()
     if user is not None:  # An account with this email exists
         return jsonify({"error": "User already exists"}), 420
 
     passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+
 
     newaccount = User(
         email=email,
@@ -177,8 +215,9 @@ def register():
 def getEvent(id):
     event = Event.query.filter_by(id=id).first()
     if event is not None:
-        user = User.query.filter_by(id=event.organizerID).first()
-        event.organizerID = user.firstname + " " + user.lastname
+        # print("timezone is:", event.eventStart.tzname())
+        event.eventStart = event.eventStart.astimezone(eastern)
+        event.eventEnd = event.eventEnd.astimezone(eastern)
         return jsonify(event.serialize())
     return jsonify({"error": "Event not found"}), 420
 
@@ -187,34 +226,43 @@ def getEvent(id):
 def createEvent():
     n = request.json
     eventName = n["eventName"]
+
     organizerID = n["organizerID"]
-    tz = timezone('EST')
-    date_format = "%Y-%m-%d %H:%M:%S"
-    eventStart = eastern.localize(datetime.strptime(n["eventStart"], date_format))
-    eventEnd = eastern.localize(datetime.strptime(n["eventEnd"], date_format))
+    date_format = "%Y-%m-%d %H:%M"
+    eventStart = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
+    eventEnd = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
+    # print("new event created in tz:", eventStart.tzname())
 
-
-    eventBuilding = n["eventBuilding"]
-    eventRoom = n["eventRoom"]
+    eventBuilding = n["building"]
+    eventRoom = n["room"]
     oneLiner = n["oneLiner"]
+    eventDesc = n["description"]
+    eventImg = n["image"] 
 
 
     organizer = User.query.filter_by(id=organizerID).first()
     if not organizer:
-        return jsonify({"Error": "Organizer does not exist"})
+        return jsonify({"Error": "Please log in first!"})
+    
+    
 
-    newevent = Event(eventName=eventName,
+    newevent = Event(
+        eventName=eventName,
         organizerID=organizerID,
         eventStart=eventStart,
         eventEnd=eventEnd,
         eventBuilding=eventBuilding,
         eventRoom=eventRoom,
         oneLiner=oneLiner,
+        eventDesc=eventDesc, 
+        eventImg=eventImg,
+        eventImgType="image/jpeg",
     )
 
     db.session.add(newevent)
     db.session.commit()
-    return jsonify(newevent.serialize())
+    return jsonify({"event_id": newevent.id})
+
 
 
 @app.route("/api/events/<eventid>/register/<userid>", methods=["POST"])
@@ -307,9 +355,13 @@ def getEventsByCategory(category):
 
 def getEventsByUser(userid):
     request_value = request.json
+    requesting_user = request_value['myID']
     user = User.query.filter_by(id=userid).first()
-    events = user.registeredEvents if request_value['option'] == 'Attending' else user.organizedEvents
     final = []
+    if not user.showRegisteredEvents and userid != requesting_user and request_value['option'] == 'Attending':
+        return jsonify(final)
+    events = user.registeredEvents if request_value['option'] == 'Attending' else user.organizedEvents
+    
     if request_value['showPastEvents']:
         for event in events:
             final.append(event.serialize())

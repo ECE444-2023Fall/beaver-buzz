@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {Form,Button} from 'react-bootstrap'
-import "./form.css"
-import {Grid, Item} from "semantic-ui-react"
-import {Link} from "react-router-dom"
+import "../LoginSignup/Form.css";
 import {useForm} from "react-hook-form";
-import Card from './components/Card';
-import CardGrid from './components/CardGrid';
-import {useUserContext} from "./UserContext";
+import Card from '../components/Card';
+import CardGrid from '../components/CardGrid';
+
 const DiscoverPage=()=>{
     const[searchitems, setsearchitems] = useState([])
     const { register, handleSubmit, formState: { errors } } = useForm();
