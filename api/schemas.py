@@ -40,6 +40,9 @@ class User(db.Model):
     userImgType = db.Column(db.Text)
     # events that this person has organized (1 to many relationship)
     organizedEvents = db.relationship("Event", backref="user")
+    showContactInfo = db.Column(db.Boolean, default=True)
+    showRegisteredEvents = db.Column(db.Boolean, default=True)
+
     # events that this person is attending
     registeredEvents = db.relationship(
         "Event", secondary=event_attendance, backref="users"

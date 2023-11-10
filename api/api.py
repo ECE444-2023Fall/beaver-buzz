@@ -35,17 +35,37 @@ def login():
 @app.route("/api/getUserInfo", methods=["POST"])
 def getInfo():
     id = request.json["id"]
+    requestingUser = request.json["myID"]
 
     user = User.query.filter_by(id=id).first()
+
+    print(user.showContactInfo)
 
     return jsonify({
         "firstname": user.firstname,
         "lastname": user.lastname,
-        "phonenumber": user.phonenumber,
-        "emailaddr": user.email,
+        "phonenumber": user.phonenumber if user.showContactInfo or id == requestingUser else "Private",
+        "emailaddr": user.email if user.showContactInfo or id == requestingUser else "Private",
         "interests": user.interests,
+        "privacy": {"showContactInformation": user.showContactInfo, "showRegisteredEvents": user.showRegisteredEvents}
     })
 
+
+@app.route("/api/setPrivacy", methods=["POST"])
+def setPrivacy():
+    id = request.json["id"]
+    showContactInfo = request.json["showContactInfo"]
+    showRegisteredEvents = request.json["showRegisteredEvents"]
+    user = User.query.filter_by(id=id).first()
+
+
+    user.showContactInfo = showContactInfo
+    user.showRegisteredEvents = showRegisteredEvents
+    db.session.commit()
+
+    return jsonify({
+        "status": "updated privacy"
+    })
 
 @app.route("/api/setEmail", methods=["POST"])
 def setEmail():
@@ -187,6 +207,7 @@ def createEvent():
     eventDesc = n["description"]
     eventImg = n["image"] 
 
+
     organizer = User.query.filter_by(id=organizerID).first()
     if not organizer:
         return jsonify({"Error": "Please log in first!"})
@@ -209,6 +230,7 @@ def createEvent():
     db.session.add(newevent)
     db.session.commit()
     return jsonify({"event_id": newevent.id})
+
 
 
 @app.route("/api/events/<eventid>/register/<userid>", methods=["POST"])
@@ -301,9 +323,13 @@ def getEventsByCategory(category):
 
 def getEventsByUser(userid):
     request_value = request.json
+    requesting_user = request_value['myID']
     user = User.query.filter_by(id=userid).first()
-    events = user.registeredEvents if request_value['option'] == 'Attending' else user.organizedEvents
     final = []
+    if not user.showRegisteredEvents and userid != requesting_user and request_value['option'] == 'Attending':
+        return jsonify(final)
+    events = user.registeredEvents if request_value['option'] == 'Attending' else user.organizedEvents
+    
     if request_value['showPastEvents']:
         for event in events:
             final.append(event.serialize())
