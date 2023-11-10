@@ -1,13 +1,14 @@
 import './App.css';
 import Navbar from './components/Navbar';
-import LoginPage from "./login";
-import RegisterPage from "./register";
-import EventPage from './Event';
-import DiscoverPage from "./discover";
+import LoginPage from "./Login/Login";
+import RegisterPage from "./Login/Register";
+import EventPage from './Event/Event';
+import DiscoverPage from "./Discover/Discover";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { UserProvider } from './UserContext';
-import ProfilePage from "./Profile";
-import UserPage from './userProfile';
+import ProfilePage from './Profile/Profile';
+import UserPage from './Profile/UserProfile';
+import HostPage from './Host/Host';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
                     <Route exact path='/register' element={<RegisterPage/>}/>
                     <Route exact path='/events/:id' element={<EventPage/>}/>
                     <Route exact path='/user/:id' element={<UserPage/>}/>
+                    <Route exact path='post-event' element={<HostPage/>}/>
                 </Routes>
             </Router>
         </UserProvider>
