@@ -93,7 +93,14 @@
   display: inline-block;
 
 }
-
+.search_filter_title{
+  color: #1E3765;
+  font-family: Poppins;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
 .filters{
   text-align: left;
   margin-left: -210px;
