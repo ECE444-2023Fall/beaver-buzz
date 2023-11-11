@@ -18,6 +18,62 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+# @app.route('/api/users/<userid>/getsubscribers')
+# def getSubscribers(userid):
+#     user = db.get_or_404(User, id)
+
+@app.route('/api/users/<userid>/getSubscribers', methods=["POST"])
+def getSubscribers(userid):
+    user = db.get_or_404(User, userid)
+    returnarray = [[u.id, u.firstname, u.lastname] for u in user.subscribers]
+    return jsonify(returnarray), 200
+
+@app.route('/api/users/<userid>/getSubscribedTo', methods=["POST"])
+def getsubscribedTo(userid):
+    user = db.get_or_404(User, userid)
+    returnarray = [[u.id, u.firstname, u.lastname] for u in user.subscribed_to_users]
+    return jsonify(returnarray), 200
+
+@app.route('/api/users/<otheruser>/subscribe/<userid>', methods=["POST"])
+def subscribe(userid, otheruser):
+    user = db.get_or_404(User, userid)
+    requestingUser = db.get_or_404(User, otheruser)
+    subscriberlist = user.subscribers
+    if requestingUser in subscriberlist:
+        return jsonify({
+            "error": "user is already subscribed"
+        }), 400
+    subscriberlist.append(requestingUser)
+    requestingUser.subscribed_to_users.append(user)
+
+    db.session.commit()
+    return jsonify({
+        "status": "subscribed"
+    })
+
+@app.route('/api/users/<otheruser>/unsubscribe/<userid>', methods=["POST"])
+def unsubscribe(userid, otheruser):
+    user = db.get_or_404(User, userid)
+    requestingUser = db.get_or_404(User, otheruser)
+    subscriberlist = user.subscribers
+    if requestingUser not in subscriberlist:
+        return jsonify({
+            "error": "user was never subscribed"
+        }), 400
+    subscriberlist.remove(requestingUser)
+    requestingUser.subscribed_to_users.remove(user)
+
+    db.session.commit()
+    return jsonify({
+        "status": "unsubscribed"
+    })
+
+
+
+    
+
+
+
 
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -47,9 +103,9 @@ def getInfo():
         "lastname": user.lastname,
         "phonenumber": user.phonenumber if user.showContactInfo or id == requestingUser else "Private",
         "emailaddr": user.email if user.showContactInfo or id == requestingUser else "Private",
-        "interests": user.interests,
+        "interests": ast.literal_eval(user.interests),
         "privacy": {"showContactInformation": user.showContactInfo, "showRegisteredEvents": user.showRegisteredEvents},
-        "avatar": user.userImg
+        "avatar": user.userImg,
 
     })
 

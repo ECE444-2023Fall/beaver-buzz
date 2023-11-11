@@ -60,7 +60,6 @@ const ProfilePage=()=> {
     const [privacy, setPrivacy] = useState({})
 
     const[subscribers, setSubscribers] = useState([]);
-    const[currentTab, setCurrentTab] = useState("Subscribers")
 
     const[tab, setTab] = useState(0);
 
@@ -70,6 +69,38 @@ const ProfilePage=()=> {
     };
 
     const [selectedValues, setSelectedValues] = useState([])
+
+    function getSubscriberList(mode) {
+        var url = '/api/users/' + userId;
+        if(mode == "Subscribers") {
+            url += '/getSubscribers'
+        }
+        else {
+            url += '/getSubscribedTo'
+        }
+        const requestOptions={
+            method:"POST",
+            headers:{
+               'content-type':'application/json'
+            },
+            body:JSON.stringify({})
+            }
+
+        fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            var subscriberArray = [];
+            for (var i = 0; i < data.length; i++) {
+                var user = new User(data[i][1], data[i][2], data[i][0])
+                console.log(user)
+                subscriberArray.push(user);
+
+            }
+            setSubscribers(subscriberArray);
+            
+        });
+    }
 
 
     function fetchEvents(option, showPastEvents) {
@@ -161,6 +192,7 @@ const ProfilePage=()=> {
 
         fetchUser();
         fetchEvents("Attending", showPastEvents);
+        getSubscriberList("Subscribers");
 
     }, []);
     const firstNameRef = useRef(null);
@@ -307,7 +339,7 @@ const ProfilePage=()=> {
     const subscribeDataItems = subscribers.map((user) =>
         <li key={user.id} onClick={() => subscriberClicked(user)}>
             <div>
-                <div  className="inputField">{user.firstname} {user.lastname}</div >
+                <div className="inputField">{user.firstname} {user.lastname}</div>
                 <div className="horizontal_divider"></div>
             </div>
         </li>
@@ -407,7 +439,14 @@ const ProfilePage=()=> {
                                 textColor="primary"
                                 indicatorColor="primary"
                                 onChange={(event, newValue) => {
+                                    console.log(newValue);
                                     setTab(newValue);
+                                    if(newValue == 0) {
+                                        getSubscriberList("Subscribers")
+                                    }
+                                    else {
+                                        getSubscriberList("Subscribed to")
+                                    }
                                 }}
                             >
                                 <Tab label="Subscribers"></Tab>
