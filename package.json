@@ -35,6 +35,10 @@
     "typescript": "^4.5.2",
     "web-vitals": "^2.1.4"
   },
+
+  "engines": {
+    "node": "21.0.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "start-api": "cd api && flask run --no-debugger -h localhost -p 8000",
