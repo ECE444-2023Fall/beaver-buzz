@@ -1,7 +1,7 @@
 {
   "name": "potato-app",
   "version": "0.1.0",
-  "type": "module",
+  "proxy": "https://beaverbuzz-ec25a7038a8a.herokuapp.com/",
   "private": true,
   "dependencies": {
     "@babel/plugin-syntax-flow": "^7.14.5",
