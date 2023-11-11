@@ -4,7 +4,7 @@ import "./Form.css"
 import {Link, redirect, useNavigate} from "react-router-dom"
 import {useForm} from "react-hook-form";
 import {useUserContext} from "../UserContext";
-#import Paper from '@mui/material/Paper';
+
 const LoginPage=()=>{
     const[credentialsValid, setCredentials] = useState(true)
     const[greeting, setGreeting] = useState('')
@@ -52,7 +52,6 @@ const LoginPage=()=>{
     return(
         <div className ="container">
             <div className="form-center">
-            <Paper elevation={0} />
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <h1 className="form-title">Get Started Now</h1>
                         <h1 className="form-name">Email</h1>
@@ -81,7 +80,6 @@ const LoginPage=()=>{
                         <Button type='submit' className="submitButton"><h1 className="form-button">Login</h1></Button>
                         <h1 className="form-name">Don't have an account?</h1><Link to='/register'><h1 className="form-name">Sign up here</h1></Link>
                     </Form>
-                    <Paper />
 
             </div>
 
