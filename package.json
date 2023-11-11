@@ -37,9 +37,13 @@
   },
 
   "scripts": {
-    "start": "node index.js",
-    "build": "ng build",
-    "heroku-postbuild": "ng build --prod" 
+    "start": "react-scripts start",
+    "start-api": "cd api && flask run --no-debugger -h localhost -p 8000",
+    "start-api-debug": "cd api && flask run --debug -h localhost -p 8000",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
