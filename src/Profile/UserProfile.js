@@ -12,6 +12,7 @@ import moment from "moment-timezone";
 import { useNavigate, useParams } from "react-router";
 import Multiselect from "multiselect-react-dropdown";
 import { CATEGORIES } from "../constants/Constants";
+import "../LoginSignup/Form.css"
 
 class Event {
     constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
@@ -66,6 +67,57 @@ const UserPage=()=> {
 
     const [events, setEvents] = useState([]);
     const [privacy, setPrivacy] = useState({})
+
+    const [buttonState, setButtonState] = useState(null);
+
+    function subscribeButtonClicked() {
+        var mode;
+        if(buttonState == "Subscribe") {
+            setButtonState("Unsubscribe")
+            mode = "subscribe"
+        }
+        else {
+            setButtonState("Subscribe")
+            mode = "unsubscribe"
+        }
+
+        const requestOptions={
+            method:"POST",
+            headers:{
+               'content-type':'application/json'
+            },
+            body:JSON.stringify({})
+            }
+    
+            fetch('/api/users/' + userId + '/' + mode + '/' + requestedUserId, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            });
+    }
+
+    function isSubscribedTo() {
+        const requestOptions={
+            method:"POST",
+            headers:{
+               'content-type':'application/json'
+            },
+            body:JSON.stringify({})
+            }
+    
+            fetch('/api/users/' + userId + '/isSubscribedTo/' + requestedUserId, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                var res = data.result;
+                if(res) {
+                    setButtonState("Unsubscribe")
+                }
+                else {
+                    setButtonState("Subscribe")
+                }
+
+            });
+    }
 
     function fetchEvents(option, showPastEvents) {
         if(requestedUserId == userId){
@@ -145,6 +197,9 @@ const UserPage=()=> {
 
         fetchUser();
         fetchEvents(value, showPastEvents);
+        isSubscribedTo();
+
+
 
     }, []);
     
@@ -196,6 +251,7 @@ const UserPage=()=> {
         <div className="alternateFlexBox">
             <div className="flexbox-user-container">
             <UploadAvatar id={userId} avatar={avatar}/>
+            <Button className="subscribeButton" onClick={(e) => {subscribeButtonClicked()}}>{buttonState} </Button>
                 <div className="person-name-font">{firstName} {lastName}</div>
                  <div className= "person-table">
                         <div className="sectionFont">First name</div>

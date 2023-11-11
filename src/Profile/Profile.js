@@ -11,6 +11,17 @@ import defaultImage from "../images/defaultEvent.png"
 import { useNavigate } from "react-router-dom";
 import Multiselect from "multiselect-react-dropdown";
 import { CATEGORIES } from "../constants/Constants";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import Paper from "@material-ui/core/Paper";
+
+class User {
+    constructor(firstname, lastname, id) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.id = id;
+    }
+}
 
 export class Event {
     constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
@@ -48,12 +59,48 @@ const ProfilePage=()=> {
     const [events, setEvents] = useState([]);
     const [privacy, setPrivacy] = useState({})
 
+    const[subscribers, setSubscribers] = useState([]);
+
+    const[tab, setTab] = useState(0);
+
 
     const state = {
         options: [{name: 'Show contact information', id: 1},{name: 'Show events you are attending', id: 2}]
     };
 
     const [selectedValues, setSelectedValues] = useState([])
+
+    function getSubscriberList(mode) {
+        var url = '/api/users/' + userId;
+        if(mode == "Subscribers") {
+            url += '/getSubscribers'
+        }
+        else {
+            url += '/getSubscribedTo'
+        }
+        const requestOptions={
+            method:"POST",
+            headers:{
+               'content-type':'application/json'
+            },
+            body:JSON.stringify({})
+            }
+
+        fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            var subscriberArray = [];
+            for (var i = 0; i < data.length; i++) {
+                var user = new User(data[i][1], data[i][2], data[i][0])
+                console.log(user)
+                subscriberArray.push(user);
+
+            }
+            setSubscribers(subscriberArray);
+            
+        });
+    }
 
 
     function fetchEvents(option, showPastEvents) {
@@ -145,6 +192,7 @@ const ProfilePage=()=> {
 
         fetchUser();
         fetchEvents("Attending", showPastEvents);
+        getSubscriberList("Subscribers");
 
     }, []);
     const firstNameRef = useRef(null);
@@ -288,6 +336,16 @@ const ProfilePage=()=> {
     const [showPastEvents, setShowPastEvents] = useState(false)
 
 
+    const subscribeDataItems = subscribers.map((user) =>
+        <li key={user.id} onClick={() => subscriberClicked(user)}>
+            <div>
+                <div className="inputField">{user.firstname} {user.lastname}</div>
+                <div className="horizontal_divider"></div>
+            </div>
+        </li>
+    );
+
+
     const arrayDataItems = events.map((event) =>
     <li key={event.id}>
         <div className="event-vertical-container">
@@ -355,20 +413,49 @@ const ProfilePage=()=> {
 
     }
 
+    function subscriberClicked(user) {
+        console.log(user);
+        navigate('/user/' + user.id);
+    }
+
     return(
         <div className="mainFlexBox">
-                <div className="privacy">
-                    <Multiselect    
-                    options={state.options} // Options to display in the dropdown
-                    selectedValues={selectedValues} // Preselected value to persist in dropdown
-                    showCheckbox='true'
-                    placeholder='Privacy settings'
-                    
-                    onSelect={privacyChanged} // Function will trigger on select event
-                    onRemove={privacyChanged} // Function will trigger on remove event
-                    displayValue="name" // Property name to display in the dropdown options
-                    />
+                <div className="flexbox-vertical-container">
+                    <div className="privacy">
+                        <Multiselect    
+                            options={state.options} // Options to display in the dropdown
+                            selectedValues={selectedValues} // Preselected value to persist in dropdown
+                            showCheckbox='true'
+                            placeholder='Privacy settings'
+                            
+                            onSelect={privacyChanged} // Function will trigger on select event
+                            onRemove={privacyChanged} // Function will trigger on remove event
+                            displayValue="name" // Property name to display in the dropdown options
+                        />
+                    </div>
+                    <Paper square className="followerList">
+                            <Tabs
+                                value={tab}
+                                textColor="primary"
+                                indicatorColor="primary"
+                                onChange={(event, newValue) => {
+                                    console.log(newValue);
+                                    setTab(newValue);
+                                    if(newValue == 0) {
+                                        getSubscriberList("Subscribers")
+                                    }
+                                    else {
+                                        getSubscriberList("Subscribed to")
+                                    }
+                                }}
+                            >
+                                <Tab label="Subscribers"></Tab>
+                                <Tab label="Subscribed to"></Tab>
+                            </Tabs>
+                            <ul className="eventList">{subscribeDataItems}</ul>
+                        </Paper>
                 </div>
+
             <div className="flexbox-user-container">
                 <UploadAvatar editable={true} id={userId} avatar={avatar}/>
                 <div className="person-name-font">{firstName} {lastName}</div>
