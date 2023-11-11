@@ -319,24 +319,47 @@ def getEventsByUser(userid):
 
     return jsonify(final)
 
+@app.route('/api/allevents', methods=['GET'])
+@cross_origin()
+def allevents():
+    results = [e.serialize() for e in Event.query.all()]
+    users = User.query.all()
+    users_dict={}
+    for u in users:
+        users_dict[u.id] = u.firstname + " " + u.lastname
+    for result in results:
+        if result['organizerID'] in users_dict.keys():
+            name = users_dict[result['organizerID']]
+            result['organizerName'] =  name
+        else:
+            u = User.query.get(result['organizerID'])
+            result['organizerName'] = u.firstname + " " + u.lastname
+    return jsonify(results)
+
+
+
+
 @app.route('/api/search', methods=['GET'])
 @cross_origin()
 def search():
     query = request.args.get('searchbar')
-    location_filters = request.args.get('filters').split(',')
+    location_filters = request.args.get('filters')
+    if location_filters:
+        location_filters = location_filters.split(',')
+    else:
+        location_filters = []
     org_filter = request.args.get('Organizer')
+    temp_q = query.split(' ')
     if org_filter:
-        if len(query.split(' '))>1:
-            fn = query.split(' ')[0]
-            ln = query.split(' ')[1]
+        if len(temp_q)>1:
+            fn = temp_q[0]
+            ln = temp_q[1]
         else:
-            fn = query.split(' ')[0]
-            ln = query.split(' ')[0]
+            fn = temp_q[0]
+            ln = temp_q[0]
     #type_filter = request.args.get('type_filter')
     if not org_filter:
         org_filter= False
-    if location_filters[0] == "":
-        location_filters = []
     filtered_results = []
     users_dict = {}
 
@@ -386,4 +409,64 @@ def search():
             u = User.query.get(result['organizerID'])
             result['organizerName'] = u.firstname + " " + u.lastname
     return jsonify(results)
+
+
+@app.route('/api/searchtest', methods=['GET'])
+@cross_origin()
+def search_test():
+    from datetime import datetime, timedelta
+    import pandas as pd
+
+    # Create a dictionary with data for the DataFrame
+    data = {
+        'EventName': ['Halloween', 'Christmas', 'Diwali', 'Holi', 'Resume Workshop', 'ECE444 Study Session'],
+        'Location': ['Bahen', 'Bahen', 'Myhal', 'Robarts', 'Sanford Fleming', 'Rotman'],
+        'OrganizerID': [3, 1, 1, 2, 2, 3],
+        'Categories': ['Social,Food', 'Social,Cultural,Food', 'Social,Cultural,Food', 'Arts,Cultural,Food', 'Academic,Social,Technology', 'Academic,Technology']
+    }
+
+    possible_results = pd.DataFrame(data)
+    Event.query.delete()
+    db.session.commit()
+    for i in range(len(data['EventName'])):
+        newevent = Event(
+            eventName=data['EventName'][i],
+            organizerID = data['OrganizerID'][i],
+            eventStart = datetime.now()+ timedelta(seconds = random.randint(0,10000)),
+            eventEnd = datetime.now(),
+            eventBuilding = data['Location'][i],
+            eventRoom = "2155",
+            oneLiner = "Very Fun Event " + data['EventName'][i],
+            eventDesc = "It's gonna be lit",
+            eventImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAADMElEQVR4nOzVwQnAIBQFQYXff81RUkQCOyDj1YOPnbXWPmeTRef+/3O/OyBjzh3CD95BfqICMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMO0TAAD//2Anhf4QtqobAAAAAElFTkSuQmCC",
+            eventImgType = "image/png",
+            eventCategories = data['Categories'][i]
+        )
+        newevent.registered = random.randint(1,100)
+        db.session.add(newevent)
+    User.query.delete()
+    db.session.commit()
+    user_data ={
+        'email':['abc@gmail.com', 'def@gmail.com', 'chad@gmail.com'],
+        'password':['yeet', 'yo', 'wassup'],
+        'firstname':['George', 'Joel', 'Ethan'],
+        'lastname':['Saad', 'Thomas', 'Baron'],
+        'phonenumber':['1234', '5678', '9101'],
+        'interests':['Social,Technology,Other', 'Social,Health,Music', 'Academic,Sports,Technology']
+    }
+    for i in range(len(user_data['firstname'])):
+        newaccount = User(
+            email=user_data['email'][i],
+            password=user_data['password'][i],
+            firstname=user_data['firstname'][i],
+            lastname=user_data['lastname'][i],
+            phonenumber=user_data['phonenumber'][i],
+            interests=user_data['interests'][i],
+        )
+        db.session.add(newaccount)
+    db.session.commit()
+    return "Hello"
+
+
+
 

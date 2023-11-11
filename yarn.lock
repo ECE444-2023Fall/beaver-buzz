@@ -8576,6 +8576,13 @@ react-bootstrap@>=0.23.0, react-bootstrap@^2.9.0:
     uncontrollable "^7.2.1"
     warning "^4.0.3"
 
+react-css-dropdown@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-css-dropdown/-/react-css-dropdown-1.1.2.tgz#3ced37ecfbed0c51cd3fa3205ba4bb74abb92cce"
+  integrity sha512-bJ5jS1ewo68GacfziWYjaDRJsqhwvzsXaZRFcdpV6ZGv4jjZM7NnUPNCJIXw6Mm6P54PdHzdWSwGGWqWA5WRxQ==
+  dependencies:
+    clsx "^1.1.1"
+
 react-datetime@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-datetime/-/react-datetime-3.2.0.tgz#fdfa4dced5a9b59724f4c478a1ecc3cb6a6a80cf"
