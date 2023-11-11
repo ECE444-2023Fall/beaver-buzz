@@ -206,8 +206,8 @@ def getEvent(id):
         # print("timezone is:", event.eventStart.tzname())
         event.eventStart = event.eventStart.astimezone(eastern)
         event.eventEnd = event.eventEnd.astimezone(eastern)
-        return jsonify(event.serialize())
-    return jsonify({"error": "Event not found"}), 420
+        return jsonify(event.serialize()), 200
+    return jsonify({"error": "Event not found"}), 404
 
 
 @app.route("/api/events/new", methods=["POST"])

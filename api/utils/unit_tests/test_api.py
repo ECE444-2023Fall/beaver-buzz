@@ -193,3 +193,18 @@ def test_createEvent(client, populate_db):
         content_type="application/json",
     )
     assert(res.status_code == 400)
+
+# Done by Julia Wang
+def test_getEvent(client, populate_db):
+    res = client.get("/api/events/1")
+    assert(res.status_code == 200)
+    assert(res.get_json()['eventName']=="ECE444 Study Session")
+    assert(res.get_json()['eventBuilding']=="Sanford Fleming")
+    assert(res.get_json()['eventRoom']=="Test Room")
+    assert(res.get_json()['oneLiner']=="Test One Liner")
+    assert(res.get_json()['eventDesc']==None)
+    assert(res.get_json()['eventImg']==None)
+
+    # try to get an event that doesn't exist
+    res = client.get("/api/events/3")
+    assert(res.status_code == 404)
