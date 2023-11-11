@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {Form,Button} from 'react-bootstrap'
-import "../Login/Form.css"
+import "../LoginSignup/Form.css"
 import {Grid, Item} from "semantic-ui-react"
-import {Link} from "react-router-dom"
 import {useForm} from "react-hook-form";
 import Card from '../components/Card'
 import CardGrid from '../components/CardGrid';
 import Pagination from '../components/Pagination';
-import Dropdown from 'react-bootstrap/Dropdown';
 import { useNavigate } from 'react-router-dom';
 import "./Discover.css"
 import {CATEGORIES} from '../constants/Constants'
