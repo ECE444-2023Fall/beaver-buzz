@@ -38,6 +38,12 @@ def getsubscribedTo(userid):
 def subscribe(userid, otheruser):
     user = db.get_or_404(User, userid)
     requestingUser = db.get_or_404(User, otheruser)
+    if userid == otheruser:
+        return jsonify({
+            "error": "cannot subscribe to yourself"
+        }), 400
+
+
     subscriberlist = user.subscribers
     if requestingUser in subscriberlist:
         return jsonify({
@@ -55,6 +61,11 @@ def subscribe(userid, otheruser):
 def unsubscribe(userid, otheruser):
     user = db.get_or_404(User, userid)
     requestingUser = db.get_or_404(User, otheruser)
+    if userid == otheruser:
+        return jsonify({
+            "error": "cannot unsubscribe from yourself"
+        }), 400
+
     subscriberlist = user.subscribers
     if requestingUser not in subscriberlist:
         return jsonify({

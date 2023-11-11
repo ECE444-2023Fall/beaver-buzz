@@ -222,7 +222,7 @@ def test_user_info(client, populate_user_info_db):
     assert(value['emailaddr'] == "afilkostic@gmail.com")
     assert(value['firstname'] == "Filip")
     assert(value['lastname'] == "Kostic")
-    assert(value['interests'] == str([{"name": "Sports", "id": 2}, {"name": "Math", "id": 4}]))
+    assert(value['interests'] == [{"name": "Sports", "id": 2}, {"name": "Math", "id": 4}])
     assert(value['privacy'] == {'showContactInformation': True, 'showRegisteredEvents': True})
     assert(res.status_code == 200)
 
@@ -366,7 +366,7 @@ def test_set_interests(client, populate_set_info_db):
     json = {"id": 1, "myID": 1})
     value = res.json
     assert(res.status_code == 200)
-    assert(value['interests'] == str([{"name": "Sports", "id": 2}]))
+    assert(value['interests'] == [{"name": "Sports", "id": 2}])
 
 
 # Done by Filip Kostic
@@ -421,3 +421,160 @@ def test_set_privacy(client, populate_set_info_db):
     assert(res.status_code == 200)
     assert(value['emailaddr'] == "Private")
     assert(value['phonenumber'] == "Private")
+
+def test_user_subscription(client, populate_set_info_db):
+    # Test invalid user ids
+    res = client.post("/api/users/3/subscribe/1")
+    assert(res.status_code == 404)
+
+    res = client.post("/api/users/3/unsubscribe/1")
+    assert(res.status_code == 404)
+
+    res = client.post("/api/users/3/getSubscribers")
+    assert(res.status_code == 404)
+
+    res = client.post("/api/users/3/getSubscribedTo")
+    assert(res.status_code == 404)
+
+    # Check initial subscriber state
+
+    res = client.post("/api/users/1/getSubscribers")
+    value = res.json
+    assert(value == [])
+
+    res = client.post("/api/users/1/getSubscribedTo")
+    value = res.json
+    assert(value == [])
+
+    res = client.post("/api/users/2/getSubscribers")
+    value = res.json
+    assert(value == [])
+
+    res = client.post("/api/users/2/getSubscribedTo")
+    value = res.json
+    assert(value == [])
+
+
+    # Subscribe user 1 to 2
+    res = client.post("/api/users/1/subscribe/2")
+    assert(res.status_code == 200)
+
+    # Test subscriber states
+    res = client.post("/api/users/1/getSubscribers")
+    value = res.json
+    assert(value == [])
+
+    res = client.post("/api/users/1/getSubscribedTo")
+    value = res.json
+    assert(value == [[2, "Benny", "Guy"]])
+
+    res = client.post("/api/users/2/getSubscribers")
+    value = res.json
+    assert(value == [[1, "Filip", "Kostic"]])
+
+    res = client.post("/api/users/2/getSubscribedTo")
+    value = res.json
+    assert(value == [])
+
+    # Subscribe user 2 to 1
+    res = client.post("/api/users/2/subscribe/1")
+    assert(res.status_code == 200)
+
+    # Test subscriber states
+    res = client.post("/api/users/1/getSubscribers")
+    value = res.json
+    assert(value == [[2, "Benny", "Guy"]])
+
+    res = client.post("/api/users/1/getSubscribedTo")
+    value = res.json
+    assert(value == [[2, "Benny", "Guy"]])
+
+    res = client.post("/api/users/2/getSubscribers")
+    value = res.json
+    assert(value == [[1, "Filip", "Kostic"]])
+
+    res = client.post("/api/users/2/getSubscribedTo")
+    value = res.json
+    assert(value == [[1, "Filip", "Kostic"]])
+
+    # Unsubscribe 1 from 2
+    res = client.post("/api/users/1/unsubscribe/2")
+    assert(res.status_code == 200)
+
+    # Test subscriber states
+    res = client.post("/api/users/1/getSubscribers")
+    value = res.json
+    assert(value == [[2, "Benny", "Guy"]])
+
+    res = client.post("/api/users/1/getSubscribedTo")
+    value = res.json
+    assert(value == [])
+
+    res = client.post("/api/users/2/getSubscribers")
+    value = res.json
+    assert(value == [])
+
+    res = client.post("/api/users/2/getSubscribedTo")
+    value = res.json
+    assert(value == [[1, "Filip", "Kostic"]])
+
+    # Unsubscribe 2 from 1
+    res = client.post("/api/users/2/unsubscribe/1")
+    assert(res.status_code == 200)
+
+    # Test subscriber states
+    res = client.post("/api/users/1/getSubscribers")
+    value = res.json
+    assert(value == [])
+
+    res = client.post("/api/users/1/getSubscribedTo")
+    value = res.json
+    assert(value == [])
+
+    res = client.post("/api/users/2/getSubscribers")
+    value = res.json
+    assert(value == [])
+
+    res = client.post("/api/users/2/getSubscribedTo")
+    value = res.json
+    assert(value == [])
+
+    # Bad requests
+
+    # Subscribe user 1 to themself
+
+    res = client.post("/api/users/1/subscribe/1")
+    assert(res.status_code == 400)
+
+    # Unsubscribe user 1 from themself
+
+    res = client.post("/api/users/1/unsubscribe/1")
+    assert(res.status_code == 400)
+    value = res.json
+    assert(value['error'] == "cannot unsubscribe from yourself")
+
+    # Subscribe user 1 from themself
+
+    res = client.post("/api/users/1/subscribe/1")
+    assert(res.status_code == 400)
+    value = res.json
+    assert(value['error'] == "cannot subscribe to yourself")
+
+    # Unubscribe 2 from 1 when they were not subscribed
+
+    res = client.post("/api/users/2/unsubscribe/1")
+    assert(res.status_code == 400)
+    value = res.json
+    assert(value['error'] == "user was never subscribed")
+
+    # Subscribe 2 to 1 when they were already subscribed
+
+    res = client.post("/api/users/2/subscribe/1")
+    assert(res.status_code == 200)
+
+    res = client.post("/api/users/2/subscribe/1")
+    assert(res.status_code == 400)
+    value = res.json
+    assert(value['error'] == "user is already subscribed")
+
+
