@@ -195,6 +195,19 @@ def setPhone():
         "status": "updated phone"
     })
 
+@app.route("/api/users/<userid>/isSubscribedTo/<otherid>", methods=["POST"])
+def isSubscribedTo(userid, otherid):
+    user = db.get_or_404(User, userid)
+    otheruser = db.get_or_404(User, otherid)
+    if otheruser in user.subscribed_to_users:
+        return jsonify({
+            "result": True
+        })
+    else:
+        return jsonify({
+            "result": False
+        })
+
 
 @app.route("/api/setInterests", methods=["POST"])
 def setInterests():
