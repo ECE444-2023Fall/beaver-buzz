@@ -9,6 +9,7 @@ import CardGrid from '../components/CardGrid';
 import Pagination from '../components/Pagination';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useNavigate } from 'react-router-dom';
+import "./Discover.css"
 
 const DiscoverPage=()=>{
     const[searchitems, setsearchitems] = useState([])
@@ -16,7 +17,7 @@ const DiscoverPage=()=>{
     const locations = ["Academic", "Arts", "Career", "Cultural", "Food", "Health", "Music", "Social", "Sports", "Technology", "Other"];
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(4);
+    const [recordsPerPage] = useState(6);
 
     //Initially Fetch all results
     useEffect(() => {
@@ -117,25 +118,26 @@ const DiscoverPage=()=>{
             <div className="form-left">
 
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <label htmlFor="searchbar">Discover</label>
+                        <label htmlFor="searchbar" class="title">Discover</label>
+                        <br/><br/>
                         <Form.Group>
                             <Form.Control type="text"
                                 placeholder="Search Here"
+                                class = "search"
                                 id="searchbar"
                                           className="input"
                                  {...register("searchbar", { required: false})}
                             />
                         </Form.Group>
-                        <Button type='submit' className="submitButton searchButton">Search</Button>
-
-                        <Dropdown class = "dropdown" onSelect={handleSelect}>
+                        <Button type='submit' className="searchButton">Search</Button>
+                        <Dropdown onSelect={handleSelect}>
                             <Dropdown.Toggle variant="success" id="dropdown-basic">
                                 {selectedItem ? selectedItem : 'Select an Item'}
                             </Dropdown.Toggle>
 
-                            <Dropdown.Menu class = "dropdown">
-                                <Dropdown.Item class = "dropdown-content" eventKey="Popularity">Popularity</Dropdown.Item>
-                                <Dropdown.Item eventKey="EventTime">EventTime</Dropdown.Item>
+                            <Dropdown.Menu class = "sorting" >
+                                <Dropdown.Item href="#/action-1" class = "dropdown-content" eventKey="Popularity">Popularity</Dropdown.Item>
+                                <Dropdown.Item href="#/action-1" eventKey="EventTime">EventTime</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
 
@@ -143,7 +145,7 @@ const DiscoverPage=()=>{
                         <Form.Check
                                 type={"checkbox"}
                                 id={`org-checkbox`}
-                                label={'Organizer'}
+                                label={'  Organizer'}
                                 {...register('Organizer', { required: false})}
                             />
                         </div>
@@ -151,8 +153,8 @@ const DiscoverPage=()=>{
 
 
 
-                        <div key={`default-checkbox`} className="mb-3 filters">
-                            <label>Search Filters </label> <br/><br/>
+                        <div key={`default-checkbox`} className="filters">
+                            <label>Search Filters </label> <br/><br/><br/>
 
                             {locations.map((item, index) => (
                                 <Form.Check
@@ -173,13 +175,17 @@ const DiscoverPage=()=>{
             
             <CardGrid>
                 { currentRecords?.map(item=>
-                    <div class = "card" style = {{display:"flex"}} onClick={() => handleClick(item.id)}>
+                    <div onClick={() => handleClick(item.id)}>
                     <Card key={item} style = {{display:"flex"}}>
-                        <img src={item.eventImg} alt="Event"></img>
+                        <img src={item.eventImg} alt="Event" class="eventimg"></img>
+                        <div class ="cardtext">
                         <h1>{item.eventName}</h1>
+                        <div class = "eventdetails">
                         <h2>Location: {item.eventBuilding}</h2>
-                        <h2>Time: {item.eventStart}</h2>
-                        <h2>Organizer: {item.organizerName}</h2>                        
+                        <h2>Time: {item.display_time}</h2>
+                        <h2>Organizer: {item.organizerName}</h2>  
+                        </div>
+                        </div>                      
                     </Card>
                     </div>
                 )

@@ -1,0 +1,143 @@
+
+.filters{
+    text-align: left;
+    margin-left: -210px;
+    margin-top: 50px;
+    width:200px;
+    padding-bottom: 100px;
+    padding-left: 50px;
+    padding-top: 10px;
+    background-color: #aab3b3;
+    border-radius: 10px;
+    background-color: rgb(48, 95, 95);
+    color: white;
+  }
+  
+  .filters:hover{
+    box-shadow: 5px 5px rgb(2, 22, 22);
+    background-color: rgb(13, 117, 117);
+  }
+  .searchresults{
+    text-align: center;
+    margin-left: 250px;
+    width: 100px;
+    justify-content: center;
+  }
+  .filters{
+    padding-bottom: 50px;
+  }
+  
+  .card{
+    background-color: rgba(0, 255, 255, 0.398);
+    border-radius: 10px;
+    display: flexbox;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+    margin:50px;
+    box-sizing: border-box;
+    width: 266px;
+    box-shadow: 5px 5px rgb(2, 131, 131);
+  }
+  .card:hover{
+    background-color: rgb(158, 83, 158);
+    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+  }
+  .cardGrid{
+    /* text-align: center; */
+    margin-top: -350px;
+    border-radius: 10px;
+    margin-right: 100px;
+    width:1100px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .dropdown{
+    margin-left: 50px;
+  }
+  
+  .organizer{
+    margin-top: -110px;
+    margin-left: 1025px;
+    width: 100px;
+    height: 30px;
+    padding: 5px;
+    border-radius: 10px;
+    padding-top: 7px;
+    background-color: rgba(85, 3, 85, 0.926);
+    color: white;
+  }
+  
+  .organizer:hover{
+    background-color: rgba(85, 3, 85, 0.748);
+    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+  }
+  
+  .eventimg{
+    margin: 33px;
+    margin-left: 15px;
+    border-radius: 10px;
+    border: 10px solid rgba(0, 0, 0, 0.111);
+    height: 200px;
+    
+  }
+  .eventimg:hover{
+    box-shadow: 5px 5px 5px 5px rgb(85, 3, 85);
+  }
+  .search{
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 100%;
+    resize: none;
+  
+    
+  
+  }
+  .search:hover {
+    box-shadow: 5px 5px rgb(11, 49, 49);
+  }
+  
+  .cardtext{
+    margin-bottom: 50px;
+  }
+  
+  
+  .searchButton {
+    background-color: rgb(85, 3, 85);
+    color: white;
+    font-family: sans-serif;
+    font-size: 14px;
+    margin: 20px 0px;
+  }
+  
+  .sorting{
+    background-color: red;
+  }
+  .title{
+    font-size: 40px;
+  }
+  .page-link-btn{
+    background-color: rgb(11, 49, 49);
+    color: white;
+    margin:20px;
+    margin-top: 150px;
+    margin-bottom: 100px;
+  }
+  .page-link-btn:hover{
+    background-color: rgb(25, 110, 110);
+    box-shadow: 5px 5px 5px 5px rgb(11, 49, 49);
+  
+  }
+  .page-container{
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+  }
+
+.eventdetails{
+    font-size: 10px;
+}
