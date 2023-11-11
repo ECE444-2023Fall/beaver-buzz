@@ -2,7 +2,7 @@ from re import T
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS, cross_origin
 from Configuration import Configuration
-from schemas import db, event_attendance, User, Event
+from schemas import db, event_attendance, User, Event, UserRatings
 import bcrypt
 from datetime import datetime
 from pytz import timezone
@@ -108,6 +108,65 @@ def getInfo():
         "avatar": user.userImg,
 
     })
+
+@app.route('/api/events/<eventid>/getRating', methods=['GET'])
+def getRating(eventid):
+    event = db.get_or_404(Event, eventid)
+    return jsonify({
+        "rating": event.rating,
+        "numreviewers": event.numReviewers
+    })
+
+@app.route('/api/users/<userid>/getreviewfor/<eventid>', methods=['GET'])
+def getReview(userid, eventid):
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
+    rating = UserRatings.query.filter_by(userID = userid, eventID = eventid).first()
+    if rating is None:
+        return 404
+    return jsonify({
+        "rating": rating.ratingValue
+    })
+
+@app.route('/api/users/<userid>/setreviewfor/<eventid>', methods=['POST'])
+def setReview(userid, eventid):
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
+    host = db.get_or_404(User, event.organizerID)
+    givenRating = request.json['rating']
+    rating = UserRatings.query.filter_by(userID = userid, eventID = eventid).first()
+    if rating is None:
+        exists = db.session.query(event_attendance).filter(
+        event_attendance.c.userID == userid,
+        event_attendance.c.eventID == eventid
+        ).first()
+        if not exists:
+            return jsonify({
+                "error": "user not registered for this event"
+            }), 404
+        rating_val = givenRating
+        new_rating = UserRatings(userid, eventid, rating_val)
+        event.rating = (event.rating * event.numReviewers + givenRating) / (event.numReviewers + 1)
+        host.rating = (host.rating * host.numReviewers + givenRating) / (host.numReviewers + 1)
+
+        event.numReviewers = event.numReviewers + 1
+        host.numReviewers = host.numReviewers + 1
+        
+        
+        # add to db
+        db.session.add(new_rating)
+        db.session.commit()
+    else:
+        event.rating = (event.rating * event.numReviewers - rating.ratingValue + givenRating) / event.numReviewers
+        host.rating = (host.rating * host.numReviewers - rating.ratingValue + givenRating) / host.numReviewers
+        rating.ratingValue = givenRating
+        db.session.commit()
+
+ 
+    return jsonify({
+        "status": "updated rating"
+    })
+
 
 
 @app.route("/api/setPrivacy", methods=["POST"])
