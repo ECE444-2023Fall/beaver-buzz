@@ -48,8 +48,9 @@ const RegisterPage=()=>{
             <div className="form-center">
                 
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <h1>Register</h1><br/>
-                        <label htmlFor="email">Email</label>
+                        <h1 className="form-title">Register Here</h1>
+                        <h1 className="form-name">Email</h1>
+                        
                         <Form.Group>
                             <Form.Control type="email"
                                 placeholder="Email"
@@ -60,7 +61,8 @@ const RegisterPage=()=>{
                         </Form.Group>
                          {errors.email && <p className="error">{"Please enter a valid email address"}</p>}
                         <br></br>
-                        <label htmlFor="password">Password</label>
+                        <h1 className="form-name">Password</h1>
+                        
                         <Form.Group>
                             <Form.Control type="password"
                                 placeholder="Password"
@@ -71,7 +73,7 @@ const RegisterPage=()=>{
                         </Form.Group>
                         {errors.password && <p className="error">{"Please enter your password (8-100 chars)"}</p>}
                         <br/>
-                         <label htmlFor="firstname">First name</label>
+                        <h1 className="form-name">First Name</h1>
                             <Form.Group>
                                 <Form.Control type="text"
                                     placeholder="First name"
@@ -83,7 +85,7 @@ const RegisterPage=()=>{
                            {errors.firstname && <p className="error">{"Please enter your first name"}</p>}
                             <br></br>
 
-                            <label htmlFor="lastname">Last name</label>
+                            <h1 className="form-name">Last Name</h1>
                             <Form.Group>
                                 <Form.Control type="text"
                                     placeholder="Last name"
@@ -95,7 +97,7 @@ const RegisterPage=()=>{
                            {errors.lastname && <p className="error">{"Please enter your last name"}</p>}
                             <br></br>
 
-                            <label htmlFor="phonenumber">Phone number (Optional)</label>
+                            <h1 className="form-name">Phone Number</h1>
                             <Form.Group>
                                 <Form.Control type="tel"
                                     placeholder="Phone number"
@@ -106,9 +108,8 @@ const RegisterPage=()=>{
                                 />
                             </Form.Group>
                             <br></br>
+                            <h1 className="form-name">What are your interests? (Optional) </h1>
 
-                            <label htmlFor="interests" style={{ marginBottom: '10px' }}>What are your interests? (Optional)</label>
-                            
                             <Multiselect   
                             options={CATEGORIES} // Options to display in the dropdown
                             showCheckbox='true'
