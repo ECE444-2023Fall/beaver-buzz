@@ -2,7 +2,7 @@ from re import T
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS, cross_origin
 from Configuration import Configuration
-from schemas import db, event_attendance, User, Event
+from schemas import db, event_attendance, User, Event, UserRatings
 import bcrypt
 from datetime import datetime
 from pytz import timezone
@@ -17,6 +17,62 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+# @app.route('/api/users/<userid>/getsubscribers')
+# def getSubscribers(userid):
+#     user = db.get_or_404(User, id)
+
+@app.route('/api/users/<userid>/getSubscribers', methods=["POST"])
+def getSubscribers(userid):
+    user = db.get_or_404(User, userid)
+    returnarray = [[u.id, u.firstname, u.lastname] for u in user.subscribers]
+    return jsonify(returnarray), 200
+
+@app.route('/api/users/<userid>/getSubscribedTo', methods=["POST"])
+def getsubscribedTo(userid):
+    user = db.get_or_404(User, userid)
+    returnarray = [[u.id, u.firstname, u.lastname] for u in user.subscribed_to_users]
+    return jsonify(returnarray), 200
+
+@app.route('/api/users/<otheruser>/subscribe/<userid>', methods=["POST"])
+def subscribe(userid, otheruser):
+    user = db.get_or_404(User, userid)
+    requestingUser = db.get_or_404(User, otheruser)
+    subscriberlist = user.subscribers
+    if requestingUser in subscriberlist:
+        return jsonify({
+            "error": "user is already subscribed"
+        }), 400
+    subscriberlist.append(requestingUser)
+    requestingUser.subscribed_to_users.append(user)
+
+    db.session.commit()
+    return jsonify({
+        "status": "subscribed"
+    })
+
+@app.route('/api/users/<otheruser>/unsubscribe/<userid>', methods=["POST"])
+def unsubscribe(userid, otheruser):
+    user = db.get_or_404(User, userid)
+    requestingUser = db.get_or_404(User, otheruser)
+    subscriberlist = user.subscribers
+    if requestingUser not in subscriberlist:
+        return jsonify({
+            "error": "user was never subscribed"
+        }), 400
+    subscriberlist.remove(requestingUser)
+    requestingUser.subscribed_to_users.remove(user)
+
+    db.session.commit()
+    return jsonify({
+        "status": "unsubscribed"
+    })
+
+
+
+    
+
+
 
 
 @app.route("/api/login", methods=["POST"])
@@ -45,11 +101,70 @@ def getUserInfo():
         "lastname": user.lastname,
         "phonenumber": user.phonenumber if user.showContactInfo or id == requestingUser else "Private",
         "emailaddr": user.email if user.showContactInfo or id == requestingUser else "Private",
-        "interests": user.interests,
+        "interests": ast.literal_eval(user.interests),
         "privacy": {"showContactInformation": user.showContactInfo, "showRegisteredEvents": user.showRegisteredEvents},
-        "avatar": user.userImg
+        "avatar": user.userImg,
 
     })
+
+@app.route('/api/events/<eventid>/getRating', methods=['GET'])
+def getRating(eventid):
+    event = db.get_or_404(Event, eventid)
+    return jsonify({
+        "rating": event.rating,
+        "numreviewers": event.numReviewers
+    })
+
+@app.route('/api/users/<userid>/getreviewfor/<eventid>', methods=['GET'])
+def getReview(userid, eventid):
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
+    rating = UserRatings.query.filter_by(userID = userid, eventID = eventid).first()
+    if rating is None:
+        return 404
+    return jsonify({
+        "rating": rating.ratingValue
+    })
+
+@app.route('/api/users/<userid>/setreviewfor/<eventid>', methods=['POST'])
+def setReview(userid, eventid):
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
+    host = db.get_or_404(User, event.organizerID)
+    givenRating = request.json['rating']
+    rating = UserRatings.query.filter_by(userID = userid, eventID = eventid).first()
+    if rating is None:
+        exists = db.session.query(event_attendance).filter(
+        event_attendance.c.userID == userid,
+        event_attendance.c.eventID == eventid
+        ).first()
+        if not exists:
+            return jsonify({
+                "error": "user not registered for this event"
+            }), 404
+        rating_val = givenRating
+        new_rating = UserRatings(userid, eventid, rating_val)
+        event.rating = (event.rating * event.numReviewers + givenRating) / (event.numReviewers + 1)
+        host.rating = (host.rating * host.numReviewers + givenRating) / (host.numReviewers + 1)
+
+        event.numReviewers = event.numReviewers + 1
+        host.numReviewers = host.numReviewers + 1
+        
+        
+        # add to db
+        db.session.add(new_rating)
+        db.session.commit()
+    else:
+        event.rating = (event.rating * event.numReviewers - rating.ratingValue + givenRating) / event.numReviewers
+        host.rating = (host.rating * host.numReviewers - rating.ratingValue + givenRating) / host.numReviewers
+        rating.ratingValue = givenRating
+        db.session.commit()
+
+ 
+    return jsonify({
+        "status": "updated rating"
+    })
+
 
 
 @app.route("/api/setPrivacy", methods=["POST"])
@@ -136,6 +251,19 @@ def setPhone():
     return jsonify({
         "status": "updated phone"
     })
+
+@app.route("/api/users/<userid>/isSubscribedTo/<otherid>", methods=["POST"])
+def isSubscribedTo(userid, otherid):
+    user = db.get_or_404(User, userid)
+    otheruser = db.get_or_404(User, otherid)
+    if otheruser in user.subscribed_to_users:
+        return jsonify({
+            "result": True
+        })
+    else:
+        return jsonify({
+            "result": False
+        })
 
 
 @app.route("/api/setInterests", methods=["POST"])
