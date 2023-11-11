@@ -9,6 +9,9 @@
     line-height: normal;
 }
 
+.privacy {
+    width: 250px;
+}
 
 .sectionFont {
     color: #1E3765;
@@ -74,13 +77,28 @@
 
 }
 
+.alternateFlexBox {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    justify-content: flex-start;
+    position: absolute;
+    top:  10%;
+    left: 30%;
+}
+
 .mainFlexBox {
     display: flex;
     flex-direction: row;
     gap: 50px;
+    justify-content: flex-start;
     position: absolute;
     top:  10%;
-    left: 30%;
+    left: 20%;
+}
+
+.followerList {
+    margin-top: 180px;
 }
 
 .flexbox-user-container {
