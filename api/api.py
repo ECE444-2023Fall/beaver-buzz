@@ -196,6 +196,8 @@ def register():
     db.session.commit()
 
     return jsonify({"greeting": "Welcome, " + newaccount.firstname})
+
+
 # route /events/<id> to get a specific event
 @app.route("/api/events/<id>", methods=["GET"])
 def getEvent(id):
@@ -212,25 +214,37 @@ def getEvent(id):
 def createEvent():
     n = request.json
     eventName = n["eventName"]
-
+    if not eventName or eventName=="":
+        return jsonify({"Error": "Please enter a valid event name"}), 400
+    
     organizerID = n["organizerID"]
+    if not organizerID:
+        return jsonify({"Error": "Please log in first!"}), 400
+    
     date_format = "%Y-%m-%d %H:%M"
+    if not n["eventDate"] or not n["eventStart"] or not n["eventEnd"]:
+        return jsonify({"Error": "Please enter a valid date and time"}), 400
+    
     eventStart = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
     eventEnd = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
-    # print("new event created in tz:", eventStart.tzname())
 
     eventBuilding = n["building"]
     eventRoom = n["room"]
+    if not eventBuilding or not eventRoom or eventBuilding=="" or eventRoom=="":
+        return jsonify({"Error": "Please enter a valid location"}), 400
+
     oneLiner = n["oneLiner"]
+    if not oneLiner or oneLiner=="": 
+        return jsonify({"Error": "Please enter a valid one-liner"}), 400
+
     eventDesc = n["description"]
-    eventImg = n["image"] 
+    eventImg = n["image"]
+    eventTags = str(n["tags"])
 
 
     organizer = User.query.filter_by(id=organizerID).first()
     if not organizer:
         return jsonify({"Error": "Please log in first!"})
-    
-    
 
     newevent = Event(
         eventName=eventName,
@@ -243,8 +257,9 @@ def createEvent():
         eventDesc=eventDesc, 
         eventImg=eventImg,
         eventImgType="image/jpeg",
+        eventCategories=eventTags
     )
-
+    
     db.session.add(newevent)
     db.session.commit()
     return jsonify({"event_id": newevent.id})

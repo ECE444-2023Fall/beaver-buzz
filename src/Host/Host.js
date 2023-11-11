@@ -25,6 +25,7 @@ export default function HostPage() {
         console.log(data);
         data['organizerID'] = userId;
         data['image'] = data['image'].length == 0 ? '../images/defaultEvent.png' : await getBase64(data['image'].item(0));
+        data['tags'] = tags == null ? [] : tags.map(tag => tag.name);
         console.log(data);
         const requestOptions={
             method:"POST",
@@ -38,6 +39,7 @@ export default function HostPage() {
             .then(response => response.json())
             .then(data => {
                 if(data['event_id']) {
+                    // redirect to event page once created
                     navigate("/events/" + data.event_id);
                 }
                 console.log(data)
@@ -109,8 +111,8 @@ export default function HostPage() {
 
                      <Multiselect 
                         options={CATEGORIES}
-                        onSelect={(e) => setTags(e.value)} 
-                        onRemove={(e) => setTags(e.value)}
+                        onSelect={(e) => setTags(e)} 
+                        onRemove={(e) => setTags(e)}
                         selectedValues={tags} 
                         showCheckbox="true"
                         placeholder="Click to select"
