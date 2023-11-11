@@ -5,8 +5,8 @@ import './Host.css';
 import '../LoginSignup/Form.css'
 import {useNavigate} from "react-router-dom";
 import UserContext from '../UserContext';
-import { MultiSelect } from 'primereact/multiselect';
-        
+import Multiselect from "multiselect-react-dropdown";
+import { CATEGORIES } from "../constants/Constants";
 
 const getBase64 = blob => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -17,23 +17,9 @@ const getBase64 = blob => new Promise((resolve, reject) => {
 
 export default function HostPage() {
     const { register, handleSubmit } = useForm();
-    const [selectedTags, setTags] = useState(null);
+    const [tags, setTags] = useState(null);
     const navigate = useNavigate();
     const {userId} = useContext(UserContext);
-
-    const tags = [
-        {name: 'Academic'},
-        {name: 'Arts'},
-        {name: 'Career'},
-        {name: 'Cultural'},
-        {name: 'Food'},
-        {name: 'Health'},
-        {name: 'Music'},
-        {name: 'Social'},
-        {name: 'Sports'},
-        {name: 'Technology'},
-        {name: 'Other'}
-    ];
 
     const onSubmit = async (data) => {
         console.log(data);
@@ -64,62 +50,75 @@ export default function HostPage() {
             <div className="host-container">
             <h1>Host</h1>
             <Form onSubmit={handleSubmit(onSubmit)} className='host-form'>
-                <Form.Group controlId="eventName">
+                <Form.Group controlId="eventName" className='left-right'>
                     <Form.Label>Event Name</Form.Label>
                     <Form.Control type="text" placeholder="Enter event name" maxLength={50}{...register("eventName", { required: true })} />
                 </Form.Group>
 
-                <Form.Group controlId="oneLiner">
+                <Form.Group controlId="oneLiner" className='left-right'>
                     <Form.Label>One-liner</Form.Label>
                     <Form.Control type="text" placeholder="Enter one-liner" maxLength={75} {...register("oneLiner")} />
                 </Form.Group>
 
-                <Form.Group controlId="eventDate">
+                <Form.Group controlId="eventDate" className='left-right'>
                     <Form.Label>Date</Form.Label>
                     <Form.Control type="date" placeholder="Enter date" {...register("eventDate", { required: true })} />
                 </Form.Group>
+
                 <div class="form-row">
                 <div class="col">
                 <Form.Group controlId="eventStart">
-                    <Form.Label>Start Time</Form.Label>
+                    <Form.Label className='add-padd'>Start Time</Form.Label>
                     <Form.Control type="time" placeholder="Enter start time" {...register("eventStart", { required: true })} />
                 </Form.Group></div>
                 <div class="col">
                 <Form.Group controlId="eventEnd">
-                    <Form.Label>End Time</Form.Label>
+                    <Form.Label className='add-padd'>End Time</Form.Label>
                     <Form.Control type="time" placeholder="Enter end time" {...register("eventEnd", { required: true })} />
                 </Form.Group></div>
                 </div>
-
+                
+                <div class="form-row">
+                <div class="col">
                 <Form.Group controlId="building">
-                    <Form.Label>Building</Form.Label>
-                    <Form.Control type="text" placeholder="Enter building name" maxLength={25} {...register("building", { required: true })} />
+                    <Form.Label className='add-padd'>Building</Form.Label>
+                    <Form.Control className="w-60" type="text" placeholder="Enter building" maxLength={25} {...register("building", { required: true })} />
                 </Form.Group>
-
+                </div>
+                <div class="col">
                 <Form.Group controlId="room">
-                    <Form.Label>Room</Form.Label>
-                    <Form.Control type="text" placeholder="Enter building room" maxLength={10} {...register("room", { required: true })} />
+                    <Form.Label className='add-padd'>Room</Form.Label>
+                    <Form.Control className="w-25" type="text" placeholder="#" maxLength={10} {...register("room", { required: true })} />
+                </Form.Group>
+                </div>
+                </div>
+
+                <Form.Group controlId="description" className='left-right'>
+                    <Form.Label className='add-padd'>Description</Form.Label>
+                    <Form.Control className='w-100' as="textarea" rows={3} maxLength={256} placeholder="Enter description" {...register("description")} />
                 </Form.Group>
 
-                <Form.Group controlId="description">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows={3} maxLength={256} placeholder="Enter description" {...register("description")} />
-                </Form.Group>
-
-                <Form.Group controlId="image">
+                <Form.Group controlId="image" className='left-right'>
                     <Form.Label>Upload Image</Form.Label>
                     <Form.Control type="file" accept=".jpg,.gif,.png" {...register("image")} />
                 </Form.Group>
 
-                <Form.Group controlId="tags">
+                <Form.Group controlId="tags" className='left-right'>
                     <Form.Label>Select related topics</Form.Label>
                     <div className="dropdown">
-                     <MultiSelect 
-                        value={selectedTags} 
-                        onChange={(e) => setTags(e.value)} 
-                        options={tags} 
-                        optionLabel="name" 
-                        placeholder="Select topics" className="w-full md:w-20rem" />
+
+                     <Multiselect 
+                        options={CATEGORIES}
+                        onSelect={(e) => setTags(e.value)} 
+                        onRemove={(e) => setTags(e.value)}
+                        selectedValues={tags} 
+                        showCheckbox="true"
+                        placeholder="Click to select"
+                        className="tags" 
+                        hidePlaceholder="true"
+                        displayValue="name"
+                        optionLabel='name'
+                        />
                     </div>
                     
                 </Form.Group>
