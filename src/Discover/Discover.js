@@ -10,12 +10,14 @@ import Pagination from '../components/Pagination';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useNavigate } from 'react-router-dom';
 import "./Discover.css"
+import {CATEGORIES} from '../constants/Constants'
 
 const DiscoverPage=()=>{
     const[searchitems, setsearchitems] = useState([])
     const { register, handleSubmit, formState: { errors } } = useForm();
     const locations = ["Academic", "Arts", "Career", "Cultural", "Food", "Health", "Music", "Social", "Sports", "Technology", "Other"];
     const navigate = useNavigate();
+    const navigate2 = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(6);
 
@@ -48,7 +50,7 @@ const DiscoverPage=()=>{
         setSelectedItem(null)
         console.log(data);
         var temp_data = {"filters": []}
-        var filters = locations
+        var filters = locations;
         for (const key in data) { 
             console.log(key)
             if(key == "searchbar"){
@@ -90,17 +92,22 @@ const DiscoverPage=()=>{
 
     const [selectedItem, setSelectedItem] = useState(null);
 
-    const handleSelect = (eventKey) => {
-        if( eventKey == "Popularity"){
+    const handleSelect = (value) => {
+        if( value == "Popularity"){
             popularitysort()
+        }
+        else if(value == "Default"){
+            setsearchitems(searchitems)
         }
         else{
             timesort()
         }
-        // `eventKey` will be the value of the selected item
-        setSelectedItem(eventKey);
+        setSelectedItem(value);
     };
 
+    const titleClick = ()=>{
+        navigate2("/")
+    }
 
     const handleClick = (eventid) => {
         // Redirect to the specified target URL
@@ -118,7 +125,7 @@ const DiscoverPage=()=>{
             <div className="form-left">
 
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <label htmlFor="searchbar" class="title">Discover</label>
+                        <label htmlFor="searchbar" class="title" onClick={() => titleClick()}>Discover</label>
                         <br/><br/>
                         <Form.Group>
                             <Form.Control type="text"
@@ -130,17 +137,11 @@ const DiscoverPage=()=>{
                             />
                         </Form.Group>
                         <Button type='submit' className="searchButton">Search</Button>
-                        <Dropdown onSelect={handleSelect}>
-                            <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                {selectedItem ? selectedItem : 'Select an Item'}
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu class = "sorting" >
-                                <Dropdown.Item href="#/action-1" class = "dropdown-content" eventKey="Popularity">Popularity</Dropdown.Item>
-                                <Dropdown.Item href="#/action-1" eventKey="EventTime">EventTime</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-
+                        <select class = "sortDropdown" name="Sort" onChange={(e) => handleSelect(e.target.value)} value={selectedItem}>
+                            <option value = "Default" selected="selected">Sort by</option>
+                            <option value="Popularity">Popularity</option>
+                            <option value="EventTime">Event Time</option>
+                        </select>
                         <div class = "organizer">
                         <Form.Check
                                 type={"checkbox"}
