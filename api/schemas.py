@@ -58,7 +58,7 @@ class User(db.Model):
 
     # Rating value from 0-5 for all of this user's events.
     # numReviewers stores the total number of reviews on all events hosted by this user
-    rating = db.Column(db.Integer, default=None)
+    rating = db.Column(db.Float, default=0.0)
     numReviewers = db.Column(db.Integer, default=0)
 
     def __init__(

@@ -69,6 +69,7 @@ def getReview(userid, eventid):
 def setReview(userid, eventid):
     event = db.get_or_404(Event, eventid)
     user = db.get_or_404(User, userid)
+    host = db.get_or_404(User, event.organizerID)
     givenRating = request.json['rating']
     rating = UserRatings.query.filter_by(userID = userid, eventID = eventid).first()
     if rating is None:
@@ -83,7 +84,10 @@ def setReview(userid, eventid):
         rating_val = givenRating
         new_rating = UserRatings(userid, eventid, rating_val)
         event.rating = (event.rating * event.numReviewers + givenRating) / (event.numReviewers + 1)
+        host.rating = (host.rating * host.numReviewers + givenRating) / (host.numReviewers + 1)
+
         event.numReviewers = event.numReviewers + 1
+        host.numReviewers = host.numReviewers + 1
         
         
         # add to db
@@ -91,6 +95,7 @@ def setReview(userid, eventid):
         db.session.commit()
     else:
         event.rating = (event.rating * event.numReviewers - rating.ratingValue + givenRating) / event.numReviewers
+        host.rating = (host.rating * host.numReviewers - rating.ratingValue + givenRating) / host.numReviewers
         rating.ratingValue = givenRating
         db.session.commit()
 
