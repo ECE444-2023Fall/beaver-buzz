@@ -46,8 +46,9 @@ const RegisterPage=()=>{
     return(
         <div className ="container">
             <div className="form-center">
-                <h1>Register</h1><br/>
+                
                     <Form onSubmit={handleSubmit(onSubmit)}>
+                        <h1>Register</h1><br/>
                         <label htmlFor="email">Email</label>
                         <Form.Group>
                             <Form.Control type="email"
@@ -98,7 +99,7 @@ const RegisterPage=()=>{
                             <Form.Group>
                                 <Form.Control type="tel"
                                     placeholder="Phone number"
-                                   pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                   pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}" 
                                    className="input"
                                     id="phonenumber"
                                      {...register("phonenumber", { required: false})}
@@ -106,8 +107,8 @@ const RegisterPage=()=>{
                             </Form.Group>
                             <br></br>
 
-                            <label htmlFor="interests">What are your interests? (Optional)</label>
-
+                            <label htmlFor="interests" style={{ marginBottom: '10px' }}>What are your interests? (Optional)</label>
+                            
                             <Multiselect   
                             options={CATEGORIES} // Options to display in the dropdown
                             showCheckbox='true'
@@ -135,7 +136,7 @@ const RegisterPage=()=>{
                                 />
                             </Form.Group>*/}
                         {!emailTaken ? <p>{greeting}</p> : <p className="error">There is already an account registered with this email</p>} 
-                        <Button type='submit' className="submitButton">Register</Button>
+                        <Button type='submit' className="submitButton" style={{ marginTop: '20px' }}><h1 className="form-button">Register</h1></Button>
 
                     </Form>
 
