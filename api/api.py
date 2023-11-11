@@ -272,6 +272,17 @@ def registerEvent(eventid, userid):
     event.users.append(user)
     event.registered += 1
     db.session.commit()
+
+    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
+    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    subject = 'Event Registration Confirmation'
+    html = open('./utils/emails/event_registration.html').read().format(
+            subject=subject, event_name=event.name, event_date=event.date,
+            event_time=event.time, event_loc=event.location)
+    msg = format_email(mailer.sender, user.email, subject, html)
+    mailer.send_mail(email,msg.as_string())
+    mailer.kill()
+
     return jsonify(event.serialize())
 
 
