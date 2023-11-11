@@ -8,6 +8,7 @@ from datetime import datetime
 from pytz import timezone
 from sqlalchemy import or_
 import random
+import ast
 
 eastern = timezone('EST')
 
