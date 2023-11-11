@@ -1,6 +1,3 @@
-import { Event } from "./Profile";
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import "./UserProfile.css"
 import mailIcon from "../images/email.svg"
@@ -11,27 +8,66 @@ import {useUserContext} from '../UserContext'
 import {Button, Image} from "react-bootstrap";
 import UploadAvatar from "../components/Avatar";
 import defaultImage from "../images/defaultEvent.png"
+import moment from "moment-timezone";
+import { useNavigate, useParams } from "react-router";
+import Multiselect from "multiselect-react-dropdown";
+import { CATEGORIES } from "../constants/Constants";
 
+class Event {
+    constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
+        this.eventBuilding = eventBuilding;
+        this.eventDesc = eventDesc;
+        this.eventEnd = eventEnd;
+        this.eventImg = eventImg;
+        this.eventImgType = eventImgType;
+        this.eventName = eventName;
+        this.eventRoom = eventRoom;
+        this.eventStart = eventStart;
+        this.id = id;
+        this.oneLiner = oneLiner;
+        this.organizerID = organizerID;
+        this.registered = registered;
+    }
+}
 
 const UserPage=()=> {
-    const params = useParams();
-    const requestedUserId = params.id;
-    const navigate = useNavigate();
     const {
         userId,
         setUserId
     } = useUserContext()
 
+    const params = useParams();
 
+    const requestedUserId = params['id']
+
+    const [value, setValue] = useState("Hosting")
+    const [showPastEvents, setShowPastEvents] = useState(false)
+    const navigate = useNavigate()
+
+    async function onOptionChange(value) {
+        setEvents([]);
+        fetchEvents(value, showPastEvents)
+        await setValue(value);
+    }
+
+    async function onCheck() {
+        setEvents([]);
+         await setShowPastEvents(!showPastEvents);
+        fetchEvents(value, !showPastEvents);
+
+    }
 
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [interests, setInterests] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
-    const [events, setEvents] = useState([]);
+    const [avatar, setAvatar] = useState(null);
 
-    function fetchEvents() {
+    const [events, setEvents] = useState([]);
+    const [privacy, setPrivacy] = useState({})
+
+    function fetchEvents(option, showPastEvents) {
         if(requestedUserId == userId){
             navigate('/profile');
             return;
@@ -42,12 +78,13 @@ const UserPage=()=> {
         headers:{
            'content-type':'application/json'
         },
-        body:JSON.stringify({option: "Hosting", showPastEvents: false})
+        body:JSON.stringify({option: option, showPastEvents: showPastEvents, myID: userId})
         }
 
         fetch('/api/users/' + requestedUserId + '/events', requestOptions)
         .then(response => response.json())
         .then(data => {
+
             var eventsArray = [];
 
             for (var i = 0; i < data.length; i++) {
@@ -73,23 +110,21 @@ const UserPage=()=> {
             }
             setEvents(eventsArray);
         });
-    }
+
+
+
+        }
+    
 
     useEffect( () => {
-
-        if(userId == 'null') {
-            navigate('/login');
-            return;
-        }
         function fetchUser() {
-
-
+            if (userId != null) {
                 const requestOptions = {
                     method: "POST",
                     headers: {
                         'content-type': 'application/json'
                     },
-                    body: JSON.stringify({id: requestedUserId})
+                    body: JSON.stringify({id: requestedUserId, myID: userId})
                 }
                 fetch('/api/getUserInfo', requestOptions)
                     .then(response => response.json())
@@ -99,16 +134,20 @@ const UserPage=()=> {
                         setFirstName(data.firstname)
                         setLastName(data.lastname)
                         setInterests(data.interests)
+                        setPrivacy(data.privacy)
+                        setAvatar(data.avatar);
                     });
+            }
         }
 
 
 
 
         fetchUser();
-        fetchEvents();
+        fetchEvents(value, showPastEvents);
 
     }, []);
+    
     
 
 
@@ -139,22 +178,37 @@ const UserPage=()=> {
     </li>
     );
 
+    async function onOptionChange(value) {
+        setEvents([]);
+        fetchEvents(value, showPastEvents)
+        await setValue(value);
+    }
+
+    async function onCheck() {
+        setEvents([]);
+         await setShowPastEvents(!showPastEvents);
+        fetchEvents(value, !showPastEvents);
+
+
+    }
 
     return(
-        <div className="mainFlexBox">
+        <div className="alternateFlexBox">
             <div className="flexbox-user-container">
-                <UploadAvatar/>
+            <UploadAvatar id={userId} avatar={avatar}/>
                 <div className="person-name-font">{firstName} {lastName}</div>
                  <div className= "person-table">
-                    <div className="sectionFont">First name</div>
-                    <div className="flexbox-horizontal-container">
-                        <input className="inputField" disabled = 'disabled' defaultValue={firstName}/>
-                    </div>
-            
+                        <div className="sectionFont">First name</div>
+                        <div className="flexbox-horizontal-container">
+                            <input className="inputField" disabled='disabled' defaultValue={firstName}/>
+                        </div>
 
                      <div className="sectionFont">Last name</div>
                         <div className="flexbox-horizontal-container">
-                            <input className="inputField" disabled = 'disabled' defaultValue={lastName}/>
+
+                            <input className="inputField" disabled='disabled' defaultValue={lastName}/>
+          
+        
                         </div>
 
                         <Divider></Divider>
@@ -165,7 +219,8 @@ const UserPage=()=> {
                             <div>
                                 <img src={mailIcon}/>
                             </div>
-                            <input className="inputField" disabled = 'disabled' defaultValue={email}/>
+                            <input className="inputField" disabled='disabled' defaultValue={email}/>
+
                         </div>
 
                         <div className="horizontal_divider"></div>
@@ -174,14 +229,24 @@ const UserPage=()=> {
                             <div>
                                 <img src={phoneIcon}/>
                             </div>
-                            <input className="inputField" disabled = 'disabled' defaultValue={phone}/>
+                            <input className="inputField" disabled='disabled' defaultValue={phone}/>
                         </div>
 
                         <Divider></Divider>
                         <div className="sectionFont">Interests</div>
                         <Divider></Divider>
-                            <textarea rows = "8" className="textAreaField" disabled = 'disabled' defaultValue={interests} />
-       
+                        <Multiselect   
+                                //options={CATEGORIES} // Options to display in the dropdown
+                                selectedValues = {interests}
+                                showCheckbox='true'
+                                className='interests'
+                                //disablePreSelectedValues='true'
+                                placeholder=""
+                                disable='true'
+                                displayValue="name" // Property name to display in the dropdown options
+                            />
+                            
+          
                     </div>
             </div>
 
@@ -190,15 +255,21 @@ const UserPage=()=> {
 
                 <div className="flexbox-horizontal-container">
 
-                    <div className="event-list-title">{firstName}'s upcoming events</div>
+                    <div className="event-list-title">{firstName}'s events</div>
+                    <p className="checkboxTitle">Show past events</p>
+                    <input type="checkbox" className = "checkbox"  checked={showPastEvents} onChange={onCheck}></input>
+                    <select className="comboBoxOption" id="option" value = {value} onChange={(e) => onOptionChange((e.target.value))}>
+                        <option value="Hosting">Hosting</option>
+                        <option value="Attending">Attending</option>
+                    </select>
 
                 </div>
-
-                <ul className="eventList">{arrayDataItems}</ul>
+                {events.length == 0 ? <div className="event-list-title">No events of this catagory or this information is private</div> : <ul className="eventList">{arrayDataItems}</ul>}
+                
             </div>
         </div>
 
     )
 }
 
-export default UserPage;
+export default UserPage

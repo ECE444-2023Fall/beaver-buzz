@@ -9,6 +9,19 @@ import {Button, Image} from "react-bootstrap";
 import UploadAvatar from "../components/Avatar";
 import defaultImage from "../images/defaultEvent.png"
 import { useNavigate } from "react-router-dom";
+import Multiselect from "multiselect-react-dropdown";
+import { CATEGORIES } from "../constants/Constants";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import Paper from "@material-ui/core/Paper";
+
+class User {
+    constructor(firstname, lastname, id) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.id = id;
+    }
+}
 
 export class Event {
     constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
@@ -41,8 +54,23 @@ const ProfilePage=()=> {
     const [interests, setInterests] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
+    const [avatar, setAvatar] = useState(null);
 
     const [events, setEvents] = useState([]);
+    const [privacy, setPrivacy] = useState({})
+
+    const[subscribers, setSubscribers] = useState([]);
+    const[currentTab, setCurrentTab] = useState("Subscribers")
+
+    const[tab, setTab] = useState(0);
+
+
+    const state = {
+        options: [{name: 'Show contact information', id: 1},{name: 'Show events you are attending', id: 2}]
+    };
+
+    const [selectedValues, setSelectedValues] = useState([])
+
 
     function fetchEvents(option, showPastEvents) {
     if (userId != null) {
@@ -53,7 +81,7 @@ const ProfilePage=()=> {
         headers:{
            'content-type':'application/json'
         },
-        body:JSON.stringify({option: option, showPastEvents: showPastEvents})
+        body:JSON.stringify({option: option, showPastEvents: showPastEvents, myID: userId})
         }
 
         fetch('/api/users/' + userId + '/events', requestOptions)
@@ -103,16 +131,27 @@ const ProfilePage=()=> {
                     headers: {
                         'content-type': 'application/json'
                     },
-                    body: JSON.stringify({id: userId})
+                    body: JSON.stringify({id: userId, myID: userId})
                 }
                 fetch('/api/getUserInfo', requestOptions)
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data);
                         setEmail(data.emailaddr)
                         setPhone(data.phonenumber)
                         setFirstName(data.firstname)
                         setLastName(data.lastname)
                         setInterests(data.interests)
+                        setPrivacy(data.privacy);
+                        setAvatar(data.avatar);
+                        var values = []
+                        if(data.privacy['showContactInformation']) {
+                            values.push(state.options[0])
+                        }
+                        if(data.privacy['showRegisteredEvents']) {
+                            values.push(state.options[1])
+                        }
+                        setSelectedValues(values)
                     });
             }
         }
@@ -245,36 +284,34 @@ const ProfilePage=()=> {
     }
 
     const interestsRef = useRef(null);
-    const [interestsDisabled, setInterestsDisabled] = useState('true')
 
     const submitInterests = event => {
-        setInterestsDisabled(true)
-        const newValue = event.target.value
-        if (newValue !== lastName) {
-            const requestOptions = {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({id: userId, interests: newValue})
-            }
-            fetch('/api/setInterests', requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status) {
-                        event.target.value = newValue
-                    }
-                });
-            // this is a valid email address
-            // call setState({email: email}) to update the email
-            // or update the data in redux store.
-        } else {
-            event.target.value = phone;
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({id: userId, interests: event})
         }
+        fetch('/api/setInterests', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+            });
+
     }
 
     const [value, setValue] = useState("Attending")
     const [showPastEvents, setShowPastEvents] = useState(false)
+
+
+    const subscribeDataItems = subscribers.map((user) =>
+        <li key={user.id} onClick={() => subscriberClicked(user)}>
+            <div>
+                <div  className="inputField">{user.firstname} {user.lastname}</div >
+                <div className="horizontal_divider"></div>
+            </div>
+        </li>
+    );
 
 
     const arrayDataItems = events.map((event) =>
@@ -315,13 +352,73 @@ const ProfilePage=()=> {
          await setShowPastEvents(!showPastEvents);
         fetchEvents(value, !showPastEvents);
 
+    }
+    function privacyChanged(value) {
+        var showContactInformation = false;
+        var showRegisteredEvents = false;
+        for (var v in value) {
+            if(value[v].name == 'Show contact information') {
+                showContactInformation = true;
+            }
+            else if(value[v].name == 'Show events you are attending') {
+                showRegisteredEvents = true;
+            }
+        }
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({id: userId, showContactInfo: showContactInformation, showRegisteredEvents: showRegisteredEvents})
+        }
+        fetch('/api/setPrivacy', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    console.log('success');
+                }
+            });
 
+    }
+
+    function subscriberClicked(user) {
+        console.log(user);
+        navigate('/user/' + user.id);
     }
 
     return(
         <div className="mainFlexBox">
+                <div className="flexbox-vertical-container">
+                    <div className="privacy">
+                        <Multiselect    
+                            options={state.options} // Options to display in the dropdown
+                            selectedValues={selectedValues} // Preselected value to persist in dropdown
+                            showCheckbox='true'
+                            placeholder='Privacy settings'
+                            
+                            onSelect={privacyChanged} // Function will trigger on select event
+                            onRemove={privacyChanged} // Function will trigger on remove event
+                            displayValue="name" // Property name to display in the dropdown options
+                        />
+                    </div>
+                    <Paper square className="followerList">
+                            <Tabs
+                                value={tab}
+                                textColor="primary"
+                                indicatorColor="primary"
+                                onChange={(event, newValue) => {
+                                    setTab(newValue);
+                                }}
+                            >
+                                <Tab label="Subscribers"></Tab>
+                                <Tab label="Subscribed to"></Tab>
+                            </Tabs>
+                            <ul className="eventList">{subscribeDataItems}</ul>
+                        </Paper>
+                </div>
+
             <div className="flexbox-user-container">
-                <UploadAvatar/>
+                <UploadAvatar editable={true} id={userId} avatar={avatar}/>
                 <div className="person-name-font">{firstName} {lastName}</div>
                  <div className= "person-table">
                         <div className="sectionFont">First name</div>
@@ -407,18 +504,31 @@ const ProfilePage=()=> {
                         <Divider></Divider>
                         <div className="sectionFont">Interests</div>
                         <Divider></Divider>
-                            <textarea rows = "8" className="textAreaField" onKeyDown={(e) => {
-                                if(e.keyCode === 13) {
+                            <Multiselect   
+                                options={CATEGORIES} // Options to display in the dropdown
+                                selectedValues = {interests}
+                                showCheckbox='true'
+                                placeholder='Your interests'
+                                className='interests'
+                                hidePlaceholder='true'
+                                onSelect={(e) => {
+                                    setInterests(e);
                                     submitInterests(e);
-                                }
-                            }} onBlur={submitInterests}  onFocus={(e)=>e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)} disabled = {interestsDisabled? "disabled" : ""}  defaultValue={interests}  ref={interestsRef}/>
-                            <div className="pencil">
-                                <Button onClick={async () => {
-                                    await setInterestsDisabled(false);
-                                    interestsRef.current.focus()
-                                }} className="pencilButton"><img src={pencilIcon} alt={"broken"}/></Button>
-                            </div>
+
+                                }} // Function will trigger on select event
+                                onRemove={(e) => {;
+                                    setInterests(e);
+                                    submitInterests(e);
+                                }} // Function will trigger on remove event
+                                displayValue="name" // Property name to display in the dropdown options
+                            />
+                            
+
+ 
                     </div>
+
+            
+
             </div>
 
             <div className="event-wish-list-table">
