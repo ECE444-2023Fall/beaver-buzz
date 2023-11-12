@@ -30,7 +30,7 @@ def get_subscribers(userid):
         userid (int): user id of the user whose subscribers are being requested
 
     Returns:
-        json: array of arrays of [id, first name, last name] representing the 
+        json: array of arrays of [id, first name, last name] representing the
         subscribers of the user with the given id
     """
     user = db.get_or_404(User, userid)
@@ -46,7 +46,7 @@ def getsubscribed_to(userid):
         userid (int): user id of the user whose subscriptions are being requested
 
     Returns:
-        json: array of arrays of [id, first name, last name] representing the users 
+        json: array of arrays of [id, first name, last name] representing the users
         that the user with the given id is subscribed to
     """
     user = db.get_or_404(User, userid)
@@ -59,7 +59,7 @@ def subscribe(userid, otheruser):
     """Subscribes the user with the given id to the other user with userid otheruser
 
     Returns:
-        json: json object with status field set to "subscribed" if successful, or 
+        json: json object with status field set to "subscribed" if successful, or
         error field set to error message if unsuccessful
     """
     user = db.get_or_404(User, userid)
@@ -82,7 +82,7 @@ def unsubscribe(userid, otheruser):
     """Unsubscribes the user with the given id from the other user with userid otheruser
 
     Returns:
-        json: json object with status field set to "unsubscribed" if successful, or 
+        json: json object with status field set to "unsubscribed" if successful, or
         error field set to error message if unsuccessful
     """
     user = db.get_or_404(User, userid)
@@ -319,7 +319,7 @@ def set_phone():
     """Sets the phone number of the user with the given id
 
     Returns:
-        json: json object with field status or 404 if no user exists or 400 
+        json: json object with field status or 404 if no user exists or 400
         if a phone number is already in use
     """
     id = request.json["id"]
@@ -339,11 +339,11 @@ def set_phone():
 
 @app.route("/api/users/<userid>/isSubscribedTo/<otherid>", methods=["POST"])
 def is_subscribed_to(userid, otherid):
-    """Checks if the user with the given id is subscribed to the other user 
+    """Checks if the user with the given id is subscribed to the other user
     with the given id
 
     Returns:
-        json: json object with field result set to True if the user is 
+        json: json object with field result set to True if the user is
         subscribed to the other user, False otherwise
     """
     user = db.get_or_404(User, userid)
@@ -395,7 +395,7 @@ def register():
     """registers a user with the provided fields
 
     Returns:
-        json: A JSON response containing a greeting message and the user's ID if 
+        json: A JSON response containing a greeting message and the user's ID if
         the registration is successful or 400 status code.
     """
     email = request.json["email"]
@@ -438,7 +438,7 @@ def get_event(id):
         id (int): event id of the event being requested
 
     Returns:
-        json: json object with event fields or 404 if no event exists 
+        json: json object with event fields or 404 if no event exists
     """
     event = Event.query.filter_by(id=id).first()
     if event is not None:
@@ -563,7 +563,20 @@ def get_events():
 
 
 @app.route("/api/events/<eventid>/update", methods=["POST"])
-def update_event(eventid, eventName, organizerID, eventStart, eventEnd, eventBuilding, eventRoom, oneLiner, eventDesc, eventImg, eventImgType, eventCategories):
+def update_event(
+    eventid,
+    eventName,
+    organizerID,
+    eventStart,
+    eventEnd,
+    eventBuilding,
+    eventRoom,
+    oneLiner,
+    eventDesc,
+    eventImg,
+    eventImgType,
+    eventCategories,
+):
     """Updates the event with the given id with the provided event fields
 
     Args:
@@ -707,7 +720,7 @@ def get_events_by_category(category):
 def get_events_by_user(userid):
     """Gets the events that are organized by the user with the given id
 
-    Args:  
+    Args:
         userid (int): user id of the user whose organized events are being requested
 
     Returns:
