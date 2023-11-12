@@ -31,11 +31,7 @@ jobs:
       uses: borales/actions-yarn@v4
       with:
           cmd: install # will run `yarn install` command
-    - name: Test frontend
-      uses: borales/actions-yarn@v4
-      with:
-          cmd: start # will run `yarn start` command
-          wait-on: 'http://localhost:3000'
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -44,12 +40,29 @@ jobs:
       run: |
           python -m pip install --upgrade pip
           pip install -r ./api/requirements.txt
-    - name: Test backend
+
+    - name: Start React
       uses: borales/actions-yarn@v4
       with:
-          cmd: start-api # will run `yarn start-api` command
-          wait-on: 'http://localhost:8000'
+          cmd: start & # will run `yarn start` command
+
+    - name: Wait for React App to start
+      run: sleep 10
+
+    - name: Start API
+      uses: borales/actions-yarn@v4
+      with:
+          cmd: start-api & # will run `yarn start-api` command
+          
+    - name: Wait for API to start
+      run: sleep 10
+
     - name: Test the app
       uses: borales/actions-yarn@v4
       with:
           cmd: test # will run `yarn test` command
+
+    - name: Stop API and React App
+      run: |
+        pkill -f "flask run"
+        pkill -f "react-scripts start"
