@@ -470,8 +470,3 @@ def search():
             u = User.query.get(result['organizerID'])
             result['organizerName'] = u.firstname + " " + u.lastname
     return jsonify(results)
-
-
-
-
-

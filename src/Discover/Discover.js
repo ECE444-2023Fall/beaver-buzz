@@ -70,7 +70,6 @@ const DiscoverPage=()=>{
         else{
             temp_data['userid'] = -1;
         }
-        console.log(temp_data)
         fetch('http://localhost:8000/api/search?'+new URLSearchParams(temp_data), {
             method: 'GET',
             headers: {
