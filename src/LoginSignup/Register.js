@@ -24,19 +24,29 @@ const RegisterPage=()=>{
         body:JSON.stringify(data)
         }
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/register`, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-        if(data.greeting) {
-            setTaken(false);
-            setGreeting(data.greeting);
-            navigate("/login");
-        }
-        else {
-            setTaken(true);
-            setGreeting('');
-        }
-        console.log(data)
-        });
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    // If the server response wasn't 'ok', throw an error with the status
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            })
+            .then(data => {
+                if (data.greeting) {
+                    setTaken(false);
+                    setGreeting(data.greeting);
+                    navigate("/login");
+                } else {
+                    setTaken(true);
+                    setGreeting('');
+                }
+            })
+            .catch(error => {
+                // This will catch any error that was thrown in the previous 'then' block
+                console.error('There was a problem with the fetch operation:', error);
+                setGreeting('An error occurred. Please try again.');
+            });
     }
 
 
