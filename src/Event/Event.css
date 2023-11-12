@@ -11,6 +11,23 @@ body {
     margin: 50px auto;
     padding: 20px;
     max-width: 600px;
+    position: relative;
+}
+
+.editButtonContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+}
+
+.editButton {
+    padding: 5px 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 #eventTitle {
@@ -20,7 +37,7 @@ body {
 
 #eventDescription {
     font-size: 18px;
-    color: #666;
+    color: #000000;
 }
 
 #eventImage {
@@ -31,4 +48,8 @@ body {
 #eventInfo {
     font-size: 16px;
     text-align: left;
+}
+
+.iconWithSpace {
+    margin-left: 8px;
 }

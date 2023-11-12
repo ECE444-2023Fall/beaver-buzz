@@ -39,6 +39,7 @@ export default function EventPage() {
     const { id } = useParams();
     const [ratingVisible, setRatingVisible] = useState([])
     const [userAttending, setUserAttending] = useState([])
+    const [eventOwner, setEventOwner] = useState([])
 
     const {
         userId,
@@ -83,6 +84,7 @@ export default function EventPage() {
                         return false;
                     });
                     setUserAttending(isFound);
+                    setEventOwner(d.organizerID === userId ? true : false)
 
                 })
                 .catch((error) => { console.log(error); setData(-1); })
@@ -132,6 +134,9 @@ export default function EventPage() {
         }
     }
 
+    const handleEditClick = () => {
+    };
+
     // eventImage uses default event image when the event data doesn't contain an event image
     return (
         <div>
@@ -142,6 +147,11 @@ export default function EventPage() {
                     </head>
                     <body>
                         <div id="eventContainer">
+                            <div className="editButtonContainer">
+                                <button className="editButton" onClick={handleEditClick}>
+                                    Edit Event
+                                </button>
+                            </div>
                             <h1 id="eventTitle">{data.eventName}</h1>
                             {ratingVisible &&
                                 <RateEvent title="" mode="eventrating" disabled={true} userID={userId} eventID={id}></RateEvent>
