@@ -23,16 +23,17 @@ const DiscoverPage=()=>{
                 temp_data["filters"].push(key)
             }
         }
-        fetch('http://localhost:8000/api/search?'+new URLSearchParams(temp_data), {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/search?` + new URLSearchParams(temp_data), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
         })
             .then(response => response.json())
-                        .then(data => {
+            .then(data => {
                 setsearchitems(data)
             });
+
     }
 
 
