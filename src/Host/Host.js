@@ -51,12 +51,12 @@ const { register, handleSubmit, formState: { errors } } = useForm();  const [tag
 
   return (
     <div>
-      <div className="host-container">
-        <h1>Host an event</h1>
+      <div className="host-container" style={{ marginTop: '160px' }} >
+      <h1 className="form-title" >Want to post an event? </h1>
         {!userId ? (
           <div>
-            <h2>Please log in to host an event </h2>
-            <button className="host-button" onClick={() => navigate("/login")}>
+            <h1 className="form-second-title">Click here to log in first!</h1>
+            <button className="host-button" style={{ marginTop: '20px' }}onClick={() => navigate("/login")}>
               Log In
             </button>
           </div>
