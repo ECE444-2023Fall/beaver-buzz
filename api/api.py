@@ -331,6 +331,8 @@ def register():
 
     passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
+    print(passwordHash)
+
 
     newaccount = User(
         email=email,
