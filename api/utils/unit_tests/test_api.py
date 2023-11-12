@@ -100,7 +100,7 @@ def populate_db():
         eventEnd=datetime.datetime.now(),
         eventBuilding="Sanford Fleming",
         eventRoom="Test Room",
-        oneLiner="Help with project",
+        oneLiner="Test One Liner",
         eventCategories="Academic",
     )
     db.session.add(newevent2)
