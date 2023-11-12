@@ -8,6 +8,7 @@ import bcrypt
 from datetime import datetime
 from pytz import timezone
 import ast
+import json
 
 eastern = timezone('EST')
 
@@ -325,9 +326,11 @@ def register():
     app_login = get_login('./utils/emails/credentials.txt', 'app_login')
     mailer = Mailer('smtp.gmail.com', 465, app_login)
     subject = 'Registration Confirmation'
+    i_list = [i['name'] for i in request.json["interests"]]
+    i_list = str(i_list).translate({ord(i): None for i in "'[]"})
     html = open('./utils/emails/registration.html').read().format(
             subject=subject,firstname=firstname,lastname=lastname,
-            email=email,phonenumber=phonenumber,interests=interests,
+            email=email,phonenumber=phonenumber,interests=i_list,
             potatoemail=mailer.sender)
     msg = format_email(mailer.sender, email, subject, html)
     mailer.send_mail(email,msg.as_string())
@@ -419,10 +422,11 @@ def registerEvent(eventid, userid):
     mailer = Mailer('smtp.gmail.com', 465, app_login)
     subject = 'Event Registration Confirmation'
     html = open('./utils/emails/event_registration.html').read().format(
-            subject=subject, event_name=event.name, event_date=event.date,
-            event_time=event.time, event_loc=event.location)
+            subject=subject, event_name=event.eventName, 
+            event_date=event.eventStart, 
+            event_loc=event.eventBuilding + ', ' + event.eventRoom)
     msg = format_email(mailer.sender, user.email, subject, html)
-    mailer.send_mail(email,msg.as_string())
+    mailer.send_mail(user.email,msg.as_string())
     mailer.kill()
 
     return jsonify(event.serialize())
