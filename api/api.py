@@ -99,7 +99,7 @@ def login():
 #     print(type(user.password))
 #     print(user.password + '\n' + password.encode("utf-8"))
 
-    if user is None or not bcrypt.checkpw(password.encode("utf-8"), bytes(user.password, 'utf-8')):
+    if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password.encode('utf-8'):
         return jsonify({"error": "Invalid username or password"}), 401
 
     return jsonify({
