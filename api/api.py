@@ -16,8 +16,7 @@ app.config.from_object(Configuration)
 app.config['CORS_HEADERS'] = 'Content-Type'
 db.init_app(app)
 
-@app.before_first_request
-def create_tables():
+if not db.engine.table_names():
     db.create_all()
 
 # @app.route('/api/users/<userid>/getsubscribers')
