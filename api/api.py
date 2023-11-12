@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}})
 app.config.from_object(Configuration)
 app.config['CORS_HEADERS'] = 'Content-Type'
-# db.init_app(app)
+db.init_app(app)
 
 with app.app_context():
     db.create_all()
