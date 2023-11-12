@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  width: 100vw;
   background-color: #f2f2f2;
 }
 
@@ -12,17 +13,49 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: 400px;
+  width: 80vw;
+  max-width: 500px;
   padding: 2rem;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
+  
+  .add-padd {
+    margin-right: 10px;
+  }
 
-.host-form div {
-  width: 100%;
-  margin-bottom: .5rem;
+  .left-right {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    .w-100 {
+      width: 100%;
+    }
+  }
+
+  .form-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+
+    .col{
+      text-align: left;
+      .w-25 {
+        width: 25%;
+      }
+      .w-50 {
+        width: 50%;
+      }
+      .w-60 {
+        width: 60%;
+      }
+    }
+  }
 }
 
 .host-button {
@@ -42,6 +75,13 @@
 }
 
 .dropdown {
-  position: relative;
-  display: inline-block;
+    all: revert;
+
+    * {
+      font-family: 'PT Sans', sans-serif;
+    }
+    
+    .tags {
+      background-color: white;
+    }
 }

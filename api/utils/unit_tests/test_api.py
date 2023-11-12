@@ -19,6 +19,7 @@ def client():
         db.create_all()  # setup
         yield app.test_client()  # tests run here
         db.drop_all()  # teardown
+
 #Done by Vishnu Akundi, Julia Wang
 @pytest.fixture
 def populate_db():
@@ -50,6 +51,7 @@ def populate_db():
     db.session.add(newaccount)
     db.session.add(newevent)
     db.session.commit()
+
 #Done by Julia Wang
 def test_registerEvent(client, populate_db):
     # create a test user and event, register the user for the event
@@ -74,7 +76,6 @@ def test_unregisterEvent(client, populate_db):
 
 #Done by Vishnu Akundi
 def test_search(client, populate_db):
-    # create a test user and event, register the user for the event
     res = client.get("/api/search?searchbar=&filters=Sanford Fleming")
     assert(res.status_code == 200)
     temp = json.loads(res.get_data())
@@ -87,4 +88,123 @@ def test_search(client, populate_db):
         assert("ECE444" in temp[i]['eventName'])
 
 
+# Done by Julia Wang
+def test_createEvent(client, populate_db):
+    # test that everything works
+    res = client.post("/api/events/new",
+        data=json.dumps(
+            dict(
+                eventName="Test Event",
+                organizerID=1,
+                eventDate = datetime.datetime.now().strftime("%Y-%m-%d"),
+                eventStart=datetime.datetime.now().strftime("%H:%M"),
+                eventEnd=datetime.datetime.now().strftime("%H:%M"),
+                building="Test Building",
+                room="1234",
+                oneLiner="Test One Liner",
+                tags = '["Test Tag 1", "Test Tag 2"]', 
+                description="Test Description",
+                image = None,
+            )
+        ),
+        content_type="application/json",
+    )
+    assert(res.status_code == 200)
 
+    # test for missing date
+    res = client.post("/api/events/new",
+        data=json.dumps(
+            dict(
+                eventName="Test Event",
+                organizerID=1,
+                eventDate = None,
+                eventStart=datetime.datetime.now().strftime("%H:%M"),
+                eventEnd=datetime.datetime.now().strftime("%H:%M"),
+                building="Test Building",
+                room="1234",
+                oneLiner="Test One Liner",
+                tags = '["Test Tag 1", "Test Tag 2"]', 
+                description="Test Description",
+                image = None,
+            )
+        ),
+        content_type="application/json",
+    )
+    assert(res.status_code == 400)
+
+    # test for missing location
+    res = client.post("/api/events/new",
+        data=json.dumps(
+            dict(
+                eventName="Test Event",
+                organizerID=1,
+                eventDate = None,
+                eventStart=datetime.datetime.now().strftime("%H:%M"),
+                eventEnd=datetime.datetime.now().strftime("%H:%M"),
+                building="",
+                room="1234",
+                oneLiner="Test One Liner",
+                tags = '["Test Tag 1", "Test Tag 2"]', 
+                description="Test Description",
+                image = None,
+            )
+        ),
+        content_type="application/json",
+    )
+    assert(res.status_code == 400)
+
+    res = client.post("/api/events/new",
+        data=json.dumps(
+            dict(
+                eventName="Test Event",
+                organizerID=1,
+                eventDate = None,
+                eventStart=datetime.datetime.now().strftime("%H:%M"),
+                eventEnd=datetime.datetime.now().strftime("%H:%M"),
+                building="Building Name",
+                room=None,
+                oneLiner="Test One Liner",
+                tags = '["Test Tag 1", "Test Tag 2"]', 
+                description="Test Description",
+                image = None,
+            )
+        ),
+        content_type="application/json",
+    )
+    assert(res.status_code == 400)
+
+    # test for missing oneLiner
+    res = client.post("/api/events/new",
+        data=json.dumps(
+            dict(
+                eventName="Test Event",
+                organizerID=1,
+                eventDate = None,
+                eventStart=datetime.datetime.now().strftime("%H:%M"),
+                eventEnd=datetime.datetime.now().strftime("%H:%M"),
+                building="Test Building",
+                room="1234",
+                oneLiner="",
+                tags = '["Test Tag 1", "Test Tag 2"]', 
+                description="Test Description",
+                image = None,
+            )
+        ),
+        content_type="application/json",
+    )
+    assert(res.status_code == 400)
+
+# Done by Julia Wang
+def test_getEvent(client, populate_db):
+    res = client.get("/api/events/1")
+    assert(res.status_code == 200)
+    assert(res.get_json()['eventName']=="ECE444 Study Session")
+    assert(res.get_json()['eventBuilding']=="Sanford Fleming")
+    assert(res.get_json()['eventRoom']=="Test Room")
+    assert(res.get_json()['oneLiner']=="Test One Liner")
+    assert(res.get_json()['eventDesc']==None)
+    assert(res.get_json()['eventImg']==None)
+
+    # try to get an event that doesn't exist
+    res = client.get("/api/events/3")
+    assert(res.status_code == 404)
