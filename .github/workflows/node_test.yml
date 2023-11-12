@@ -50,25 +50,16 @@ jobs:
         CI: false
 
     - name: Start API
-      uses: borales/actions-yarn@v4
-      with:
-          cmd: start-api # will run `yarn start-api` command
-          background: true
-      env:
-        CI: false
+      run: |
+          yarn start-api &
+          sleep 10
+          run: curl -I -s -L http://localhost:8000 || exit 1
     
-
-    - name: Wait for API to start
-      run: sleep 10
-
     - name: Test the app
       uses: borales/actions-yarn@v4
       with:
           cmd: test # will run `yarn test` command
-      env:
-          CI: false
 
     - name: Stop API and React App
       run: |
         pkill -f "flask run"
-        # pkill -f "react-scripts start"
