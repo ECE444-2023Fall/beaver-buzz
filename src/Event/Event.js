@@ -39,76 +39,128 @@ export default function EventPage() {
     const { id } = useParams();
     const [ratingVisible, setRatingVisible] = useState([])
     const [userAttending, setUserAttending] = useState([])
-    const [registerValue, setRegisterValue] = useState("Register")
+    const [registerValue, setRegisterValue] = useState([])
 
     const {
         userId,
         setUserId
     } = useUserContext()
 
-    const fetchInfo = () => {
-        return fetch(`/api/events/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-        )
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                }
-                return response.json().then((error) => {
-                    console.log("Event does not exist.")
-                    throw new Error(error);
-                })
-            })
-            .then((d) => {
-                // console.log(d);
-                setData(d)
-                let currentDate = new Date();
-                let eventEnd = new Date(d.eventEnd)
-                if (eventEnd <= currentDate) {
-                    setRatingVisible(true);
-                }
-                else {
-                    setRatingVisible(false);
-                }
-                let isFound = d.attendeeList.some(user => {
-                    if (userId != null && user == userId) {
-                        return true;
-                    }
-                    return false;
-                });
-                setUserAttending(isFound);
 
-            })
-            .catch((error) => { console.log(error); setData(-1); })
-    };
 
     useEffect(() => {
-        fetchInfo();
-    }, [id]);
+        const fetchInfo = () => {
+            return fetch(`/api/events/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            )
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    return response.json().then((error) => {
+                        console.log("Event does not exist.")
+                        throw new Error(error);
+                    })
+                })
+                .then((d) => {
+                    // console.log(d);
+                    setData(d)
+                    let currentDate = new Date();
+                    let eventEnd = new Date(d.eventEnd)
+                    if (eventEnd <= currentDate) {
+                        setRatingVisible(true);
+                    }
+                    else {
+                        setRatingVisible(false);
+                    }
+                    let isFound = d.attendeeList.some(user => {
+                        if (userId != null && user == userId) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    setUserAttending(isFound);
 
+                })
+                .catch((error) => { console.log(error); setData(-1); })
+        };
+        const isRegistered = () => {
+            if (userId != null) {
+                fetch(`/api/events/${id}/isregistered/${userId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({}),
+                }).then((response) => {
+                    return response.json()
+                }).then((d) => {
+                    // User has already registered so button should say Unregister
+                    if (d.userFound === true) {
+                        setRegisterValue(true);
+                    }
+                    else {
+                        setRegisterValue(false);
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+            else {
+                setRegisterValue(true);
+            }
+        }
+
+        fetchInfo();
+        isRegistered();
+    }, [id, userId]);
 
 
     const register = () => {
-        fetch(`/api/events/${id}/register/${userId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({}),
-        }).then((res) => {
-            if (res.status === 200) {
-                console.log("Successfully registered");
-            } else {
-                console.log("Failed to register");
-            }
-            console.log(res);
-        }).catch((error) => {
-            console.log(error);
-        });
+        if (!registerValue) {
+            fetch(`/api/events/${id}/register/${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+            }).then((res) => {
+                if (res.status === 200) {
+                    console.log("Successfully registered");
+                    setRegisterValue(true);
+                    window.location.reload(false);
+                } else {
+                    console.log("Failed to register");
+                }
+                console.log(res);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+        else {
+            fetch(`/api/events/${id}/unregister/${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+            }).then((res) => {
+                if (res.status === 200) {
+                    console.log("Successfully un-registered");
+                    setRegisterValue(false);
+                    window.location.reload(false);
+                } else {
+                    console.log("Failed to un-register");
+                }
+                console.log(res);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
     }
 
     // eventImage uses default event image when the event data doesn't contain an event image
@@ -126,14 +178,18 @@ export default function EventPage() {
                                 <RateEvent title="" mode="eventrating" disabled={true} userID={userId} eventID={id}></RateEvent>
                             }
                             <p id="eventOneLiner">{data.oneLiner}</p>
-                            <img id="eventImage" src={data.eventImg ? data.eventImg : eventDefault} alt="Event"></img>
+                            <img id="eventImage" src={data.eventImg} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
                             <div id="eventInfo">
                                 <p><strong>Organizer: </strong>{data.organizerName}</p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                             </div>
-                            <Button buttonStyle='btn--primary' onClick={register}>Register</Button>
+                            {registerValue ? (
+                                <Button buttonStyle='btn--primary' onClick={register}>Unregister</Button>
+                            ) : (
+                                <Button buttonStyle='btn--primary' onClick={register}>Register</Button>
+                            )}
                             {ratingVisible && userAttending &&
                                 <RateEvent title="Rate this event" mode="myrating" userID={userId} eventID={id}></RateEvent>
                             }

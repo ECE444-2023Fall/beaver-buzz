@@ -385,6 +385,15 @@ def unregisterEvent(eventid, userid):
     return jsonify(event.serialize())
 
 
+@app.route("/api/events/<eventid>/isregistered/<userid>", methods=["POST"])
+def isRegistered(eventid, userid):
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
+    if user in event.users:
+        return jsonify({"userFound": True})
+    return jsonify({"userFound": False})
+
+
 # TODO: below functions to be further implemented and used by Vishnu and Tracy for discover page
 
 

@@ -122,7 +122,7 @@ class Event(db.Model):
         eventRoom,
         oneLiner,
         eventDesc=None,
-        eventImg="../images/event-default.jpg",
+        eventImg=None,
         eventImgType=None,
         eventCategories=None,
     ):
