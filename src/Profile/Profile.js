@@ -347,7 +347,7 @@ const ProfilePage=()=> {
 
 
     const arrayDataItems = events.map((event) =>
-    <li key={event.id}>
+    <li key={event.id} onClick={(e) => {console.log('hi'); navigate('../events/' + event.id)}}>
         <div className="event-vertical-container">
             <div className="event-list-title-font">{event.eventName}</div>
             <Image className="eventImage" src = {event.eventImg ? event.eventImg : defaultImage}></Image>

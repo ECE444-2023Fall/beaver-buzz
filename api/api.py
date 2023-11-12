@@ -2,7 +2,7 @@ from re import T
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS, cross_origin
 from Configuration import Configuration
-from schemas import db, event_attendance, User, Event
+from schemas import db, event_attendance, User, Event, UserRatings
 from utils.emails.mailing import Mailer, get_login, format_email
 import bcrypt
 from datetime import datetime
@@ -109,6 +109,65 @@ def getInfo():
         "avatar": user.userImg,
 
     })
+
+@app.route('/api/events/<eventid>/getRating', methods=['GET'])
+def getRating(eventid):
+    event = db.get_or_404(Event, eventid)
+    return jsonify({
+        "rating": event.rating,
+        "numreviewers": event.numReviewers
+    })
+
+@app.route('/api/users/<userid>/getreviewfor/<eventid>', methods=['GET'])
+def getReview(userid, eventid):
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
+    rating = UserRatings.query.filter_by(userID = userid, eventID = eventid).first()
+    if rating is None:
+        return 404
+    return jsonify({
+        "rating": rating.ratingValue
+    })
+
+@app.route('/api/users/<userid>/setreviewfor/<eventid>', methods=['POST'])
+def setReview(userid, eventid):
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
+    host = db.get_or_404(User, event.organizerID)
+    givenRating = request.json['rating']
+    rating = UserRatings.query.filter_by(userID = userid, eventID = eventid).first()
+    if rating is None:
+        exists = db.session.query(event_attendance).filter(
+        event_attendance.c.userID == userid,
+        event_attendance.c.eventID == eventid
+        ).first()
+        if not exists:
+            return jsonify({
+                "error": "user not registered for this event"
+            }), 404
+        rating_val = givenRating
+        new_rating = UserRatings(userid, eventid, rating_val)
+        event.rating = (event.rating * event.numReviewers + givenRating) / (event.numReviewers + 1)
+        host.rating = (host.rating * host.numReviewers + givenRating) / (host.numReviewers + 1)
+
+        event.numReviewers = event.numReviewers + 1
+        host.numReviewers = host.numReviewers + 1
+        
+        
+        # add to db
+        db.session.add(new_rating)
+        db.session.commit()
+    else:
+        event.rating = (event.rating * event.numReviewers - rating.ratingValue + givenRating) / event.numReviewers
+        host.rating = (host.rating * host.numReviewers - rating.ratingValue + givenRating) / host.numReviewers
+        rating.ratingValue = givenRating
+        db.session.commit()
+
+ 
+    return jsonify({
+        "status": "updated rating"
+    })
+
 
 
 @app.route("/api/setPrivacy", methods=["POST"])
@@ -278,6 +337,8 @@ def register():
     db.session.commit()
 
     return jsonify({"greeting": "Welcome, " + newaccount.firstname})
+
+
 # route /events/<id> to get a specific event
 @app.route("/api/events/<id>", methods=["GET"])
 def getEvent(id):
@@ -286,33 +347,45 @@ def getEvent(id):
         # print("timezone is:", event.eventStart.tzname())
         event.eventStart = event.eventStart.astimezone(eastern)
         event.eventEnd = event.eventEnd.astimezone(eastern)
-        return jsonify(event.serialize())
-    return jsonify({"error": "Event not found"}), 420
+        return jsonify(event.serialize()), 200
+    return jsonify({"error": "Event not found"}), 404
 
 
 @app.route("/api/events/new", methods=["POST"])
 def createEvent():
     n = request.json
     eventName = n["eventName"]
-
+    if not eventName or eventName=="":
+        return jsonify({"Error": "Please enter a valid event name"}), 400
+    
     organizerID = n["organizerID"]
+    if not organizerID:
+        return jsonify({"Error": "Please log in first!"}), 400
+    
     date_format = "%Y-%m-%d %H:%M"
+    if not n["eventDate"] or not n["eventStart"] or not n["eventEnd"]:
+        return jsonify({"Error": "Please enter a valid date and time"}), 400
+    
     eventStart = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
     eventEnd = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
-    # print("new event created in tz:", eventStart.tzname())
 
     eventBuilding = n["building"]
     eventRoom = n["room"]
+    if not eventBuilding or not eventRoom or eventBuilding=="" or eventRoom=="":
+        return jsonify({"Error": "Please enter a valid location"}), 400
+
     oneLiner = n["oneLiner"]
+    if not oneLiner or oneLiner=="": 
+        return jsonify({"Error": "Please enter a valid one-liner"}), 400
+
     eventDesc = n["description"]
-    eventImg = n["image"] 
+    eventImg = n["image"]
+    eventTags = str(n["tags"])
 
 
     organizer = User.query.filter_by(id=organizerID).first()
     if not organizer:
         return jsonify({"Error": "Please log in first!"})
-    
-    
 
     newevent = Event(
         eventName=eventName,
@@ -325,8 +398,9 @@ def createEvent():
         eventDesc=eventDesc, 
         eventImg=eventImg,
         eventImgType="image/jpeg",
+        eventCategories=eventTags
     )
-
+    
     db.session.add(newevent)
     db.session.commit()
     return jsonify({"event_id": newevent.id})

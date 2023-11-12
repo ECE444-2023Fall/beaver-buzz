@@ -4,6 +4,7 @@ import { useUserContext } from '../UserContext';
 import './Event.css';
 import eventDefault from '.././images/event-default.jpg';
 import { useParams } from "react-router-dom";
+import RateEvent from '../components/Rating';
 
 function convertDate(date) {
     if (!date) return "";
@@ -61,13 +62,14 @@ export default function EventPage() {
                     })
                 })
                 .then((d) => {
-                    // console.log(d);
+                    console.log(d);
                     setData(d)
                 })
                 .catch((error) => { console.log(error); setData(-1); })
         };
         fetchInfo();
     }, [id]);
+
 
     const register = () => {
         fetch(`/api/events/${id}/register/${userId}`, {
@@ -99,6 +101,7 @@ export default function EventPage() {
                     <body>
                         <div id="eventContainer">
                             <h1 id="eventTitle">{data.eventName}</h1>
+                            <RateEvent title = "" mode="eventrating" disabled='disabled' userID ={userId} eventID={id}></RateEvent>
                             <p id="eventOneLiner">{data.oneLiner}</p>
                             <img id="eventImage" src={data.eventImg ? data.eventImg : eventDefault} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
@@ -108,6 +111,7 @@ export default function EventPage() {
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                             </div>
                             <Button buttonStyle='btn--primary' onClick={register}>Register</Button>
+                            <RateEvent title = "Rate this event" mode="myrating" disabled='' userID ={userId} eventID={id}></RateEvent>
                         </div>
                     </body>
                 </div>
