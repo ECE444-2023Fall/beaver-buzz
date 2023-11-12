@@ -21,8 +21,4 @@ jobs:
           pip install -r ./api/requirements.txt
       - name: Running unit tests with pytest
         run: |
-          # python -m pytest ./api/utils/unit_tests/
-          coverage run -m pytest  -v -s  
-      - name: Generate Coverage Report  
-        run: |  
-          coverage report -m
+          python -m pytest ./api/utils/unit_tests/
