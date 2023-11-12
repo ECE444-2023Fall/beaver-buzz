@@ -5,11 +5,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email_validator import validate_email, EmailNotValidError
 import pandas as pd
-import logging
 from typing import Iterable
 from tqdm import tqdm
-
-logging.basicConfig(filename='mail.log', encoding='utf-8', level=logging.DEBUG)
 
 class Mailer:
     """
@@ -36,9 +33,9 @@ class Mailer:
                 validate_email(recipient) # This may be redundant, but in the event emails need to be sent to people outside our db
                 self.server.sendmail(self.sender, recipient, content)
             except EmailNotValidError as e:
-                logging.error(str(e))
+                print(str(e))
         else:
-            logging.warn('Sending email with no validation...')
+            print('Sending email with no validation...')
             self.server.sendmail(self.sender, recipient, content)
 
     def mass_mail(self, recipients: Iterable[str], content: str, validate: bool=True) -> None:
@@ -53,7 +50,7 @@ class Mailer:
         """
         Terminates connection to smtp server.
         """
-        return logging.info(self.server.quit())
+        return self.server.quit()
 
 
 class Inbox:
@@ -109,7 +106,7 @@ def get_login(f_path, account):
     Reads login credentials from a textfile.
     """
     if not os.path.isfile(f_path):
-        logging.error('File does not exist')
+        print('File does not exist')
     else:
         with open(f_path) as f:
             lines = f.read().splitlines()

@@ -3,12 +3,11 @@ from flask import Flask, request, jsonify, session
 from flask_cors import CORS, cross_origin
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event
+from utils.emails.mailing import Mailer, get_login, format_email
 import bcrypt
 from datetime import datetime
 from pytz import timezone
 import ast
-
-from utils.emails.mailing import Mailer, get_login, format_email
 
 eastern = timezone('EST')
 
