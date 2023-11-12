@@ -1,6 +1,6 @@
 import os
 
-uri = os.getenv('DATABASE_URL')
+uri = os.getenv('SQLALCHEMY_DATABASE_URI')
 print("Database URI:", uri)  # Debugging line to be removed later
 if uri and uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://", 1)
