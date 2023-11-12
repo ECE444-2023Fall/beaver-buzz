@@ -14,9 +14,10 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}})
 app.config.from_object(Configuration)
 app.config['CORS_HEADERS'] = 'Content-Type'
-db.init_app(app)
+# db.init_app(app)
 
-if not db.engine.table_names():
+@app.before_first_request
+def create_tables():
     db.create_all()
 
 # @app.route('/api/users/<userid>/getsubscribers')
