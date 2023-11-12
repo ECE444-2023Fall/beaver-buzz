@@ -387,6 +387,7 @@ def allevents():
 @app.route('/api/search', methods=['GET'])
 @cross_origin()
 def search():
+    
     query = request.args.get('searchbar')
     location_filters = request.args.get('filters')
     if location_filters:

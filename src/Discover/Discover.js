@@ -1,23 +1,26 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import {Form,Button} from 'react-bootstrap'
 import "../LoginSignup/Form.css"
-import {Grid, Item} from "semantic-ui-react"
 import {useForm} from "react-hook-form";
 import Card from '../components/Card'
 import CardGrid from '../components/CardGrid';
 import Pagination from '../components/Pagination';
 import { useNavigate } from 'react-router-dom';
+import UserContext from '../UserContext';
 import "./Discover.css"
 import {CATEGORIES} from '../constants/Constants'
 
 const DiscoverPage=()=>{
     const[searchitems, setsearchitems] = useState([])
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const locations = ["Academic", "Arts", "Career", "Cultural", "Food", "Health", "Music", "Social", "Sports", "Technology", "Other"];
+    const locations = CATEGORIES.map(category => category.name);
+    console.log(locations)
     const navigate = useNavigate();
     const navigate2 = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(6);
+    const userId = useContext(UserContext);
+
 
     //Initially Fetch all results
     useEffect(() => {
@@ -46,11 +49,11 @@ const DiscoverPage=()=>{
 
     const onSubmit = (data) => {
         setSelectedItem(null)
-        console.log(data);
+        //console.log(data);
         var temp_data = {"filters": []}
         var filters = locations;
         for (const key in data) { 
-            console.log(key)
+            //console.log(key)
             if(key == "searchbar"){
                 temp_data["searchbar"]= data["searchbar"]
             }
@@ -61,6 +64,13 @@ const DiscoverPage=()=>{
                 temp_data["filters"].push(key)
             }
         }
+        if(userId){
+            temp_data['userid'] = userId;
+        }
+        else{
+            temp_data['userid'] = -1;
+        }
+        console.log(temp_data)
         fetch('http://localhost:8000/api/search?'+new URLSearchParams(temp_data), {
             method: 'GET',
             headers: {
@@ -69,7 +79,14 @@ const DiscoverPage=()=>{
         })
             .then(response => response.json())
                         .then(data => {
-                setsearchitems(data)
+                //console.log(data.length);
+                if (data.length ==0){
+                    setNores(true);
+                }
+                else{
+                    setNores(false);
+                }
+                setsearchitems(data);
             });
     }
   
@@ -116,6 +133,9 @@ const DiscoverPage=()=>{
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
     const currentRecords = searchitems.slice(indexOfFirstRecord, indexOfLastRecord);
     const nPages = Math.ceil(searchitems.length / recordsPerPage)
+
+    const [nores, setNores] = useState(false);
+
 
     return(
         <div>
@@ -171,9 +191,9 @@ const DiscoverPage=()=>{
 
         </div>
         <div class="searchresults">
-            
+            {nores ? <h1> No Results Found</h1> : 
             <CardGrid>
-                { currentRecords?.map(item=>
+                {currentRecords?.map(item=>
                     <div onClick={() => handleClick(item.id)}>
                     <Card key={item} style = {{display:"flex"}}>
                         <img src={item.eventImg} alt="Event" class="eventimg"></img>
@@ -187,9 +207,9 @@ const DiscoverPage=()=>{
                         </div>                      
                     </Card>
                     </div>
-                )
-                }
+                )}
             </CardGrid>
+            }
             
         </div>
     <Pagination
