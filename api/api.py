@@ -1,9 +1,9 @@
 from re import T
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS, cross_origin
+import bcrypt
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
-import bcrypt
 from datetime import datetime
 from pytz import timezone
 from sqlalchemy import or_
@@ -519,6 +519,9 @@ def getEventsByUser(userid):
 @app.route('/api/allevents', methods=['GET'])
 @cross_origin()
 def allevents():
+    '''
+    Returns all events for initialization purposes. search() function is used when a search is executed.
+    '''
     results = [e.serialize() for e in Event.query.all()]
     users = User.query.all()
     users_dict={}
@@ -526,7 +529,7 @@ def allevents():
         users_dict[u.id] = u.firstname + " " + u.lastname
     for result in results:
         result['display_time'] = str(result['eventStart'].time().strftime("%I:%M %p"))
-        if result['organizerID'] in users_dict.keys():
+        if result['organizerID'] in users_dict:
             name = users_dict[result['organizerID']]
             result['organizerName'] =  name
         else:
@@ -540,12 +543,14 @@ def allevents():
 @app.route('/api/search', methods=['GET'])
 @cross_origin()
 def search():
-    
+    '''
+    This function conducts the search operation. This includes search by query, filter, organizer name, and searching for tag in search bar.
+    '''
     query = request.args.get('searchbar')
     location_filters = request.args.get('filters')
-    c_user = request.args.get('userid')
+    #c_user = request.args.get('userid')
     #NEED TO IMPLEMENT USER EVENT INTERESTS
-    curr_user = User.query.filter_by(id=c_user).first()
+    #curr_user = User.query.filter_by(id=c_user).first()
     #curr_user_interests = curr_user.interests.split(',')
 
     eventtags = ["Academic", "Sports","Science","Math","Technology","Engineering","Students","Arts","Music","Games","Career","Food"]
@@ -563,14 +568,13 @@ def search():
         else:
             fn = temp_q[0]
             ln = temp_q[0]
-    #type_filter = request.args.get('type_filter')
     if not org_filter:
         org_filter= False
     filtered_results = []
     users_dict = {}
     #Both Query and Filters
     if query != '' and len(location_filters)!=0:
-        if org_filter == False:
+        if org_filter is False:
             if query.capitalize() not in eventtags:
                 filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]), Event.eventName.contains(query)).all()
             else:
@@ -594,7 +598,7 @@ def search():
     
     #Query but no Filter
     elif len(location_filters)==0 and query!="":
-        if org_filter == False:
+        if org_filter is False:
             if query.capitalize() not in eventtags:
                 filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
             else:
@@ -616,7 +620,7 @@ def search():
     results = [e.serialize() for e in filtered_results]
     for result in results:
         result['display_time'] = str(result['eventStart'].time().strftime("%I:%M %p"))
-        if result['organizerID'] in users_dict.keys():
+        if result['organizerID'] in users_dict:
             name = users_dict[result['organizerID']]
             result['organizerName'] =  name
         else:

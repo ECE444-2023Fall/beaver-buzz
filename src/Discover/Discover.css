@@ -82,6 +82,8 @@
     border-radius: 10px;
     border: 10px solid rgba(0, 0, 0, 0.111);
     height: 200px;
+    width: 80%;
+    object-fit: scale-down;
     
   }
   .eventimg:hover{

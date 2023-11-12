@@ -81,7 +81,8 @@ def populate_db():
         firstname="Prem",
         lastname="Potat",
     )
-
+    db.session.add(newaccount)
+    db.session.commit()
 
     newevent = Event(
         eventName="Test Event",
@@ -104,7 +105,6 @@ def populate_db():
         eventCategories="Academic",
     )
     db.session.add(newevent2)
-    db.session.add(newaccount)
     db.session.add(newevent)
     db.session.commit()
 #Done by Vishnu Akundi
@@ -172,6 +172,7 @@ def test_unregisterEvent(client, populate_db):
 
 #Done by Vishnu Akundi
 def test_search(client, populate_db2):
+    '''Tests Search Function by using only filter, only search bar entry, organizer name, and specifying name of filter in searchbar'''
     #Search Filter 
     res = client.get("/api/search?filters=Arts&searchbar=&userid=%5Bobject+Object%5D")
     temp = json.loads(res.get_data())
@@ -181,26 +182,27 @@ def test_search(client, populate_db2):
     res = client.get("/api/search?filters=&searchbar=ECE444&userid=%5Bobject+Object%5D")
     temp = json.loads(res.get_data())
     for i in range(len(temp)):
-        assert(temp[i]['eventName'] == "ECE444 Study Session")
+        assert temp[i]['eventName'] == "ECE444 Study Session"
     #Organizer Name
     res = client.get("/api/search?filters=&searchbar=Prem&Organizer=true&userid=%5Bobject+Object%5D")
     temp = json.loads(res.get_data())
     for i in range(len(temp)):
-        assert(temp[i]['eventName'] == "Test Event")
+        assert temp[i]['eventName'] == "Test Event"
     #Search for Filter in Search Bar 
     res = client.get("/api/search?filters=&searchbar=Academic&userid=%5Bobject+Object%5D")
     temp = json.loads(res.get_data())
     for i in range(len(temp)):
-        assert(temp[i]['eventName'] == "ECE444 Study Session")
+        assert temp[i]['eventName'] == "ECE444 Study Session"
 #Done by Vishnu Akundi
 def test_allevents(client, populate_db2):
+    '''Tests the allevents api function. Checks if all events have been returned'''
     res=client.get("/api/allevents")
-    assert(res.status_code == 200)
+    assert res.status_code == 200
     temp = json.loads(res.get_data())
     eventnames = []
     for i in temp:
         eventnames.append(i['eventName'])
-    assert(set(eventnames)==set(["ECE444 Study Session", "Test Event"]))
+    assert set(eventnames)==set(["ECE444 Study Session", "Test Event"])
 
 # Done by Filip Kostic
 def test_login(client, populate_login_db):
