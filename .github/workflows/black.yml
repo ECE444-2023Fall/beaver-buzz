@@ -18,4 +18,4 @@ jobs:
           pip install black
       - name: Formatting code with Black
         run: |
-          black --check --verbose --diff .
+          black --check --verbose .
