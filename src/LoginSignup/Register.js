@@ -23,7 +23,7 @@ const RegisterPage=()=>{
         },
         body:JSON.stringify(data)
         }
-        fetch('/api/register', requestOptions)
+        fetch('${process.env.REACT_APP_BACKEND_URL}/api/register', requestOptions)
         .then(response => response.json())
         .then(data => {
         if(data.greeting) {

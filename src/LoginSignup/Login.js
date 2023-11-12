@@ -24,7 +24,7 @@ const LoginPage=()=>{
         },
         body:JSON.stringify(data)
         }
-        fetch('/api/login', requestOptions)
+        fetch('${process.env.REACT_APP_BACKEND_URL}/api/login', requestOptions)
         .then(response => response.json())
         .then(data => {
             if(data.greeting) {
