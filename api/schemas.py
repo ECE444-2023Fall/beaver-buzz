@@ -1,6 +1,6 @@
-from datetime import datetime
-
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
+from datetime import datetime
 from pytz import timezone
 
 tz = timezone("US/Eastern")
@@ -72,8 +72,8 @@ class User(db.Model):
         email,
         phonenumber=None,
         interests=None,
-        user_img=None,
-        user_img_type=None,
+        userImg=None,
+        userImgType=None,
     ):
         self.password = password
         self.firstname = firstname
@@ -81,8 +81,8 @@ class User(db.Model):
         self.email = email
         self.phonenumber = phonenumber
         self.interests = interests
-        self.userImg = user_img
-        self.userImgType = user_img_type
+        self.userImg = userImg
+        self.userImgType = userImgType
 
     def __repr__(self):
         return f"<Student {self.firstname}, {self.lastname}>"
@@ -114,29 +114,29 @@ class Event(db.Model):
 
     def __init__(
         self,
-        event_name,
-        organizer_id,
-        event_start,
-        event_end,
-        event_building,
-        event_room,
-        one_liner,
-        event_desc=None,
-        event_img=None,
-        event_img_type=None,
-        event_categories=None,
+        eventName,
+        organizerID,
+        eventStart,
+        eventEnd,
+        eventBuilding,
+        eventRoom,
+        oneLiner,
+        eventDesc=None,
+        eventImg=None,
+        eventImgType=None,
+        eventCategories=None,
     ):
-        self.eventName = event_name
-        self.organizerID = organizer_id
-        self.eventStart = event_start
-        self.eventEnd = event_end
-        self.eventBuilding = event_building
-        self.eventRoom = event_room
-        self.oneLiner = one_liner
-        self.eventDesc = event_desc
-        self.eventImg = event_img
-        self.eventImgType = event_img_type
-        self.eventCategories = event_categories
+        self.eventName = eventName
+        self.organizerID = organizerID
+        self.eventStart = eventStart
+        self.eventEnd = eventEnd
+        self.eventBuilding = eventBuilding
+        self.eventRoom = eventRoom
+        self.oneLiner = oneLiner
+        self.eventDesc = eventDesc
+        self.eventImg = eventImg
+        self.eventImgType = eventImgType
+        self.eventCategories = eventCategories
 
     def __repr__(self):
         return f"<Event {self.eventName}>"
@@ -153,10 +153,10 @@ class UserRatings(db.Model):
     eventID = db.Column(db.Integer, db.ForeignKey("events.id"))
     ratingValue = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, user_id, event_id, rating_value):
-        self.userID = user_id
-        self.eventID = event_id
-        self.ratingValue = rating_value
+    def __init__(self, userID, eventID, ratingValue):
+        self.userID = userID
+        self.eventID = eventID
+        self.ratingValue = ratingValue
 
     def __repr__(self):
         return f"<Rating by userID: {self.userID}, for eventID: {self.eventID}, rating: {self.ratingValue}>"

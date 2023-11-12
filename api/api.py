@@ -2,15 +2,14 @@
 This file contains the API endpoints for the backend.
 """
 
-import ast
-
-import bcrypt
-from flask import Flask, request, jsonify
-from flask_cors import cross_origin
-from pytz import timezone
-
+from re import T
+from flask import Flask, request, jsonify, session
+from flask_cors import CORS, cross_origin
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
+import bcrypt
+from pytz import timezone
+import ast
 
 eastern = timezone("EST")
 
@@ -24,7 +23,7 @@ with app.app_context():
 
 
 @app.route("/api/users/<userid>/getSubscribers", methods=["POST"])
-def getsubscribers(userid):
+def get_subscribers(userid):
     """Gets the subscribers of a user with the given id
 
     Args:
@@ -40,7 +39,7 @@ def getsubscribers(userid):
 
 
 @app.route("/api/users/<userid>/getSubscribedTo", methods=["POST"])
-def getsubscribedto(userid):
+def getsubscribed_to(userid):
     """Gets the users that the user with the given id is subscribed to
 
     Args:
@@ -64,15 +63,15 @@ def subscribe(userid, otheruser):
         error field set to error message if unsuccessful
     """
     user = db.get_or_404(User, userid)
-    requesting_user = db.get_or_404(User, otheruser)
+    requestingUser = db.get_or_404(User, otheruser)
     if userid == otheruser:
         return jsonify({"error": "cannot subscribe to yourself"}), 400
 
     subscriberlist = user.subscribers
-    if requesting_user in subscriberlist:
+    if requestingUser in subscriberlist:
         return jsonify({"error": "user is already subscribed"}), 400
-    subscriberlist.append(requesting_user)
-    requesting_user.subscribed_to_users.append(user)
+    subscriberlist.append(requestingUser)
+    requestingUser.subscribed_to_users.append(user)
 
     db.session.commit()
     return jsonify({"status": "subscribed"})
@@ -87,15 +86,15 @@ def unsubscribe(userid, otheruser):
         error field set to error message if unsuccessful
     """
     user = db.get_or_404(User, userid)
-    requesting_user = db.get_or_404(User, otheruser)
+    requestingUser = db.get_or_404(User, otheruser)
     if userid == otheruser:
         return jsonify({"error": "cannot unsubscribe from yourself"}), 400
 
     subscriberlist = user.subscribers
-    if requesting_user not in subscriberlist:
+    if requestingUser not in subscriberlist:
         return jsonify({"error": "user was never subscribed"}), 400
-    subscriberlist.remove(requesting_user)
-    requesting_user.subscribed_to_users.remove(user)
+    subscriberlist.remove(requestingUser)
+    requestingUser.subscribed_to_users.remove(user)
 
     db.session.commit()
     return jsonify({"status": "unsubscribed"})
@@ -128,20 +127,20 @@ def get_user_info():
     Returns:
         json: json object with user info fields
     """
-    uid = request.json["id"]
-    requesting_user = request.json["myID"]
-    user = db.get_or_404(User, uid)
-    db.get_or_404(User, requesting_user)
+    id = request.json["id"]
+    requestingUser = request.json["myID"]
+    user = db.get_or_404(User, id)
+    otheruser = db.get_or_404(User, requestingUser)
 
     return jsonify(
         {
             "firstname": user.firstname,
             "lastname": user.lastname,
             "phonenumber": user.phonenumber
-            if user.showContactInfo or uid == requesting_user
+            if user.showContactInfo or id == requestingUser
             else "Private",
             "emailaddr": user.email
-            if user.showContactInfo or uid == requesting_user
+            if user.showContactInfo or id == requestingUser
             else "Private",
             "interests": ast.literal_eval(user.interests),
             "privacy": {
@@ -178,8 +177,8 @@ def get_review(userid, eventid):
     Returns:
         json: json object with field rating or 404 if no rating exists
     """
-    db.get_or_404(Event, eventid)
-    db.get_or_404(User, userid)
+    event = db.get_or_404(Event, eventid)
+    user = db.get_or_404(User, userid)
     rating = UserRatings.query.filter_by(userID=userid, eventID=eventid).first()
     if rating is None:
         return 404
@@ -198,9 +197,9 @@ def set_review(userid, eventid):
         json: json object with field status or 404 if no user or event exists
     """
     event = db.get_or_404(Event, eventid)
-    db.get_or_404(User, userid)
+    user = db.get_or_404(User, userid)
     host = db.get_or_404(User, event.organizerID)
-    given_rating = request.json["rating"]
+    givenRating = request.json["rating"]
     rating = UserRatings.query.filter_by(userID=userid, eventID=eventid).first()
     if rating is None:
         exists = (
@@ -213,12 +212,12 @@ def set_review(userid, eventid):
         )
         if not exists:
             return jsonify({"error": "user not registered for this event"}), 404
-        rating_val = given_rating
+        rating_val = givenRating
         new_rating = UserRatings(userid, eventid, rating_val)
-        event.rating = (event.rating * event.numReviewers + given_rating) / (
+        event.rating = (event.rating * event.numReviewers + givenRating) / (
             event.numReviewers + 1
         )
-        host.rating = (host.rating * host.numReviewers + given_rating) / (
+        host.rating = (host.rating * host.numReviewers + givenRating) / (
             host.numReviewers + 1
         )
 
@@ -230,12 +229,12 @@ def set_review(userid, eventid):
         db.session.commit()
     else:
         event.rating = (
-            event.rating * event.numReviewers - rating.ratingValue + given_rating
+            event.rating * event.numReviewers - rating.ratingValue + givenRating
         ) / event.numReviewers
         host.rating = (
-            host.rating * host.numReviewers - rating.ratingValue + given_rating
+            host.rating * host.numReviewers - rating.ratingValue + givenRating
         ) / host.numReviewers
-        rating.ratingValue = given_rating
+        rating.ratingValue = givenRating
         db.session.commit()
 
     return jsonify({"status": "updated rating"})
@@ -248,13 +247,13 @@ def set_privacy():
     Returns:
         json: json object with field status or 404 if no user exists
     """
-    uid = request.json["id"]
-    show_contact_info = request.json["showContactInfo"]
-    show_registered_events = request.json["showRegisteredEvents"]
-    user = db.get_or_404(User, uid)
+    id = request.json["id"]
+    showContactInfo = request.json["showContactInfo"]
+    showRegisteredEvents = request.json["showRegisteredEvents"]
+    user = db.get_or_404(User, id)
 
-    user.showContactInfo = show_contact_info
-    user.showRegisteredEvents = show_registered_events
+    user.showContactInfo = showContactInfo
+    user.showRegisteredEvents = showRegisteredEvents
     db.session.commit()
 
     return jsonify({"status": "updated privacy"})
@@ -268,12 +267,12 @@ def set_email():
         json: json object with field status or 404 if no user exists or 400 if an
          email is already in use
     """
-    uid = request.json["id"]
+    id = request.json["id"]
     email = request.json["email"]
-    user = db.get_or_404(User, uid)
+    user = db.get_or_404(User, id)
 
-    other_user = User.query.filter_by(email=email).first()
-    if other_user is not None and other_user != user:
+    otherUser = User.query.filter_by(email=email).first()
+    if otherUser is not None and otherUser != user:
         return jsonify({"error": "email already in use"}), 400
     user.email = email
     db.session.commit()
@@ -288,9 +287,9 @@ def set_lastname():
     Returns:
         json: json object with field status or 404 if no user exists
     """
-    uid = request.json["id"]
+    id = request.json["id"]
     lastname = request.json["lastname"]
-    user = db.get_or_404(User, uid)
+    user = db.get_or_404(User, id)
 
     user.lastname = lastname
     db.session.commit()
@@ -305,9 +304,9 @@ def set_firstname():
     Returns:
         json: json object with field status or 404 if no user exists
     """
-    uid = request.json["id"]
+    id = request.json["id"]
     firstname = request.json["firstname"]
-    user = db.get_or_404(User, uid)
+    user = db.get_or_404(User, id)
 
     user.firstname = firstname
     db.session.commit()
@@ -323,12 +322,12 @@ def set_phone():
         json: json object with field status or 404 if no user exists or 400 
         if a phone number is already in use
     """
-    uid = request.json["id"]
+    id = request.json["id"]
     phone = request.json["phone"]
-    user = db.get_or_404(User, uid)
+    user = db.get_or_404(User, id)
 
-    other_user = User.query.filter_by(phonenumber=phone).first()
-    if other_user is not None and other_user != user:
+    otherUser = User.query.filter_by(phonenumber=phone).first()
+    if otherUser is not None and otherUser != user:
         return jsonify({"error": "phone number is already in use"}), 400
 
     user.phonenumber = phone
@@ -362,9 +361,9 @@ def set_interests():
     Returns:
         json: json object with field status or 404 if no user exists
     """
-    uid = request.json["id"]
+    id = request.json["id"]
     interests = request.json["interests"]
-    user = db.get_or_404(User, uid)
+    user = db.get_or_404(User, id)
 
     user.interests = str(interests)
 
@@ -380,9 +379,9 @@ def set_avatar():
     Returns:
         json: json object with field status or 404 if no user exists
     """
-    uid = request.json["id"]
+    id = request.json["id"]
     avatar = request.json["avatar"]
-    user = db.get_or_404(User, uid)
+    user = db.get_or_404(User, id)
 
     user.userImg = avatar
 
@@ -414,11 +413,11 @@ def register():
     if user is not None:  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
-    password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+    passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
     newaccount = User(
         email=email,
-        password=password_hash,
+        password=passwordHash,
         firstname=firstname,
         lastname=lastname,
         phonenumber=phonenumber,
@@ -432,16 +431,16 @@ def register():
 
 # route /events/<id> to get a specific event
 @app.route("/api/events/<id>", methods=["GET"])
-def get_event(uid):
+def get_event(id):
     """Gets the event with the given id
 
     Args:
-        uid (int): event id of the event being requested
+        id (int): event id of the event being requested
 
     Returns:
         json: json object with event fields or 404 if no event exists 
     """
-    event = Event.query.filter_by(id=uid).first()
+    event = Event.query.filter_by(id=id).first()
     if event is not None:
         # print("timezone is:", event.eventStart.tzname())
         event.eventStart = event.eventStart.astimezone(eastern)
@@ -458,54 +457,54 @@ def create_event():
         json: json object with event id field or 400 if invalid event fields are provided
     """
     n = request.json
-    event_name = n["eventName"]
-    if not event_name or event_name == "":
+    eventName = n["eventName"]
+    if not eventName or eventName == "":
         return jsonify({"Error": "Please enter a valid event name"}), 400
 
-    organizer_id = n["organizerID"]
-    if not organizer_id:
+    organizerID = n["organizerID"]
+    if not organizerID:
         return jsonify({"Error": "Please log in first!"}), 400
 
     date_format = "%Y-%m-%d %H:%M"
     if not n["eventDate"] or not n["eventStart"] or not n["eventEnd"]:
         return jsonify({"Error": "Please enter a valid date and time"}), 400
 
-    event_start = eastern.localize(
+    eventStart = eastern.localize(
         datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
     )
-    event_end = eastern.localize(
+    eventEnd = eastern.localize(
         datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
     )
 
-    event_building = n["building"]
-    event_room = n["room"]
-    if not event_building or not event_room or event_building == "" or event_room == "":
+    eventBuilding = n["building"]
+    eventRoom = n["room"]
+    if not eventBuilding or not eventRoom or eventBuilding == "" or eventRoom == "":
         return jsonify({"Error": "Please enter a valid location"}), 400
 
-    one_liner = n["oneLiner"]
-    if not one_liner or one_liner == "":
+    oneLiner = n["oneLiner"]
+    if not oneLiner or oneLiner == "":
         return jsonify({"Error": "Please enter a valid one-liner"}), 400
 
-    event_desc = n["description"]
-    event_img = n["image"]
-    event_tags = str(n["tags"])
+    eventDesc = n["description"]
+    eventImg = n["image"]
+    eventTags = str(n["tags"])
 
-    organizer = User.query.filter_by(id=organizer_id).first()
+    organizer = User.query.filter_by(id=organizerID).first()
     if not organizer:
         return jsonify({"Error": "Please log in first!"})
 
     newevent = Event(
-        event_name=event_name,
-        organizer_id=organizer_id,
-        event_start=event_start,
-        event_end=event_end,
-        event_building=event_building,
-        event_room=event_room,
-        one_liner=one_liner,
-        event_desc=event_desc,
-        event_img=event_img,
-        event_img_type="image/jpeg",
-        event_categories=event_tags,
+        eventName=eventName,
+        organizerID=organizerID,
+        eventStart=eventStart,
+        eventEnd=eventEnd,
+        eventBuilding=eventBuilding,
+        eventRoom=eventRoom,
+        oneLiner=oneLiner,
+        eventDesc=eventDesc,
+        eventImg=eventImg,
+        eventImgType="image/jpeg",
+        eventCategories=eventTags,
     )
 
     db.session.add(newevent)
@@ -564,39 +563,38 @@ def get_events():
 
 
 @app.route("/api/events/<eventid>/update", methods=["POST"])
-def update_event(eventid, event_name, organizer_id, event_start, event_end, event_building, event_room, one_liner,
-                 event_desc, event_img, event_img_type, event_categories):
+def update_event(eventid, eventName, organizerID, eventStart, eventEnd, eventBuilding, eventRoom, oneLiner, eventDesc, eventImg, eventImgType, eventCategories):
     """Updates the event with the given id with the provided event fields
 
     Args:
         eventid (int): event id of the event being updated
-        event_name (string): new name of the event
-        organizer_id (int): id of the organizer of the event
-        event_start (string): new start time of the event
-        event_end (string): new end time of the event
-        event_building (string): building where the event is held
-        event_room (string): room where the event is held
-        one_liner (string): one liner description of the event
-        event_desc (string): description of the event
-        event_img (bytes): image of the event
-        event_img_type (string): type of the image
-        event_categories (list): list of categories for the event
+        eventName (string): new name of the event
+        organizerID (int): id of the organizer of the event
+        eventStart (string): new start time of the event
+        eventEnd (string): new end time of the event
+        eventBuilding (string): building where the event is held
+        eventRoom (string): room where the event is held
+        oneLiner (string): one liner description of the event
+        eventDesc (string): description of the event
+        eventImg (bytes): image of the event
+        eventImgType (string): type of the image
+        eventCategories (list): list of categories for the event
 
     Returns:
         json: json object with updated event fields
     """
     event = Event.query.filter_by(id=eventid).first()
-    event.name = event_name
-    event.organizer_id = organizer_id
-    event.start_time = event_start
-    event.end_time = event_end
-    event.building = event_building
-    event.room = event_room
-    event.one_liner = one_liner
-    event.description = event_desc
-    event.image = event_img
-    event.image_type = event_img_type
-    event.categories = event_categories
+    event.name = eventName
+    event.organizer_id = organizerID
+    event.start_time = eventStart
+    event.end_time = eventEnd
+    event.building = eventBuilding
+    event.room = eventRoom
+    event.one_liner = oneLiner
+    event.description = eventDesc
+    event.image = eventImg
+    event.image_type = eventImgType
+    event.categories = eventCategories
     db.session.commit()
     return jsonify(event.serialize())
 
