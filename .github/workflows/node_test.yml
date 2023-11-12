@@ -45,6 +45,7 @@ jobs:
       uses: borales/actions-yarn@v4
       with:
           cmd: start & # will run `yarn start` command
+          background: true
 
     - name: Wait for React App to start
       run: sleep 10
@@ -53,7 +54,8 @@ jobs:
       uses: borales/actions-yarn@v4
       with:
           cmd: start-api & # will run `yarn start-api` command
-          
+          background: true
+
     - name: Wait for API to start
       run: sleep 10
 
