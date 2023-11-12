@@ -46,9 +46,11 @@ const RegisterPage=()=>{
     return(
         <div className ="container">
             <div className="form-center">
-                <h1>Register</h1><br/>
+                
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <label htmlFor="email">Email</label>
+                        <h1 className="form-title">Register Here</h1>
+                        <h1 className="form-name">Email</h1>
+                        
                         <Form.Group>
                             <Form.Control type="email"
                                 placeholder="Email"
@@ -59,7 +61,8 @@ const RegisterPage=()=>{
                         </Form.Group>
                          {errors.email && <p className="error">{"Please enter a valid email address"}</p>}
                         <br></br>
-                        <label htmlFor="password">Password</label>
+                        <h1 className="form-name">Password</h1>
+                        
                         <Form.Group>
                             <Form.Control type="password"
                                 placeholder="Password"
@@ -70,7 +73,7 @@ const RegisterPage=()=>{
                         </Form.Group>
                         {errors.password && <p className="error">{"Please enter your password (8-100 chars)"}</p>}
                         <br/>
-                         <label htmlFor="firstname">First name</label>
+                        <h1 className="form-name">First Name</h1>
                             <Form.Group>
                                 <Form.Control type="text"
                                     placeholder="First name"
@@ -82,7 +85,7 @@ const RegisterPage=()=>{
                            {errors.firstname && <p className="error">{"Please enter your first name"}</p>}
                             <br></br>
 
-                            <label htmlFor="lastname">Last name</label>
+                            <h1 className="form-name">Last Name</h1>
                             <Form.Group>
                                 <Form.Control type="text"
                                     placeholder="Last name"
@@ -94,19 +97,18 @@ const RegisterPage=()=>{
                            {errors.lastname && <p className="error">{"Please enter your last name"}</p>}
                             <br></br>
 
-                            <label htmlFor="phonenumber">Phone number (Optional)</label>
+                            <h1 className="form-name">Phone Number</h1>
                             <Form.Group>
                                 <Form.Control type="tel"
                                     placeholder="Phone number"
-                                   pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                   pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}" 
                                    className="input"
                                     id="phonenumber"
                                      {...register("phonenumber", { required: false})}
                                 />
                             </Form.Group>
                             <br></br>
-
-                            <label htmlFor="interests">What are your interests? (Optional)</label>
+                            <h1 className="form-name">What are your interests? (Optional) </h1>
 
                             <Multiselect   
                             options={CATEGORIES} // Options to display in the dropdown
@@ -135,7 +137,7 @@ const RegisterPage=()=>{
                                 />
                             </Form.Group>*/}
                         {!emailTaken ? <p>{greeting}</p> : <p className="error">There is already an account registered with this email</p>} 
-                        <Button type='submit' className="submitButton">Register</Button>
+                        <Button type='submit' className="submitButton" style={{ marginTop: '20px' }}><h1 className="form-button">Register</h1></Button>
 
                     </Form>
 

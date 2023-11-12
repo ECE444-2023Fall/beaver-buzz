@@ -40,6 +40,12 @@ def getsubscribedTo(userid):
 def subscribe(userid, otheruser):
     user = db.get_or_404(User, userid)
     requestingUser = db.get_or_404(User, otheruser)
+    if userid == otheruser:
+        return jsonify({
+            "error": "cannot subscribe to yourself"
+        }), 400
+
+
     subscriberlist = user.subscribers
     if requestingUser in subscriberlist:
         return jsonify({
@@ -57,6 +63,11 @@ def subscribe(userid, otheruser):
 def unsubscribe(userid, otheruser):
     user = db.get_or_404(User, userid)
     requestingUser = db.get_or_404(User, otheruser)
+    if userid == otheruser:
+        return jsonify({
+            "error": "cannot unsubscribe from yourself"
+        }), 400
+
     subscriberlist = user.subscribers
     if requestingUser not in subscriberlist:
         return jsonify({
@@ -84,21 +95,19 @@ def login():
 
     user = User.query.filter_by(email=email).first()
     if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password):
-        return jsonify({"error": "Invalid username or password"}), 425
+        return jsonify({"error": "Invalid username or password"}), 401
 
     return jsonify({
         "greeting": "Welcome, " + user.firstname,
         "id": user.id
-    })
+    }), 202
 
 @app.route("/api/getUserInfo", methods=["POST"])
-def getInfo():
+def getUserInfo():
     id = request.json["id"]
     requestingUser = request.json["myID"]
-
-    user = User.query.filter_by(id=id).first()
-
-    print(user.showContactInfo)
+    user =  db.get_or_404(User, id)
+    otheruser = db.get_or_404(User, requestingUser)
 
     return jsonify({
         "firstname": user.firstname,
@@ -176,7 +185,7 @@ def setPrivacy():
     id = request.json["id"]
     showContactInfo = request.json["showContactInfo"]
     showRegisteredEvents = request.json["showRegisteredEvents"]
-    user = User.query.filter_by(id=id).first()
+    user =  db.get_or_404(User, id)
 
 
     user.showContactInfo = showContactInfo
@@ -191,13 +200,13 @@ def setPrivacy():
 def setEmail():
     id = request.json["id"]
     email = request.json["email"]
-    user = User.query.filter_by(id=id).first()
+    user =  db.get_or_404(User, id)
 
     otherUser = User.query.filter_by(email=email).first()
     if otherUser is not None and otherUser != user:
         return jsonify({
             "error": "email already in use"
-        })
+        }), 400
     user.email = email
     db.session.commit()
 
@@ -212,7 +221,7 @@ def setEmail():
 def setLastname():
     id = request.json["id"]
     lastname = request.json["lastname"]
-    user = User.query.filter_by(id=id).first()
+    user =  db.get_or_404(User, id)
 
     user.lastname = lastname
     db.session.commit()
@@ -226,7 +235,7 @@ def setLastname():
 def setFirstname():
     id = request.json["id"]
     firstname = request.json["firstname"]
-    user = User.query.filter_by(id=id).first()
+    user =  db.get_or_404(User, id)
 
     user.firstname = firstname
     db.session.commit()
@@ -240,13 +249,13 @@ def setFirstname():
 def setPhone():
     id = request.json["id"]
     phone = request.json["phone"]
-    user = User.query.filter_by(id=id).first()
+    user = db.get_or_404(User, id)
 
     otherUser = User.query.filter_by(phonenumber=phone).first()
     if otherUser is not None and otherUser != user:
         return jsonify({
             "error": "phone number is already in use"
-        })
+        }), 400
 
     user.phonenumber = phone
 
@@ -274,7 +283,7 @@ def isSubscribedTo(userid, otherid):
 def setInterests():
     id = request.json["id"]
     interests = request.json["interests"]
-    user = User.query.filter_by(id=id).first()
+    user = db.get_or_404(User, id)
 
     user.interests = str(interests)
 
@@ -309,7 +318,11 @@ def register():
 
     user = User.query.filter_by(email=email).first()
     if user is not None:  # An account with this email exists
-        return jsonify({"error": "User already exists"}), 420
+        return jsonify({"error": "User with this email already exists"}), 400
+
+    user = User.query.filter_by(phonenumber=phonenumber).first()
+    if user is not None:  # An account with this phonenumber exists
+        return jsonify({"error": "User with this phone number already exists"}), 400
 
     passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
@@ -339,8 +352,7 @@ def register():
     db.session.add(newaccount)
     db.session.commit()
 
-    return jsonify({"greeting": "Welcome, " + newaccount.firstname})
-
+    return jsonify({"greeting": "Welcome, " + newaccount.firstname}), 201
 
 # route /events/<id> to get a specific event
 @app.route("/api/events/<id>", methods=["GET"])

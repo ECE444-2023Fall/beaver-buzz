@@ -1,0 +1,50 @@
+/* styles.css (or your preferred CSS file) */
+
+.container_discover{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 100% of the viewport height */
+  }
+
+.search_bar{
+    border-radius: 16px;
+    background: #FFF;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.04), 0px 4px 8px 0px rgba(0, 0, 0, 0.04), 0px 16px 24px 0px rgba(0, 0, 0, 0.04), 0px 24px 32px 0px rgba(0, 0, 0, 0.04);
+}
+
+.search_filter_title{
+    color: #1E3765;
+    font-family: Poppins;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+  .form-left {
+    margin-right: 20px;
+  }
+  
+  .input {
+    width: 100%;
+  }
+  
+  .searchButton {
+    margin-top: 10px;
+  }
+  
+  .filters {
+    margin-top: 20px;
+  }
+  
+  .searchresults {
+    margin-top: 20px;
+  }
+  
+  .card {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  /* Add more styles as needed */
+  

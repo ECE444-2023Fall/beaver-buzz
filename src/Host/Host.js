@@ -50,63 +50,111 @@ export default function HostPage() {
     return (
         <div>
             <div className="host-container">
-            <h1>Host</h1>
-            <Form onSubmit={handleSubmit(onSubmit)} className='host-form'>
-                <Form.Group controlId="eventName" className='left-right'>
-                    <Form.Label>Event Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter event name" maxLength={50}{...register("eventName", { required: true })} />
-                </Form.Group>
+            <h1 className="form-title" style={{ marginTop: '20px' }} >Want to host an event?</h1>
+                <Form onSubmit={handleSubmit(onSubmit)} className='host-form'>
+                    <Form.Group controlId="eventName">
+                        <Form.Label className="form-label">Event Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter event name"
+                            maxLength={50}
+                            {...register("eventName", { required: true })}
+                            className="form-input"
+                        />
+                    </Form.Group>
 
-                <Form.Group controlId="oneLiner" className='left-right'>
-                    <Form.Label>One-liner</Form.Label>
-                    <Form.Control type="text" placeholder="Enter one-liner" maxLength={75} {...register("oneLiner")} />
-                </Form.Group>
+            <Form.Group controlId="oneLiner">
+                <Form.Label className="form-label">One-liner</Form.Label>
+                <Form.Control
+                    type="text"
+                    placeholder="Enter one-liner"
+                    maxLength={75}
+                    {...register("oneLiner")}
+                    className="form-input"
+                />
+            </Form.Group>
 
-                <Form.Group controlId="eventDate" className='left-right'>
-                    <Form.Label>Date</Form.Label>
-                    <Form.Control type="date" placeholder="Enter date" {...register("eventDate", { required: true })} />
-                </Form.Group>
+            <Form.Group controlId="eventDate">
+                <Form.Label className="form-label">Date</Form.Label>
+                <Form.Control
+                    type="date"
+                    placeholder="Enter date"
+                    {...register("eventDate", { required: true })}
+                    className="form-input"
+                />
+            </Form.Group>
 
-                <div class="form-row">
-                <div class="col">
-                <Form.Group controlId="eventStart">
-                    <Form.Label className='add-padd'>Start Time</Form.Label>
-                    <Form.Control type="time" placeholder="Enter start time" {...register("eventStart", { required: true })} />
-                </Form.Group></div>
-                <div class="col">
-                <Form.Group controlId="eventEnd">
-                    <Form.Label className='add-padd'>End Time</Form.Label>
-                    <Form.Control type="time" placeholder="Enter end time" {...register("eventEnd", { required: true })} />
-                </Form.Group></div>
+            <div className="form-row">
+                <div className="col">
+                    <Form.Group controlId="eventStart">
+                        <Form.Label className="form-label">Start Time</Form.Label>
+                        <Form.Control
+                            type="time"
+                            placeholder="Enter start time"
+                            {...register("eventStart", { required: true })}
+                            className="form-input"
+                        />
+                    </Form.Group>
                 </div>
-                
-                <div class="form-row">
-                <div class="col">
-                <Form.Group controlId="building">
-                    <Form.Label className='add-padd'>Building</Form.Label>
-                    <Form.Control className="w-60" type="text" placeholder="Enter building" maxLength={25} {...register("building", { required: true })} />
-                </Form.Group>
+                <div className="col">
+                    <Form.Group controlId="eventEnd">
+                        <Form.Label className="form-label">End Time</Form.Label>
+                        <Form.Control
+                            type="time"
+                            placeholder="Enter end time"
+                            {...register("eventEnd", { required: true })}
+                            className="form-input"
+                        />
+                    </Form.Group>
                 </div>
-                <div class="col">
-                <Form.Group controlId="room">
-                    <Form.Label className='add-padd'>Room</Form.Label>
-                    <Form.Control className="w-25" type="text" placeholder="#" maxLength={10} {...register("room", { required: true })} />
-                </Form.Group>
-                </div>
-                </div>
+            </div>
 
-                <Form.Group controlId="description" className='left-right'>
-                    <Form.Label className='add-padd'>Description</Form.Label>
-                    <Form.Control className='w-100' as="textarea" rows={3} maxLength={256} placeholder="Enter description" {...register("description")} />
-                </Form.Group>
+            <Form.Group controlId="building">
+                <Form.Label className="form-label">Building</Form.Label>
+                <Form.Control
+                    type="text"
+                    placeholder="Enter building name"
+                    maxLength={25}
+                    {...register("building", { required: true })}
+                    className="form-input"
+                />
+            </Form.Group>
 
-                <Form.Group controlId="image" className='left-right'>
-                    <Form.Label>Upload Image</Form.Label>
-                    <Form.Control type="file" accept=".jpg,.gif,.png" {...register("image")} />
-                </Form.Group>
+            <Form.Group controlId="room">
+                <Form.Label className="form-label">Room</Form.Label>
+                <Form.Control
+                    type="text"
+                    placeholder="Enter building room"
+                    maxLength={10}
+                    {...register("room", { required: true })}
+                    className="form-input"
+                />
+            </Form.Group>
 
-                <Form.Group controlId="tags" className='left-right'>
-                    <Form.Label>Select related topics</Form.Label>
+            <Form.Group controlId="description">
+                <Form.Label className="form-label">Description</Form.Label>
+                <Form.Control
+                    as="textarea"
+                    rows={3}
+                    maxLength={256}
+                    placeholder="Enter description"
+                    {...register("description")}
+                    className="form-input"
+                />
+            </Form.Group>
+
+            <Form.Group controlId="image">
+                <Form.Label className="form-label">Upload Image</Form.Label>
+                <Form.Control
+                    type="file"
+                    accept=".jpg,.gif,.png"
+                    {...register("image")}
+                    className="form-input"
+                />
+            </Form.Group>
+
+            <Form.Group controlId="tags">
+                <Form.Label className="form-label">Select related topics</Form.Label>
                     <div className="dropdown">
 
                      <Multiselect 
@@ -125,10 +173,12 @@ export default function HostPage() {
                     
                 </Form.Group>
 
-                <Button variant="primary" type="submit" className='host-button'>
-                    Post Event
-                </Button>
-            </Form>
+            <Button variant="primary" type="submit" className="host-button">
+                Post Event
+            </Button>
+
+                </Form>
+ 
             </div>
         </div>
     )

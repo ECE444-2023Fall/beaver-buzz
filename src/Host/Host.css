@@ -3,8 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  width: 100vw;
+  height: 95vh;
   background-color: #f2f2f2;
 }
 
@@ -61,9 +60,9 @@
 .host-button {
   width: 100%;
   padding: 0.5rem;
-  border: none;
+  border: 1px solid #1E3765;
   border-radius: 5px;
-  background-color: #4caf50;
+  background-color: #1E3765;
   color: #fff;
   font-weight: bold;
   cursor: pointer;
@@ -75,13 +74,94 @@
 }
 
 .dropdown {
-    all: revert;
-
-    * {
-      font-family: 'PT Sans', sans-serif;
-    }
-    
-    .tags {
-      background-color: white;
-    }
+  position: relative;
+  display: inline-block;
 }
+
+.h1 {
+  border-bottom: 1px solid white;
+  color: #3d3d3d;
+  font-family: sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  padding: 10px;
+  text-align: center;
+  }
+
+  .form {
+  background: white;
+  border: 1px solid #dedede;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 0 auto;
+  max-width: 500px;
+  padding: 30px 50px;
+  }
+
+  .input {
+    display: flex;
+    width: 404px;
+    height: 32px;
+    padding: 10px 0px 10px 10px;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid #D9D9D9;
+  }
+
+  .form-title{
+    color: #000;
+    font-family: Poppins;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+
+}
+
+.host-form {
+  max-width: 400px; /* Adjust the max-width according to your design */
+  margin: auto;
+}
+
+.form-label {
+  font-weight: bold;
+  font-family: Poppins;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  font-family: Poppins;
+  margin-bottom: 16px;
+}
+
+
+.form-name{
+  color: #000;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+  .label {
+  color: #3d3d3d;
+  display: block;
+  font-family: sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  }
+
+  .error {
+  color: red;
+  font-family: sans-serif;
+  font-size: 12px;
+  height: 30px;
+  }
+
