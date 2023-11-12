@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Button } from '../components/Button';
 import { useUserContext } from '../UserContext';
 import './Event.css';
-import eventDefault from '.././images/event-default.jpg';
+import eventDefault from '../images/event-default.jpg';
 import { useParams } from "react-router-dom";
 import RateEvent from '../components/Rating';
 
@@ -37,38 +37,59 @@ export default function EventPage() {
 
     const [data, setData] = useState([]);
     const { id } = useParams();
+    const [ratingVisible, setRatingVisible] = useState([])
+    const [userAttending, setUserAttending] = useState([])
+    const [registerValue, setRegisterValue] = useState("Register")
 
     const {
         userId,
         setUserId
     } = useUserContext()
 
-    useEffect(() => {
-        const fetchInfo = () => {
-            return fetch(`/api/events/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+    const fetchInfo = () => {
+        return fetch(`/api/events/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
             }
-            )
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
+        }
+        )
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                return response.json().then((error) => {
+                    console.log("Event does not exist.")
+                    throw new Error(error);
+                })
+            })
+            .then((d) => {
+                // console.log(d);
+                setData(d)
+                let currentDate = new Date();
+                let eventEnd = new Date(d.eventEnd)
+                if (eventEnd <= currentDate) {
+                    setRatingVisible(true);
+                }
+                else {
+                    setRatingVisible(false);
+                }
+                let isFound = d.attendeeList.some(user => {
+                    if (userId != null && user == userId) {
+                        return true;
                     }
-                    return response.json().then((error) => {
-                        console.log("Event does not exist.")
-                        throw new Error(error);
-                    })
-                })
-                .then((d) => {
-                    // console.log(d);
-                    setData(d)
-                })
-                .catch((error) => { console.log(error); setData(-1); })
-        };
+                    return false;
+                });
+                setUserAttending(isFound);
+
+            })
+            .catch((error) => { console.log(error); setData(-1); })
+    };
+
+    useEffect(() => {
         fetchInfo();
     }, [id]);
+
 
 
     const register = () => {
@@ -101,17 +122,21 @@ export default function EventPage() {
                     <body>
                         <div id="eventContainer">
                             <h1 id="eventTitle">{data.eventName}</h1>
-                            <RateEvent title = "" mode="eventrating" disabled='disabled' userID ={userId} eventID={id}></RateEvent>
+                            {ratingVisible &&
+                                <RateEvent title="" mode="eventrating" disabled={true} userID={userId} eventID={id}></RateEvent>
+                            }
                             <p id="eventOneLiner">{data.oneLiner}</p>
                             <img id="eventImage" src={data.eventImg ? data.eventImg : eventDefault} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
                             <div id="eventInfo">
-                                <p><strong>Organizer: </strong>{data.organizerID}</p>
+                                <p><strong>Organizer: </strong>{data.organizerName}</p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                             </div>
                             <Button buttonStyle='btn--primary' onClick={register}>Register</Button>
-                            <RateEvent title = "Rate this event" mode="myrating" disabled='' userID ={userId} eventID={id}></RateEvent>
+                            {ratingVisible && userAttending &&
+                                <RateEvent title="Rate this event" mode="myrating" userID={userId} eventID={id}></RateEvent>
+                            }
                         </div>
                     </body>
                 </div>
