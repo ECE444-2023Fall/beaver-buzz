@@ -53,7 +53,7 @@ jobs:
       run: |
           yarn start-api &
           sleep 10
-          run: curl -I -s -L http://localhost:8000 || exit 1
+          curl -I -s -L http://localhost:8000 || exit 1
     
     - name: Test the app
       uses: borales/actions-yarn@v4
