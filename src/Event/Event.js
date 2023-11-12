@@ -39,7 +39,6 @@ export default function EventPage() {
     const { id } = useParams();
     const [ratingVisible, setRatingVisible] = useState([])
     const [userAttending, setUserAttending] = useState([])
-    const [registerValue, setRegisterValue] = useState([])
 
     const {
         userId,
@@ -88,40 +87,12 @@ export default function EventPage() {
                 })
                 .catch((error) => { console.log(error); setData(-1); })
         };
-        const isRegistered = () => {
-            if (userId != null) {
-                fetch(`/api/events/${id}/isregistered/${userId}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({}),
-                }).then((response) => {
-                    return response.json()
-                }).then((d) => {
-                    // User has already registered so button should say Unregister
-                    if (d.userFound === true) {
-                        setRegisterValue(true);
-                    }
-                    else {
-                        setRegisterValue(false);
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
-            }
-            else {
-                setRegisterValue(true);
-            }
-        }
-
         fetchInfo();
-        isRegistered();
     }, [id, userId]);
 
 
     const register = () => {
-        if (!registerValue) {
+        if (!userAttending) {
             fetch(`/api/events/${id}/register/${userId}`, {
                 method: "POST",
                 headers: {
@@ -131,8 +102,7 @@ export default function EventPage() {
             }).then((res) => {
                 if (res.status === 200) {
                     console.log("Successfully registered");
-                    setRegisterValue(true);
-                    window.location.reload(false);
+                    setUserAttending(true);
                 } else {
                     console.log("Failed to register");
                 }
@@ -151,8 +121,7 @@ export default function EventPage() {
             }).then((res) => {
                 if (res.status === 200) {
                     console.log("Successfully un-registered");
-                    setRegisterValue(false);
-                    window.location.reload(false);
+                    setUserAttending(false);
                 } else {
                     console.log("Failed to un-register");
                 }
@@ -185,7 +154,7 @@ export default function EventPage() {
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                             </div>
-                            {registerValue ? (
+                            {userAttending ? (
                                 <Button buttonStyle='btn--primary' onClick={register}>Unregister</Button>
                             ) : (
                                 <Button buttonStyle='btn--primary' onClick={register}>Register</Button>
