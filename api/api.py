@@ -428,8 +428,6 @@ def unregisterEvent(eventid, userid):
     return jsonify(event.serialize())
 
 
-# TODO: below functions to be further implemented and used by Vishnu and Tracy for discover page
-
 
 @app.route("/api/events/all", methods=["GET"])
 def getEvents():

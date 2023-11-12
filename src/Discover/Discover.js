@@ -145,14 +145,13 @@ const DiscoverPage=()=>{
             <div className="form-left">
 
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <label htmlFor="searchbar" class="title" onClick={() => titleClick()}>Discover</label>
+                        <label htmlFor="searchbar" class="title" onClick={() => titleClick()}>Discover Events on Campus!</label>
                         <br/><br/>
                         <Form.Group>
                             <Form.Control type="text"
                                 placeholder="Search Here"
-                                class = "search"
+                                className = "search"
                                 id="searchbar"
-                                          className="input"
                                  {...register("searchbar", { required: false})}
                             />
                         </Form.Group>
@@ -193,7 +192,7 @@ const DiscoverPage=()=>{
 
         </div>
         <div class="searchresults">
-            {nores ? <h1 class="error" onClick={() => noEventClick()}> No Results Found. Click here to Post Your Own Event</h1>:
+            {nores ? <h1 class="nrferror" onClick={() => noEventClick()}> No Results Found. Click here to Post Your Own Event</h1>:
             <CardGrid>
                 {currentRecords?.map(item=>
                     <div onClick={() => handleClick(item.id)}>
