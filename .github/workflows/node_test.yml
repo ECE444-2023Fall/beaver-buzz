@@ -44,7 +44,7 @@ jobs:
     - name: Start React
       uses: borales/actions-yarn@v4
       with:
-          cmd: start & # will run `yarn start` command
+          cmd: build & # will run `yarn build` command
           background: true
 
     - name: Wait for React App to start
@@ -67,4 +67,4 @@ jobs:
     - name: Stop API and React App
       run: |
         pkill -f "flask run"
-        pkill -f "react-scripts start"
+        # pkill -f "react-scripts start"
