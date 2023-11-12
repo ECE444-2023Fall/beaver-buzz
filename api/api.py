@@ -329,7 +329,7 @@ def register():
     if user is not None:  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
-    passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+    passwordHash = str(bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()))
 
     print(passwordHash)
 
