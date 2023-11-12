@@ -318,6 +318,8 @@ def getEvent(id):
         results = event.serialize()
         results["organizerName"] = str(user.firstname) + " " + str(user.lastname)
         results["attendeeList"] = [int(id) for user in event.users]
+        if event.eventCategories is not None:
+            results["eventCategories"] = ast.literal_eval(event.eventCategories)
         return jsonify(results)
     return jsonify({"error": "Event not found"}), 420
 
@@ -358,6 +360,7 @@ def createEvent():
         eventDesc=eventDesc,
         eventImg=eventImg,
         eventImgType="image/jpeg",
+        eventCategories=str(n["eventCategories"]),
     )
 
     db.session.add(newevent)
@@ -404,14 +407,32 @@ def getEvents():
 
 
 @app.route("/api/events/<eventid>/update", methods=["POST"])
-def updateEvent(eventid, name, date, time, location):
+def updateEvent(eventid):
+    n = request.json
+
     event = Event.query.filter_by(id=eventid).first()
-    event.name = name
-    event.date = date
-    event.time = time
-    event.location = location
+
+    date_format = "%Y-%m-%d %H:%M"
+    eventStart = eastern.localize(
+        datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
+    )
+    eventEnd = eastern.localize(
+        datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
+    )
+
+    event.eventName = n["eventName"]
+    event.eventStart = eventStart
+    event.eventEnd = eventEnd
+    event.eventBuilding = n["building"]
+    event.eventRoom = n["room"]
+    event.oneLiner = n["oneLiner"]
+    event.eventDesc = n["description"]
+    if n["image"] is not False:
+        event.eventImg = n["image"]
+    event.eventCategories = str(n["eventCategories"])
+
     db.session.commit()
-    return jsonify(event.serialize())
+    return jsonify({"event_id": event.id})
 
 
 @app.route("/api/events/<eventid>/delete", methods=["POST"])

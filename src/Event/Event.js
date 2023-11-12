@@ -2,9 +2,9 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Button } from '../components/Button';
 import { useUserContext } from '../UserContext';
 import './Event.css';
-import eventDefault from '../images/event-default.jpg';
 import { useParams } from "react-router-dom";
 import RateEvent from '../components/Rating';
+import { Link } from "react-router-dom";
 
 function convertDate(date) {
     if (!date) return "";
@@ -30,7 +30,7 @@ function convertDate(date) {
     const time = dateParts[4];
     const newDate = new Date(`${year}-${month}-${day}T${time}Z`);
     // console.log(newDate);
-    return newDate.toLocaleString();
+    return newDate.toString();
 }
 
 export default function EventPage() {
@@ -78,13 +78,14 @@ export default function EventPage() {
                         setRatingVisible(false);
                     }
                     let isFound = d.attendeeList.some(user => {
+                        // this comparison must be using double equal sign
                         if (userId != null && user == userId) {
                             return true;
                         }
                         return false;
                     });
                     setUserAttending(isFound);
-                    setEventOwner(d.organizerID === userId ? true : false)
+                    setEventOwner(d.organizerID == userId ? true : false)
 
                 })
                 .catch((error) => { console.log(error); setData(-1); })
@@ -94,7 +95,11 @@ export default function EventPage() {
 
 
     const register = () => {
-        if (!userAttending) {
+        if (userId === null) {
+            // redirect to login page
+            window.location.href = "/login";
+        }
+        else if (!userAttending) {
             fetch(`/api/events/${id}/register/${userId}`, {
                 method: "POST",
                 headers: {
@@ -134,9 +139,6 @@ export default function EventPage() {
         }
     }
 
-    const handleEditClick = () => {
-    };
-
     // eventImage uses default event image when the event data doesn't contain an event image
     return (
         <div>
@@ -147,11 +149,11 @@ export default function EventPage() {
                     </head>
                     <body>
                         <div id="eventContainer">
-                            <div className="editButtonContainer">
-                                <button className="editButton" onClick={handleEditClick}>
-                                    Edit Event
-                                </button>
-                            </div>
+                            {eventOwner &&
+                                <div className="editButtonContainer">
+                                    <Link to="update-event" className="btn btn-primary" id="editButton">Edit Event</Link>
+                                </div>
+                            }
                             <h1 id="eventTitle">{data.eventName}</h1>
                             {ratingVisible &&
                                 <RateEvent title="" mode="eventrating" disabled={true} userID={userId} eventID={id}></RateEvent>
@@ -163,6 +165,12 @@ export default function EventPage() {
                                 <p><strong>Organizer: </strong>{data.organizerName}</p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
+                                {data.eventCategories && <p><strong>Event Categories: </strong>{
+                                    data.eventCategories && data.eventCategories.map(item =>
+                                        <tr key={item.name}>
+                                            <td>- {item.name}</td>
+                                        </tr>)}
+                                </p>}
                             </div>
                             {userAttending ? (
                                 <Button buttonStyle='btn--primary' onClick={register}>Unregister</Button>
