@@ -46,6 +46,8 @@ jobs:
       with:
           cmd: build & # will run `yarn build` command
           background: true
+      env:
+        CI: false
 
     - name: Wait for React App to start
       run: sleep 10
@@ -55,6 +57,9 @@ jobs:
       with:
           cmd: start-api & # will run `yarn start-api` command
           background: true
+      env:
+        CI: false
+    
 
     - name: Wait for API to start
       run: sleep 10
