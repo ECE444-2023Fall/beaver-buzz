@@ -1,5 +1,5 @@
 .navbar {
-    background: linear-gradient(90deg, rgb(28, 27, 27) 0%, rgb(26, 23, 23) 100%);
+    background: #1E3765;
     height: 80px;
     display: flex;
     justify-content: center;
@@ -27,6 +27,11 @@
     font-size: 2rem;
     display: flex;
     align-items: center;
+    color: #FFF;
+    font-family: Jim Nightshade;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
   }
   
   .fa-typo3 {

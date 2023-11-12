@@ -139,7 +139,6 @@ const DiscoverPage=()=>{
 
     const [nores, setNores] = useState(false);
 
-
     return(
         <div>
         <div className ="container">
