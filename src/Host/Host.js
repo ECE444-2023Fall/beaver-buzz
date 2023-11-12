@@ -17,8 +17,7 @@ const getBase64 = (blob) =>
   });
 
 export default function HostPage() {
-  const { register, handleSubmit } = useForm();
-  const [tags, setTags] = useState(null);
+const { register, handleSubmit, formState: { errors } } = useForm();  const [tags, setTags] = useState(null);
   const navigate = useNavigate();
   const { userId } = useContext(UserContext);
 
@@ -53,7 +52,7 @@ export default function HostPage() {
   return (
     <div>
       <div className="host-container">
-        <h1>Host</h1>
+        <h1>Host an event</h1>
         {!userId ? (
           <div>
             <h2>Please log in to host an event </h2>
@@ -72,6 +71,7 @@ export default function HostPage() {
                 {...register("eventName", { required: true })}
               />
             </Form.Group>
+            {errors.eventName && <p className="error">{"Please enter the event name"}</p>}
 
             <Form.Group controlId="oneLiner" className="left-right">
               <Form.Label>One-liner</Form.Label>
@@ -79,9 +79,10 @@ export default function HostPage() {
                 type="text"
                 placeholder="Enter one-liner"
                 maxLength={75}
-                {...register("oneLiner")}
+                {...register("oneLiner", {required: true})}
               />
             </Form.Group>
+            {errors.oneLiner && <p className="error">{"Please enter a 1 line description of your event"}</p>}
 
             <Form.Group controlId="eventDate" className="left-right">
               <Form.Label>Date</Form.Label>
@@ -91,54 +92,59 @@ export default function HostPage() {
                 {...register("eventDate", { required: true })}
               />
             </Form.Group>
+            {errors.eventDate && <p className="error">{"Please enter the date of your event"}</p>}
+
+            <Form.Group controlId="eventStart">
+                <Form.Label className="add-padd">Start Time</Form.Label>
+                <Form.Control
+                type="time"
+                placeholder="Enter start time"
+                {...register("eventStart", { required: true })}
+                />
+            </Form.Group>
+            {errors.eventStart && <p className="error">{"Please enter the start time of your event"}</p>}
+
+            <Form.Group controlId="eventEnd">
+                <Form.Label className="add-padd">End Time</Form.Label>
+                <Form.Control
+                type="time"
+                placeholder="Enter end time"
+                {...register("eventEnd", { required: true })}
+                />
+            </Form.Group>
+            {errors.eventEnd && <p className="error">{"Please enter the end time of your event"}</p>}
 
             <div class="form-row">
               <div class="col">
-                <Form.Group controlId="eventStart">
-                  <Form.Label className="add-padd">Start Time</Form.Label>
+                <Form.Group controlId="building">
+                  <Form.Label className="add-padd">Building</Form.Label>
                   <Form.Control
-                    type="time"
-                    placeholder="Enter start time"
-                    {...register("eventStart", { required: true })}
+                    className="w-60"
+                    type="text"
+                    placeholder="Enter building"
+                    maxLength={25}
+                    {...register("building", { required: true })}
                   />
                 </Form.Group>
+                {errors.building && <p className="error">{"Please enter the building of your event"}</p>}
               </div>
               <div class="col">
-                <Form.Group controlId="eventEnd">
-                  <Form.Label className="add-padd">End Time</Form.Label>
+                <Form.Group controlId="room">
+                  <Form.Label className="add-padd">Room</Form.Label>
                   <Form.Control
-                    type="time"
-                    placeholder="Enter end time"
-                    {...register("eventEnd", { required: true })}
+                    className="w-25"
+                    type="text"
+                    placeholder="#"
+                    maxLength={10}
+                    {...register("room", { required: true })}
                   />
                 </Form.Group>
+                {errors.room && <p className="error">{"Please enter the room of your event"}</p>}
               </div>
             </div>
 
-            <Form.Group controlId="building">
-              <Form.Label className="form-label">Building</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter building name"
-                maxLength={25}
-                {...register("building", { required: true })}
-                className="form-input"
-              />
-            </Form.Group>
-
-            <Form.Group controlId="room">
-              <Form.Label className="form-label">Room</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter building room"
-                maxLength={10}
-                {...register("room", { required: true })}
-                className="form-input"
-              />
-            </Form.Group>
-
-            <Form.Group controlId="description">
-              <Form.Label className="form-label">Description</Form.Label>
+            <Form.Group controlId="description" className="left-right">
+              <Form.Label className="add-padd">Description (optional)</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -149,8 +155,8 @@ export default function HostPage() {
               />
             </Form.Group>
 
-            <Form.Group controlId="image">
-              <Form.Label className="form-label">Upload Image</Form.Label>
+            <Form.Group controlId="image" className="left-right">
+              <Form.Label>Upload Image (optional) </Form.Label>
               <Form.Control
                 type="file"
                 accept=".jpg,.gif,.png"
@@ -159,10 +165,8 @@ export default function HostPage() {
               />
             </Form.Group>
 
-            <Form.Group controlId="tags">
-              <Form.Label className="form-label">
-                Select related topics
-              </Form.Label>
+            <Form.Group controlId="tags" className="left-right">
+              <Form.Label>Select related topics (optional)</Form.Label>
               <div className="dropdown">
                 <Multiselect
                   options={CATEGORIES}
