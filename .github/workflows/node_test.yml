@@ -46,12 +46,17 @@ jobs:
       with:
           cmd: build # will run `yarn build` command
           background: true
+      env:
+        CI: false
 
     - name: Start API
       uses: borales/actions-yarn@v4
       with:
           cmd: start-api # will run `yarn start-api` command
           background: true
+      env:
+        CI: false
+    
 
     - name: Wait for API to start
       run: sleep 10
