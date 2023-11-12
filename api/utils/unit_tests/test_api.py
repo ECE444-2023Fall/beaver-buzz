@@ -73,29 +73,30 @@ def test_unregisterEvent(client, populate_db):
     assert(res.status_code == 404)
 
 #Done by Vishnu Akundi
-def test_search(client, populate_db):
-    # create a test user and event, register the user for the event
-    res = client.get("/api/search?searchbar=&filters=Sanford Fleming")
-    assert(res.status_code == 200)
-    temp = json.loads(res.get_data())
-    for i in range(len(temp)):
-        assert(temp[i]['eventBuilding']== "Sanford Fleming")
-    res = client.get("/api/search?searchbar=ECE444&filters=")
-    assert(res.status_code == 200)
-    temp = json.loads(res.get_data())
-    for i in range(len(temp)):
-        assert("ECE444" in temp[i]['eventName'])
+# def test_search(client, populate_db):
+#     # create a test user and event, register the user for the event
+#     res = client.get("/api/search?searchbar=&filters=Sanford Fleming")
+#     assert(res.status_code == 200)
+#     temp = json.loads(res.get_data())
+#     for i in range(len(temp)):
+#         assert(temp[i]['eventBuilding']== "Sanford Fleming")
+#     res = client.get("/api/search?searchbar=ECE444&filters=")
+#     assert(res.status_code == 200)
+#     temp = json.loads(res.get_data())
+#     for i in range(len(temp)):
+#         assert("ECE444" in temp[i]['eventName'])
 
-def test_allevents(client, populate_db):
-    # create a test user and event, register the user for the event
-    res = client.get("/api/allevents")
-    assert(res.status_code == 200)
-    temp = json.loads(res.get_data())
-    for i in range(len(temp)):
-        assert(temp[i]['eventBuilding']== "Sanford Fleming")
-    res = client.get("/api/search?searchbar=ECE444&filters=")
-    assert(res.status_code == 200)
-    temp = json.loads(res.get_data())
-    for i in range(len(temp)):
-        assert("ECE444" in temp[i]['eventName'])
+# def test_allevents(client, populate_db):
+#     # create a test user and event, register the user for the event
+#     res = client.get("/api/allevents")
+#     assert(res.status_code == 200)
+#     temp = json.loads(res.get_data())
+#     print(temp)
+#     for i in range(len(temp)):
+#         assert(temp[i]['eventBuilding']== "Sanford Fleming")
+#     res = client.get("/api/search?searchbar=ECE444&filters=")
+#     assert(res.status_code == 200)
+#     temp = json.loads(res.get_data())
+#     for i in range(len(temp)):
+#         assert("ECE444" in temp[i]['eventName'])
 

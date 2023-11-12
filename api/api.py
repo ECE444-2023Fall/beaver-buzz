@@ -390,6 +390,13 @@ def search():
     
     query = request.args.get('searchbar')
     location_filters = request.args.get('filters')
+    c_user = request.args.get('userid')
+    #NEED TO IMPLEMENT USER EVENT INTERESTS
+    curr_user = User.query.filter_by(id=c_user).first()
+    #curr_user_interests = curr_user.interests.split(',')
+
+    eventtags = ["Academic", "Sports","Science","Math","Technology","Engineering","Students","Arts","Music","Games","Career","Food"]
+
     if location_filters:
         location_filters = location_filters.split(',')
     else:
@@ -408,13 +415,13 @@ def search():
         org_filter= False
     filtered_results = []
     users_dict = {}
-
+    #Both Query and Filters
     if query != '' and len(location_filters)!=0:
-
-
-
         if org_filter == False:
-            filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]), Event.eventName.contains(query)).all()
+            if query.capitalize() not in eventtags:
+                filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]), Event.eventName.contains(query)).all()
+            else:
+                filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]),Event.eventCategories.contains(query.capitalize())).all()
         else:
             if fn == ln:
                 users = User.query.filter(or_(User.firstname.contains(fn),User.lastname.contains(ln))).all()
@@ -427,11 +434,18 @@ def search():
 
 
             filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]), Event.organizerID.in_(user_ids)).all()
+    
+    #No Query and Have Filter
     elif len(location_filters)!=0:
         filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))])).all()
+    
+    #Query but no Filter
     elif len(location_filters)==0 and query!="":
         if org_filter == False:
-            filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
+            if query.capitalize() not in eventtags:
+                filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
+            else:
+                filtered_results = Event.query.filter(Event.eventCategories.contains(query.capitalize())).all()
         else:
             if fn == ln:
                 users = User.query.filter(or_(User.firstname.contains(fn),User.lastname.contains(ln))).all()

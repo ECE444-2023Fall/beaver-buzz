@@ -42,6 +42,7 @@
   .card:hover{
     background-color: rgb(158, 83, 158);
     box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+    cursor: pointer;
   }
   .cardGrid{
     /* text-align: center; */
@@ -164,4 +165,22 @@
 .sortDropdown:hover{
     background-color: rgb(158, 83, 158);
     box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+}
+
+.error{
+    margin-left: 360px;
+    font-size: large;
+    width: 220px;
+    margin-top: -250px;
+    cursor: pointer;
+    background-color: rgb(48, 95, 95);
+    height: 65px;
+    padding: 10px;
+    border-radius: 5px;
+    color:white;
+
+}
+.error:hover{
+    box-shadow: 5px 5px rgb(2, 22, 22);
+    background-color: rgb(13, 117, 117);
 }

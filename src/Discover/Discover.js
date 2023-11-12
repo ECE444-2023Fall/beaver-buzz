@@ -128,6 +128,10 @@ const DiscoverPage=()=>{
         // Redirect to the specified target URL
         navigate("/events/"+eventid);
     };
+    const noEventClick = () => {
+        // Redirect to the specified target URL
+        navigate("/post-event");
+    };
 
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -191,7 +195,7 @@ const DiscoverPage=()=>{
 
         </div>
         <div class="searchresults">
-            {nores ? <h1> No Results Found</h1> : 
+            {nores ? <h1 class="error" onClick={() => noEventClick()}> No Results Found. Click here to Post Your Own Event</h1>:
             <CardGrid>
                 {currentRecords?.map(item=>
                     <div onClick={() => handleClick(item.id)}>
@@ -212,11 +216,13 @@ const DiscoverPage=()=>{
             }
             
         </div>
+    {nores ? <p></p>: 
     <Pagination
                 nPages={nPages}
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
     />
+    }
     </div>
 
     )
