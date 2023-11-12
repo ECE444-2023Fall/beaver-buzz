@@ -115,56 +115,54 @@ export default function HostPage() {
               </div>
             </div>
 
-            <div class="form-row">
-              <div class="col">
-                <Form.Group controlId="building">
-                  <Form.Label className="add-padd">Building</Form.Label>
-                  <Form.Control
-                    className="w-60"
-                    type="text"
-                    placeholder="Enter building"
-                    maxLength={25}
-                    {...register("building", { required: true })}
-                  />
-                </Form.Group>
-              </div>
-              <div class="col">
-                <Form.Group controlId="room">
-                  <Form.Label className="add-padd">Room</Form.Label>
-                  <Form.Control
-                    className="w-25"
-                    type="text"
-                    placeholder="#"
-                    maxLength={10}
-                    {...register("room", { required: true })}
-                  />
-                </Form.Group>
-              </div>
-            </div>
-
-            <Form.Group controlId="description" className="left-right">
-              <Form.Label className="add-padd">Description</Form.Label>
+            <Form.Group controlId="building">
+              <Form.Label className="form-label">Building</Form.Label>
               <Form.Control
-                className="w-100"
+                type="text"
+                placeholder="Enter building name"
+                maxLength={25}
+                {...register("building", { required: true })}
+                className="form-input"
+              />
+            </Form.Group>
+
+            <Form.Group controlId="room">
+              <Form.Label className="form-label">Room</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter building room"
+                maxLength={10}
+                {...register("room", { required: true })}
+                className="form-input"
+              />
+            </Form.Group>
+
+            <Form.Group controlId="description">
+              <Form.Label className="form-label">Description</Form.Label>
+              <Form.Control
                 as="textarea"
                 rows={3}
                 maxLength={256}
                 placeholder="Enter description"
                 {...register("description")}
+                className="form-input"
               />
             </Form.Group>
 
-            <Form.Group controlId="image" className="left-right">
-              <Form.Label>Upload Image</Form.Label>
+            <Form.Group controlId="image">
+              <Form.Label className="form-label">Upload Image</Form.Label>
               <Form.Control
                 type="file"
                 accept=".jpg,.gif,.png"
                 {...register("image")}
+                className="form-input"
               />
             </Form.Group>
 
-            <Form.Group controlId="tags" className="left-right">
-              <Form.Label>Select related topics</Form.Label>
+            <Form.Group controlId="tags">
+              <Form.Label className="form-label">
+                Select related topics
+              </Form.Label>
               <div className="dropdown">
                 <Multiselect
                   options={CATEGORIES}

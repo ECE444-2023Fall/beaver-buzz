@@ -38,15 +38,11 @@ const DiscoverPage=()=>{
 
 
 
-
     return(
         <div>
         <div className ="container">
-            <div className="form-left">
-
-                    <Form onSubmit={handleSubmit(onSubmit)}>
-
-                        <label htmlFor="searchbar">Discover</label>
+                <Form onSubmit={handleSubmit(onSubmit)}>
+                    <h1 className="form-title">Discover Events on Campus</h1>
                         <Form.Group>
                             <Form.Control type="text"
                                 placeholder="Enter Query Here"
@@ -55,11 +51,11 @@ const DiscoverPage=()=>{
                                  {...register("searchbar", { required: false})}
                             />
                         </Form.Group>
-                        <Button type='submit' className="submitButton searchButton">Search</Button>
-                        
+                        <Button type='submit' className="submitButton" style={{ marginTop: '10px' }}><h1 className="form-button">Search</h1></Button>
 
-                        <div key={`default-checkbox`} className="mb-3 filters">
-                            <label>Search Filters </label> <br/><br/>
+                        <div key={`default-checkbox`} className="mb-1 filters">
+                        <h1 className="search_filter_title">Location</h1>
+                            
                             <Form.Check
                                 type={"checkbox"}
                                 id={`default-checkbox`}
@@ -73,36 +69,42 @@ const DiscoverPage=()=>{
                                 label={`Myhal`}
                                 {...register("Myhal", { required: false})}
                             />
+
                             <Form.Check
                                 type={"checkbox"}
                                 id={`default-checkbox`}
                                 label={`Sanford Fleming`}
                                 {...register("Sanford Fleming", { required: false})}
                             />
+
                             <Form.Check
                                 type={"checkbox"}
                                 id={`default-checkbox`}
                                 label={`Robarts`}
                                 {...register("Robarts", { required: false})}
                             />
+
                             <Form.Check
                                 type={"checkbox"}
                                 id={`default-checkbox`}
                                 label={`Galbraith`}
                                 {...register("Galbraith", { required: false})}
                             />
+
                             <Form.Check
                                 type={"checkbox"}
                                 id={`default-checkbox`}
                                 label={`Trinity Bellwoods`}
                                 {...register("Trinity Bellwoods", { required: false})}
                             />
+
                             <Form.Check
                                 type={"checkbox"}
                                 id={`default-checkbox`}
                                 label={`Queen's Park`}
                                 {...register("Queens Park", { required: false})}
                             />
+                            
                             <Form.Check
                                 type={"checkbox"}
                                 label={`Rotman`}
@@ -112,7 +114,7 @@ const DiscoverPage=()=>{
                             
                         </div>
                     </Form>
-            </div>
+            
 
         </div>
         <div class="searchresults">
