@@ -30,7 +30,7 @@ const DiscoverPage = () => {
     acc[location] = false;
     return acc;
   }, {});
-  initialObject['searchbar'] = "";
+  initialObject["searchbar"] = "";
   const [sendToBack, setSendToBack] = useState(initialObject);
 
   //Initially Fetch all results
@@ -160,17 +160,21 @@ const DiscoverPage = () => {
           type="text"
           placeholder="Start typing your search.."
           className="search"
-          onChange={(e) =>{
+          onChange={(e) => {
             setQuery(e.target.value);
-            onSubmit({searchbar: e.target.value})}}
+            onSubmit({ searchbar: e.target.value });
+          }}
         ></input>
-        <Button type="submit" className="searchButton">
+        <div className="search-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        {/* <Button type="submit" className="searchButton">
           Search
-        </Button>
+        </Button> */}
       </div>
       {/* <Form onSubmit={handleSubmit(onSubmit)} className="overall-search"> */}
-        <div className="search-class">
-          {/* <Form.Group>
+      <div className="search-class">
+        {/* <Form.Group>
             <Form.Control
               type="text"
               placeholder="Start typing your search here"
@@ -182,51 +186,28 @@ const DiscoverPage = () => {
           <Button type="submit" className="searchButton">
             Search
           </Button> */}
-        </div>
+      </div>
 
-        <div className="search-options">
-          <select
-            className="sortDropdown"
-            name="Sort"
-            onChange={(e) => handleSelect(e.target.value)}
-            value={selectedItem}
-          >
-            <option value="Default" selected="selected">
-              Sort by
-            </option>
-            <option value="Popularity">Popularity</option>
-            <option value="EventTime">Event Time</option>
-          </select>
-          <div className="organizer">
-            <input type="checkbox" id="org-checkbox" name="organizer" value="Organizer" onClick={e => {
-                setSendToBack({...sendToBack, Organizer: e.target.checked});
-                onSubmit({...sendToBack, Organizer: e.target.checked});
-                }}></input>
-                <label for="org-checkbox">Organizer</label>
-          </div>
-          {/* <div className="organizer">
-            <Form.Check
-              type={"checkbox"}
-              id={`org-checkbox`}
-              label={"  Organizer"}
-              {...register("Organizer", { required: false })}
-            />
-          </div> */}
-        </div>
-        <div className="discover-body">
-          <div key={`default-checkbox`} className="filters">
-            <h1 className="filter-title">Search Filters</h1>
+      <div className="discover-body">
+        <div key={`default-checkbox`} className="filters">
+          <h1 className="filter-title">Search Filters</h1>
 
-            {locations.map((item, index) => (
-              <div>
-                  <input type="checkbox" id="default-checkbox0" name="location0" value="Location 0" onClick={
-                    (e) => {
-                        setSendToBack({...sendToBack, [item]: e.target.checked});
-                        onSubmit({...sendToBack, [item]: e.target.checked});
-                    }
-                  }></input>
-                  <label for="default-checkbox0">{item}</label>
-                </div>
+          {locations.map((item, index) => (
+            <div>
+              <input
+                type="checkbox"
+                id="default-checkbox0"
+                name="location0"
+                value="Location 0"
+                onClick={(e) => {
+                  setSendToBack({ ...sendToBack, [item]: e.target.checked });
+                  onSubmit({ ...sendToBack, [item]: e.target.checked });
+                }}
+              ></input>
+              <label for="default-checkbox0" className="filter-label">
+                {item}
+              </label>
+            </div>
 
             //   <Form.Check
             //     type={"checkbox"}
@@ -235,65 +216,99 @@ const DiscoverPage = () => {
             //     ref={(e) => console.log(e)}
             //     {...register(item, { required: false })}
             //   />
-            ))}
-          </div>
-
-          <div className="searchresults">
-            {nores ? (
-              <h1 className="nrferror" onClick={() => noEventClick()}>
-                {" "}
-                No Results Found. Click here to Post Your Own Event
-              </h1>
-            ) : (
-              <CardGrid>
-                {currentRecords?.map((item) => (
-                  <div onClick={() => handleClick(item.id)}>
-                    <Card
-                      key={item}
-                      style={{ display: "flex", alignItems: "flex-start" }}
-                    >
-                      <img
-                        src={
-                          item.eventImg
-                            ? item.eventImg
-                            : "https://mlpcesocsoqj.i.optimole.com/w:auto/h:auto/q:mauto/ig:avif/f:best/https://eventimaging.ca/wp-content/uploads/2021/03/Toronto-Event-Photographer-scaled.jpg"
-                        }
-                        alt="Event"
-                        className="card-img"
-                      ></img>
-                      <div className="cardtext" style={{ marginLeft: "10px" }}>
-                        <h1 className="card-title">{item.eventName}</h1>
-                        <div className="eventdetails">
-                          <h1 className="card-detail-oneliner">
-                            {item.oneLiner}
-                          </h1>
-                          <h1 className="card-detail-time">
-                            {item.eventStart}
-                          </h1>
-                          <h1 className="card-detail-location">
-                            Location: {item.eventBuilding} {item.eventRoom}
-                          </h1>
-                          <h1 className="card-detail">
-                            Brought to you by {item.organizerName}
-                          </h1>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                ))}
-              </CardGrid>
-            )}
-            {nores ? (
-              <p></p>
-            ) : (
-              <Pagination
-                nPages={nPages}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-              />
-            )}
-          </div>
+          ))}
         </div>
+
+        <div className="searchresults">
+          <div className="search-options">
+          <div className="organizer">
+              <input
+                type="checkbox"
+                id="org-checkbox"
+                name="organizer"
+                value="Organizer"
+                onClick={(e) => {
+                  setSendToBack({ ...sendToBack, Organizer: e.target.checked });
+                  onSubmit({ ...sendToBack, Organizer: e.target.checked });
+                }}
+              ></input>
+              <label for="org-checkbox" className="org-text">Search by organizer</label>
+            </div>
+            <select
+              className="sortDropdown"
+              name="Sort"
+              onChange={(e) => handleSelect(e.target.value)}
+              value={selectedItem}
+            >
+              <option value="Default" selected="selected">
+                Sort by
+              </option>
+              <option value="Popularity">Popularity</option>
+              <option value="EventTime">Event Time</option>
+            </select>
+            
+            {/* <div className="organizer">
+            <Form.Check
+              type={"checkbox"}
+              id={`org-checkbox`}
+              label={"  Organizer"}
+              {...register("Organizer", { required: false })}
+            />
+          </div> */}
+          </div>
+          {nores ? (
+            <h1 className="nrferror" onClick={() => noEventClick()}>
+              {" "}
+              No Results Found. Click here to Post Your Own Event
+            </h1>
+          ) : (
+            <CardGrid>
+              {currentRecords?.map((item) => (
+                <div onClick={() => handleClick(item.id)}>
+                  <Card
+                    key={item}
+                    style={{ display: "flex", alignItems: "flex-start" }}
+                  >
+                    <img
+                      src={
+                        item.eventImg
+                          ? item.eventImg
+                          : "https://mlpcesocsoqj.i.optimole.com/w:auto/h:auto/q:mauto/ig:avif/f:best/https://eventimaging.ca/wp-content/uploads/2021/03/Toronto-Event-Photographer-scaled.jpg"
+                      }
+                      alt="Event"
+                      className="card-img"
+                    ></img>
+                    <div className="cardtext" style={{ marginLeft: "10px" }}>
+                      <h1 className="card-title">{item.eventName}</h1>
+                      <div className="eventdetails">
+                        <h1 className="card-detail-oneliner">
+                          {item.oneLiner}
+                        </h1>
+                        <h1 className="card-detail-time">{item.eventStart}</h1>
+                        <h1 className="card-detail-location">
+                          Location: {item.eventBuilding} {item.eventRoom}
+                        </h1>
+                        <h1 className="card-detail">
+                          Brought to you by {item.organizerName}
+                        </h1>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              ))}
+            </CardGrid>
+          )}
+          {nores ? (
+            <p></p>
+          ) : (
+            <Pagination
+              nPages={nPages}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
+        </div>
+      </div>
       {/* </Form> */}
     </div>
   );
