@@ -60,6 +60,6 @@ jobs:
       with:
           cmd: test # will run `yarn test` command
 
-    - name: Stop API and React App
-      run: |
-        pkill -f "flask run"
+    # - name: Stop API and React App
+    #   run: |
+    #     pkill -f "flask run"
