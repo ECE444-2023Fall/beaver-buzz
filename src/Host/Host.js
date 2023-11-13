@@ -56,7 +56,7 @@ export default function HostPage() {
 
   return (
     <div>
-      <div className="host-container" style={{ marginTop: "160px" }}>
+      <div className="host-container">
         <h1 className="form-title">Want to post an event? </h1>
         {!userId ? (
           <div>
