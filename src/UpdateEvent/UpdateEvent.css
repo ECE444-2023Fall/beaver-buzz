@@ -1,0 +1,77 @@
+.host-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f2f2f2;
+}
+
+.host-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.host-form div {
+  width: 100%;
+  margin-bottom: .5rem;
+}
+
+.host-button {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.host-button:hover {
+  background-color: #388e3c;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+}
+
+.alert-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.alert {
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #cce5ff;
+  /* Light blue background */
+  color: #004085;
+  /* Dark blue text */
+}
+
+.close {
+  float: right;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Hover effect for close button */
+.close:hover {
+  color: #007bff;
+  /* Blue color on hover */
+}

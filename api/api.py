@@ -16,16 +16,21 @@ import random
 import ast
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}})
+CORS(
+    app,
+    resources={
+        r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}
+    },
+)
 app.config.from_object(Configuration)
-app.config['CORS_HEADERS'] = 'Content-Type'
+app.config["CORS_HEADERS"] = "Content-Type"
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
 
 utc = pytz.UTC
-est = pytz.timezone('US/Eastern')
+est = pytz.timezone("US/Eastern")
 
 
 @app.route("/api/health", methods=["GET"])
@@ -126,7 +131,9 @@ def login():
     password = request.json["password"]
 
     user = User.query.filter_by(email=email).first()
-    if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password.encode('utf-8')):
+    if user is None or not bcrypt.checkpw(
+        password.encode("utf-8"), user.password.encode("utf-8")
+    ):
         return jsonify({"error": "Invalid username or password"}), 401
 
     return jsonify({"greeting": "Welcome, " + user.firstname, "id": user.id}), 202
@@ -193,7 +200,10 @@ def get_review(userid, eventid):
     user = db.get_or_404(User, userid)
     rating = UserRatings.query.filter_by(userID=userid, eventID=eventid).first()
     if rating is None:
-        return jsonify({"error": "Not Found"}), 404
+        return (
+            jsonify({"error": "Rating does not exist for this event by this user."}),
+            404,
+        )
     return jsonify({"rating": rating.ratingValue})
 
 
@@ -425,7 +435,9 @@ def register():
     if user is not None:  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
-    passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode(
+        "utf-8"
+    )
 
     print(passwordHash)
 
@@ -456,10 +468,16 @@ def get_event(id):
     """
     event = Event.query.filter_by(id=id).first()
     if event is not None:
+        user = db.get_or_404(User, event.organizerID)
         # print("timezone is:", event.eventStart.tzname())
-        event.eventStart = event.eventStart
-        event.eventEnd = event.eventEnd
-        return jsonify(event.serialize()), 200
+        event.eventStart = event.eventStart.astimezone(eastern)
+        event.eventEnd = event.eventEnd.astimezone(eastern)
+        results = event.serialize()
+        results["organizerName"] = str(user.firstname) + " " + str(user.lastname)
+        results["attendeeList"] = [int(id) for user in event.users]
+        if event.eventCategories is not None:
+            results["eventCategories"] = ast.literal_eval(event.eventCategories)
+        return jsonify(results), 200
     return jsonify({"error": "Event not found"}), 404
 
 
@@ -483,9 +501,13 @@ def create_event():
     if not n["eventDate"] or not n["eventStart"] or not n["eventEnd"]:
         return jsonify({"Error": "Please enter a valid date and time"}), 400
 
-    eventStart = utc.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
+    eventStart = utc.localize(
+        datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
+    )
 
-    eventEnd = utc.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
+    eventEnd = utc.localize(
+        datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
+    )
 
     eventBuilding = n["building"]
     eventRoom = n["room"]
@@ -562,6 +584,7 @@ def unregister_event(eventid, userid):
     return jsonify(event.serialize())
 
 
+# TODO: below functions to be further implemented and used by Vishnu and Tracy for discover page
 @app.route("/api/events/all", methods=["GET"])
 def get_events():
     """Gets all events
@@ -574,53 +597,39 @@ def get_events():
 
 
 @app.route("/api/events/<eventid>/update", methods=["POST"])
-def update_event(
-    eventid,
-    eventName,
-    organizerID,
-    eventStart,
-    eventEnd,
-    eventBuilding,
-    eventRoom,
-    oneLiner,
-    eventDesc,
-    eventImg,
-    eventImgType,
-    eventCategories,
-):
+def updateEvent(eventid):
     """Updates the event with the given id with the provided event fields
 
     Args:
         eventid (int): event id of the event being updated
-        eventName (string): new name of the event
-        organizerID (int): id of the organizer of the event
-        eventStart (string): new start time of the event
-        eventEnd (string): new end time of the event
-        eventBuilding (string): building where the event is held
-        eventRoom (string): room where the event is held
-        oneLiner (string): one liner description of the event
-        eventDesc (string): description of the event
-        eventImg (bytes): image of the event
-        eventImgType (string): type of the image
-        eventCategories (list): list of categories for the event
 
     Returns:
-        json: json object with updated event fields
+        json: json object with the event id
     """
+    n = request.json
+
     event = Event.query.filter_by(id=eventid).first()
-    event.name = eventName
-    event.organizer_id = organizerID
-    event.start_time = eventStart
-    event.end_time = eventEnd
-    event.building = eventBuilding
-    event.room = eventRoom
-    event.one_liner = oneLiner
-    event.description = eventDesc
-    event.image = eventImg
-    event.image_type = eventImgType
-    event.categories = eventCategories
+
+    date_format = "%Y-%m-%d %H:%M"
+    eventStart = eastern.localize(
+        datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
+    )
+    eventEnd = eastern.localize(
+        datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
+    )
+
+    event.eventName = n["eventName"]
+    event.eventStart = eventStart
+    event.eventEnd = eventEnd
+    event.eventBuilding = n["building"]
+    event.eventRoom = n["room"]
+    event.oneLiner = n["oneLiner"]
+    event.eventDesc = n["description"]
+    if n["image"] is not False:
+        event.eventImg = n["image"]
+    event.eventCategories = str(n["eventCategories"])
     db.session.commit()
-    return jsonify(event.serialize())
+    return jsonify({"event_id": event.id})
 
 
 @app.route("/api/events/<eventid>/delete", methods=["POST"])
