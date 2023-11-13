@@ -80,11 +80,11 @@
 }
 
 .card:hover {
-  box-shadow: 0 4px 8px 0 var(--uoft-blue), 0 6px 20px 0 var(--uoft-blue);
+  box-shadow: 0 4px 8px 0 #1e3765, 0 6px 20px 0 #1e3765;
   cursor: pointer;
 }
 .cardGrid {
-  
+  margin-top: 40px;
   border-radius: 10px;
   display: flex;
   flex-direction: row;
@@ -181,7 +181,8 @@
 
 .search-options {
   display: flex;
-  position: relative;
+  /* position: absolute; */
+  top:0;
   right: 10px;
   width: 80vw;
   align-items: center;
@@ -239,7 +240,8 @@
   width: 100vw;
   flex-direction: row;
   justify-content: center;
-  margin-top: 20px
+  margin-top: 20px;
+  /* min-height: 100vh; */
 }
 
 .filters {
@@ -267,6 +269,7 @@
   width: 100px;
   justify-content: center;
   flex-direction: column;
+  min-height: 50vh;
 }
 
 .page-link-btn {

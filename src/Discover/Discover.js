@@ -196,7 +196,7 @@ const DiscoverPage = () => {
             <div>
               <input
                 type="checkbox"
-                id="default-checkbox0"
+                id={`default-checkbox${index}`}
                 name="location0"
                 value="Location 0"
                 onClick={(e) => {
@@ -204,7 +204,7 @@ const DiscoverPage = () => {
                   onSubmit({ ...sendToBack, [item]: e.target.checked });
                 }}
               ></input>
-              <label for="default-checkbox0" className="filter-label">
+              <label for={`default-checkbox${index}`} className="filter-label">
                 {item}
               </label>
             </div>
@@ -221,7 +221,7 @@ const DiscoverPage = () => {
 
         <div className="searchresults">
           <div className="search-options">
-          <div className="organizer">
+            <div className="organizer">
               <input
                 type="checkbox"
                 id="org-checkbox"
@@ -232,7 +232,9 @@ const DiscoverPage = () => {
                   onSubmit({ ...sendToBack, Organizer: e.target.checked });
                 }}
               ></input>
-              <label for="org-checkbox" className="org-text">Search by organizer</label>
+              <label for="org-checkbox" className="org-text">
+                Search by organizer
+              </label>
             </div>
             <select
               className="sortDropdown"
@@ -246,7 +248,7 @@ const DiscoverPage = () => {
               <option value="Popularity">Popularity</option>
               <option value="EventTime">Event Time</option>
             </select>
-            
+
             {/* <div className="organizer">
             <Form.Check
               type={"checkbox"}
@@ -266,6 +268,7 @@ const DiscoverPage = () => {
               {currentRecords?.map((item) => (
                 <div onClick={() => handleClick(item.id)}>
                   <Card
+                    className="card"
                     key={item}
                     style={{ display: "flex", alignItems: "flex-start" }}
                   >
