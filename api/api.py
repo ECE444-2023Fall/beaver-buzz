@@ -503,11 +503,11 @@ def create_event():
 
     eventStart = utc.localize(
         datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
-    )
+    ).astimezone(est)
 
     eventEnd = utc.localize(
         datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
-    )
+    ).astimezone(est)
 
     eventBuilding = n["building"]
     eventRoom = n["room"]
@@ -611,12 +611,12 @@ def updateEvent(eventid):
     event = Event.query.filter_by(id=eventid).first()
 
     date_format = "%Y-%m-%d %H:%M"
-    eventStart = eastern.localize(
+    eventStart = utc.localize(
         datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
-    )
-    eventEnd = eastern.localize(
+    ).astimezone(est)
+    eventEnd = utc.localize(
         datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
-    )
+    ).astimezone(est)
 
     event.eventName = n["eventName"]
     event.eventStart = eventStart
@@ -768,9 +768,8 @@ def get_events_by_user(userid):
 
     else:
         for event in events:
-            dt = datetime.now().replace(tzinfo=None)
-            dt = utc.localize(dt)
-            dt = dt - timedelta(hours=5)
+            dt = datetime.now()
+            print(dt, type(dt))
             print(event.eventEnd, type(event.eventEnd))
             if dt <= event.eventEnd:
                 final.append(event.serialize())
