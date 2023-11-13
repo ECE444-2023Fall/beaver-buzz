@@ -9,6 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent
 
 """Unit test functions made to initialize and test the database"""
 """Made by Himanish Jindal"""
+
+
 @pytest.fixture
 def client():
     app.config["TESTING"] = True
@@ -88,7 +90,7 @@ def test_add_event(client):
 
 # check if event attendance works properly with the event_attendance table
 def test_event_attendance(client):
-    # Creating test users and test event 
+    # Creating test users and test event
     new_user1 = User(
         email="jhimanish@gmail.com",
         password="password",
@@ -127,7 +129,10 @@ def test_event_attendance(client):
 
     # checking if the event is in both users
     users = User.query.all()
-    assert new_event in users[0].registeredEvents and new_event in users[1].registeredEvents
+    assert (
+        new_event in users[0].registeredEvents
+        and new_event in users[1].registeredEvents
+    )
     # checking if event has list of users in attendance
     event = Event.query.filter_by(eventName="Event 1").first()
     print(event.users)

@@ -1,50 +1,275 @@
-/* styles.css (or your preferred CSS file) */
-
-.container_discover{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* 100% of the viewport height */
+.filters{
+    text-align: left;
+    margin-left: -20%;
+    margin-top: 50px;
+    width:200px;
+    padding-bottom: 100px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 10px;
+    background-color: #aab3b3;
+    border-radius: 10px;
+    background-color: rgb(36,55,98);
+    box-shadow: 5px 5px 5px 5px rgb(7,30,64);
+    color: white;
+    font-size:25px;
   }
+  
+  /* Add this CSS to your stylesheet */
 
-.search_bar{
-    border-radius: 16px;
-    background: #FFF;
-    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.04), 0px 4px 8px 0px rgba(0, 0, 0, 0.04), 0px 16px 24px 0px rgba(0, 0, 0, 0.04), 0px 24px 32px 0px rgba(0, 0, 0, 0.04);
+.adventure-image {
+  width: 100%; 
+  height: auto;
+  mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  margin-bottom: 20px;
 }
 
-.search_filter_title{
-    color: #1E3765;
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.title {
+  color: #000;
+  font-family: 'Poppins';
+  font-size: 42px;
+  font-style: bold; /* Note: 'bold' is not a valid value for font-style, use font-weight for that */
+  font-weight: 500;
+  line-height: normal;
+  animation: flash 3s infinite; /* Adjust the duration (2s) as needed */
+}
+
+  .filters:hover{
+    box-shadow: 5px 5px rgb(2, 22, 22);
+    background-color:rgb(55,126,160);
+  }
+  .searchresults{
+    text-align: center;
+    margin-left: 30%;
+    width: 100px;
+    justify-content: center;
+    margin-top: 00px;
+  }
+  .filters{
+    padding-bottom: 50px;
+  }
+  
+  .card{
+    background-color: rgba(233, 237, 246, 0.516);
+    border-radius: 10px;
+    display: flexbox;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+    margin:50px;
+    box-sizing: border-box;
+    width: 266px;
+    box-shadow: 5px 5px 5px 5px #1E3765;
+  }
+  .card:hover{
+    background-color: rgba(5, 233,233,0.158);
+    box-shadow:10px 10px 10px 10px #1E3765;
+    cursor: pointer;
+  }
+  .cardGrid{
+    /* text-align: center; */
+    margin-top: -350px;
+    border-radius: 10px;
+    margin-right: 100px;
+    width:1100px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .dropdown{
+    margin-left: 50px;
+  }
+
+
+  .search-title{
+    color: #b4ebea;
     font-family: Poppins;
     font-size: 32px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: bold;
     line-height: normal;
+    margin-bottom:10px;
 }
-  .form-left {
-    margin-right: 20px;
+  .card-title{
+    color: #000;
+    font-family: Poppins;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+
+}
+
+.card-detail-oneliner{
+  color: #000;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: bold;
+  line-height: normal;
+
+}
+
+.card-detail-location{
+  color: #000;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+
+}
+
+.card-detail-time{
+  color: #d84747;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+
+}
+
+.card-detail{
+  color: #504242;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+
+}
+  
+  .organizer{
+    margin-top: -110px;
+    margin-left: 1025px;
+    width: 100px;
+    height: 30px;
+    padding: 5px;
+    border-radius: 10px;
+    padding-top: 7px;
+    background-color: rgb(55, 126, 160);
+    color: white;
   }
   
-  .input {
+  .organizer:hover{
+    background-color: rgb(36,55,98);
+  }
+  
+  .eventimg{
+    margin: 33px;
+    margin-left: 15px;
+    border-radius: 10px;
+    border: 10px solid rgba(0, 0, 0, 0.111);
+    height: 200px;
+    width: 80%;
+    object-fit: fill;
+    
+  }
+
+  .search{
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
     width: 100%;
+    resize: none;
+  
+  }
+  .search:hover {
+    box-shadow: 5px 5px rgb(11, 49, 49);
   }
   
+  .cardtext{
+    margin-bottom: 50px;
+  }
+
+
   .searchButton {
-    margin-top: 10px;
+    background-color: rgb(55, 126, 160);
+    color: white;
+    font-family: sans-serif;
+    font-size: 14px;
+    margin: 20px 0px;
+    margin-left: 435px;
+    margin-right: 340px;
   }
+.searchButton:hover{
+    background-color: rgb(36,55,98);
+}
+
+.title:hover{
+    color:purple;
+}
   
-  .filters {
-    margin-top: 20px;
+  .sorting{
+    background-color: red;
   }
-  
-  .searchresults {
-    margin-top: 20px;
+  .title{
+    font-size: 40px;    
   }
+  .page-link-btn{
+    background-color: rgb(11, 49, 49);
+    color: white;
+    margin:20px;
+    margin-top: 150px;
+    margin-bottom: 100px;
+  }
+  .page-link-btn:hover{
+    background-color: rgb(25, 110, 110);
+    box-shadow: 5px 5px 5px 5px rgb(11, 49, 49);
   
-  .card {
+  }
+  .page-container{
+    flex-direction: row;
     display: flex;
-    margin-bottom: 20px;
+    justify-content: center;
   }
-  
-  /* Add more styles as needed */
-  
+
+.eventdetails{
+    font-size: 10px;
+}
+
+.sortDropdown{
+    width: 120px;
+    height: 32px;
+    text-align: center;
+    background-color: rgb(55,126,160);
+    color: white;
+    font-family: sans-serif;
+    font-size: 14px;
+  }
+.sortDropdown:hover{
+    background-color: rgb(36,55,98);
+}
+
+.nrferror{
+    margin-left: 360px;
+    font-size: large;
+    width: 220px;
+    margin-top: 100px;
+    cursor: pointer;
+    background-color: rgb(48, 95, 95);
+    height: 65px;
+    padding: 10px;
+    border-radius: 5px;
+    color:white;
+
+}
+.nrferror:hover{
+    box-shadow: 5px 5px rgb(2, 22, 22);
+    background-color: rgb(13, 117, 117);
+}
