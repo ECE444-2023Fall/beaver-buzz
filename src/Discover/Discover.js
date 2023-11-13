@@ -252,7 +252,7 @@ const DiscoverPage = () => {
                 Sort by
               </option>
               <option value="Popularity">Popularity</option>
-              <option value="EventTime">Event Time</option>
+              <option value="EventTime">Event Date</option>
             </select>
 
             {/* <div className="organizer">
