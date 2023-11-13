@@ -85,24 +85,16 @@
 
 }
 
-.alternateFlexBox {
-    display: flex;
-    flex-direction: row;
-    gap: 50px;
-    justify-content: flex-start;
-    position: absolute;
-    top:  10%;
-    left: 30%;
-}
+
 
 .mainFlexBox {
     display: flex;
     flex-direction: row;
     gap: 50px;
-    justify-content: flex-start;
-    position: absolute;
-    top:  10%;
-    left: 20%;
+    justify-content: center;
+    margin-top: 2%;
+    align-items: flex-start; /* Change align-items to flex-start */
+    height: 100vh;
 }
 
 .followerList {

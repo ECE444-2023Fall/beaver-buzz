@@ -1,50 +1,188 @@
-/* styles.css (or your preferred CSS file) */
+.filters{
+    text-align: left;
+    margin-left: -210px;
+    margin-top: 50px;
+    width:200px;
+    padding-bottom: 100px;
+    padding-left: 50px;
+    padding-top: 10px;
+    background-color: #aab3b3;
+    border-radius: 10px;
+    background-color: rgb(48, 95, 95);
+    color: white;
+  }
+  
+  .filters:hover{
+    box-shadow: 5px 5px rgb(2, 22, 22);
+    background-color: rgb(13, 117, 117);
+  }
+  .searchresults{
+    text-align: center;
+    margin-left: 250px;
+    width: 100px;
+    justify-content: center;
+    margin-top: -500px;
+  }
+  .filters{
+    padding-bottom: 50px;
+  }
+  
+  .card{
+    background-color: rgba(5, 233, 233, 0.398);
+    border-radius: 10px;
+    display: flexbox;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+    margin:50px;
+    box-sizing: border-box;
+    width: 266px;
+    box-shadow: 5px 5px rgb(2, 131, 131);
+  }
+  .card:hover{
+    background-color: rgb(158, 83, 158);
+    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+    cursor: pointer;
+  }
+  .cardGrid{
+    /* text-align: center; */
+    margin-top: -350px;
+    border-radius: 10px;
+    margin-right: 100px;
+    width:1100px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .dropdown{
+    margin-left: 50px;
+  }
+  
+  .organizer{
+    margin-top: -110px;
+    margin-left: 1025px;
+    width: 100px;
+    height: 30px;
+    padding: 5px;
+    border-radius: 10px;
+    padding-top: 7px;
+    background-color: rgba(85, 3, 85, 0.926);
+    color: white;
+  }
+  
+  .organizer:hover{
+    background-color: rgba(85, 3, 85, 0.748);
+    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+  }
+  
+  .eventimg{
+    margin: 33px;
+    margin-left: 15px;
+    border-radius: 10px;
+    border: 10px solid rgba(0, 0, 0, 0.111);
+    height: 200px;
+    width: 80%;
+    object-fit: scale-down;
+    
+  }
+  .eventimg:hover{
+    box-shadow: 5px 5px 5px 5px rgb(85, 3, 85);
+  }
+  .search{
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 100%;
+    resize: none;
+  
+    
+  
+  }
+  .search:hover {
+    box-shadow: 5px 5px rgb(11, 49, 49);
+  }
+  
+  .cardtext{
+    margin-bottom: 50px;
+  }
 
-.container_discover{
+
+  .searchButton {
+    background-color: rgb(85, 3, 85);
+    color: white;
+    font-family: sans-serif;
+    font-size: 14px;
+    margin: 20px 0px;
+    margin-left: 435px;
+    margin-right: 340px;
+  }
+.searchButton:hover{
+    background-color: rgb(158, 83, 158);
+    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+}
+
+.title:hover{
+    color:purple;
+}
+  
+  .sorting{
+    background-color: red;
+  }
+  .title{
+    font-size: 40px;    
+  }
+  .page-link-btn{
+    background-color: rgb(11, 49, 49);
+    color: white;
+    margin:20px;
+    margin-top: 150px;
+    margin-bottom: 100px;
+  }
+  .page-link-btn:hover{
+    background-color: rgb(25, 110, 110);
+    box-shadow: 5px 5px 5px 5px rgb(11, 49, 49);
+  
+  }
+  .page-container{
+    flex-direction: row;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh; /* 100% of the viewport height */
   }
 
-.search_bar{
-    border-radius: 16px;
-    background: #FFF;
-    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.04), 0px 4px 8px 0px rgba(0, 0, 0, 0.04), 0px 16px 24px 0px rgba(0, 0, 0, 0.04), 0px 24px 32px 0px rgba(0, 0, 0, 0.04);
+.eventdetails{
+    font-size: 10px;
 }
 
-.search_filter_title{
-    color: #1E3765;
-    font-family: Poppins;
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+.sortDropdown{
+    width: 120px;
+    height: 32px;
+    text-align: center;
+    background-color: rgb(85, 3, 85);
+    color: white;
+    font-family: sans-serif;
+    font-size: 14px;
+  }
+.sortDropdown:hover{
+    background-color: rgb(158, 83, 158);
+    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
 }
-  .form-left {
-    margin-right: 20px;
-  }
-  
-  .input {
-    width: 100%;
-  }
-  
-  .searchButton {
-    margin-top: 10px;
-  }
-  
-  .filters {
-    margin-top: 20px;
-  }
-  
-  .searchresults {
-    margin-top: 20px;
-  }
-  
-  .card {
-    display: flex;
-    margin-bottom: 20px;
-  }
-  
-  /* Add more styles as needed */
-  
+
+.nrferror{
+    margin-left: 360px;
+    font-size: large;
+    width: 220px;
+    margin-top: 100px;
+    cursor: pointer;
+    background-color: rgb(48, 95, 95);
+    height: 65px;
+    padding: 10px;
+    border-radius: 5px;
+    color:white;
+
+}
+.nrferror:hover{
+    box-shadow: 5px 5px rgb(2, 22, 22);
+    background-color: rgb(13, 117, 117);
+}

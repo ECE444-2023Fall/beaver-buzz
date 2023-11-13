@@ -248,7 +248,7 @@ const UserPage=()=> {
     }
 
     return(
-        <div className="alternateFlexBox">
+        <div className="mainFlexBox">
             <div className="flexbox-user-container">
             <UploadAvatar id={userId} avatar={avatar}/>
             <Button className="subscribeButton" onClick={(e) => {subscribeButtonClicked()}}>{buttonState} </Button>

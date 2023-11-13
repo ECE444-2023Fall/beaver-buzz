@@ -5,10 +5,14 @@ This file contains the API endpoints for the backend.
 from re import T
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS, cross_origin
+import bcrypt
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
 import bcrypt
+from datetime import datetime
 from pytz import timezone
+from sqlalchemy import or_
+import random
 import ast
 
 eastern = timezone("EST")
@@ -763,31 +767,114 @@ def get_events_by_user(userid):
 
     return jsonify(final)
 
+@app.route('/api/allevents', methods=['GET'])
+@cross_origin()
+def allevents():
+    '''
+    Returns all events for initialization purposes. search() function is used when a search is executed.
+    '''
+    results = [e.serialize() for e in Event.query.all()]
+    users = User.query.all()
+    users_dict={}
+    for u in users:
+        users_dict[u.id] = u.firstname + " " + u.lastname
+    for result in results:
+        result['display_time'] = str(result['eventStart'].time().strftime("%I:%M %p"))
+        if result['organizerID'] in users_dict:
+            name = users_dict[result['organizerID']]
+            result['organizerName'] =  name
+        else:
+            u = User.query.get(result['organizerID'])
+            result['organizerName'] = u.firstname + " " + u.lastname
+    return jsonify(results)
 
-@app.route("/api/search", methods=["GET"])
+
+
+
+@app.route('/api/search', methods=['GET'])
 @cross_origin()
 def search():
-    """Searches for events based on the query and filters
+    '''
+    This function conducts the search operation. This includes search by query, filter, organizer name, and searching for tag in search bar.
+    '''
+    query = request.args.get('searchbar')
+    location_filters = request.args.get('filters')
+    #c_user = request.args.get('userid')
+    #NEED TO IMPLEMENT USER EVENT INTERESTS
+    #curr_user = User.query.filter_by(id=c_user).first()
+    #curr_user_interests = curr_user.interests.split(',')
 
-    Returns:
-        json: array of json objects with event fields
-    """
-    query = request.args.get("searchbar")
-    location_filters = request.args.get("filters").split(",")
-    if location_filters[0] == "":
+    eventtags = ["Academic", "Sports","Science","Math","Technology","Engineering","Students","Arts","Music","Games","Career","Food"]
+
+    if location_filters:
+        location_filters = location_filters.split(',')
+    else:
         location_filters = []
+    org_filter = request.args.get('Organizer')
+    temp_q = query.split(' ')
+    if org_filter:
+        if len(temp_q)>1:
+            fn = temp_q[0]
+            ln = temp_q[1]
+        else:
+            fn = temp_q[0]
+            ln = temp_q[0]
+    if not org_filter:
+        org_filter= False
     filtered_results = []
-    if query != "" and len(location_filters) != 0:
-        filtered_results = Event.query.filter(
-            Event.eventBuilding.in_(location_filters), Event.eventName.contains(query)
-        ).all()
-    elif len(location_filters) != 0:
-        filtered_results = Event.query.filter(
-            Event.eventBuilding.in_(location_filters)
-        ).all()
-    elif len(location_filters) == 0 and query != "":
-        filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
+    users_dict = {}
+    #Both Query and Filters
+    if query != '' and len(location_filters)!=0:
+        if org_filter is False:
+            if query.capitalize() not in eventtags:
+                filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]), Event.eventName.contains(query)).all()
+            else:
+                filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]),Event.eventCategories.contains(query.capitalize())).all()
+        else:
+            if fn == ln:
+                users = User.query.filter(or_(User.firstname.contains(fn),User.lastname.contains(ln))).all()
+            else:
+                users = User.query.filter(User.firstname.contains(fn),User.lastname.contains(ln)).all()
+
+            user_ids = [user.id for user in users]
+            for u in users:
+                users_dict[u.id] = u.firstname + " " + u.lastname
+
+
+            filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))]), Event.organizerID.in_(user_ids)).all()
+    
+    #No Query and Have Filter
+    elif len(location_filters)!=0:
+        filtered_results = Event.query.filter(or_(*[Event.eventCategories.contains(location_filters[i]) for i in range(len(location_filters))])).all()
+    
+    #Query but no Filter
+    elif len(location_filters)==0 and query!="":
+        if org_filter is False:
+            if query.capitalize() not in eventtags:
+                filtered_results = Event.query.filter(Event.eventName.contains(query)).all()
+            else:
+                filtered_results = Event.query.filter(Event.eventCategories.contains(query.capitalize())).all()
+        else:
+            if fn == ln:
+                users = User.query.filter(or_(User.firstname.contains(fn),User.lastname.contains(ln))).all()
+            else:
+                users = User.query.filter(User.firstname.contains(fn),User.lastname.contains(ln)).all()
+
+            user_ids = [user.id for user in users]
+            for u in users:
+                users_dict[u.id] = u.firstname + " " + u.lastname
+
+            filtered_results = Event.query.filter(Event.organizerID.in_(user_ids)).all()
     else:
         filtered_results = Event.query.all()
 
-    return jsonify([e.serialize() for e in filtered_results])
+    results = [e.serialize() for e in filtered_results]
+    for result in results:
+        result['display_time'] = str(result['eventStart'].time().strftime("%I:%M %p"))
+        if result['organizerID'] in users_dict:
+            name = users_dict[result['organizerID']]
+            result['organizerName'] =  name
+        else:
+            u = User.query.get(result['organizerID'])
+            result['organizerName'] = u.firstname + " " + u.lastname
+    return jsonify(results)
