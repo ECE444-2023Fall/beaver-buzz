@@ -23,29 +23,37 @@ const DiscoverPage=()=>{
     const userId = useContext(UserContext);
 
 
-    //Initially Fetch all results
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-            // Your fetch request goes here
-            fetch('http://localhost:8000/api/allevents', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-                        .then(data => {
-                setsearchitems(data)
-            });
-            // Process the data
-            } catch (error) {
-            console.error('Error fetching data:', error);
-            }
-        };
+    // const onSubmit = (data) => {
+    //     console.log(data);
+    //     var temp_data = {"filters": []}
+    //     var filters = ["Bahen", "Myhal", "Sanford Fleming", "Robarts", "Rotman", "Galbraith", "Trinity Bellwoods", "Queens Park"]
+    //     for (const key in data) { 
+    //         console.log(key)
+    //         if(key == "searchbar"){
+    //             temp_data["searchbar"]= data["searchbar"]
+    //         }
+    //         if(filters.includes(key) && data[key] == true){
+    //             temp_data["filters"].push(key)
+    //         }
+    //     }
+    //     fetch(`${process.env.REACT_APP_BACKEND_URL}/api/search?` + new URLSearchParams(temp_data), {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setsearchitems(data)
+    //         });
+    //         // Process the data
+    //         } catch (error) {
+    //         console.error('Error fetching data:', error);
+    //         }
+    //     };
     
-        fetchData(); // Call the fetch function
-        }, []); 
+    //     fetchData(); // Call the fetch function
+    //     }, []); 
     
 
     const onSubmit = (data) => {
@@ -71,15 +79,14 @@ const DiscoverPage=()=>{
         else{
             temp_data['userid'] = -1;
         }
-        fetch('http://localhost:8000/api/search?'+new URLSearchParams(temp_data), {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/search?` + new URLSearchParams(temp_data), {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
             },
         })
             .then(response => response.json())
-                        .then(data => {
-                //console.log(data.length);
+                .then(data => {
                 if (data.length ==0){
                     setNores(true);
                 }

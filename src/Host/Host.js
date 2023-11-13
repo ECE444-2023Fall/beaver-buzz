@@ -38,7 +38,7 @@ const { register, handleSubmit, formState: { errors } } = useForm();  const [tag
       body: JSON.stringify(data),
     };
 
-    fetch("/api/events/new", requestOptions)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/new`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         if (data["event_id"]) {
