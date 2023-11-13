@@ -9,14 +9,11 @@ import bcrypt
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
 import bcrypt
-from datetime import datetime
-from pytz import timezone
+from datetime import datetime, timedelta
+import pytz
 from sqlalchemy import or_
 import random
 import ast
-from werkzeug.exceptions import NotFound
-
-eastern = timezone("EST")
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}})
@@ -26,6 +23,9 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+utc = pytz.UTC
+est = pytz.timezone('US/Eastern')
 
 
 @app.route("/api/health", methods=["GET"])
@@ -193,7 +193,7 @@ def get_review(userid, eventid):
     user = db.get_or_404(User, userid)
     rating = UserRatings.query.filter_by(userID=userid, eventID=eventid).first()
     if rating is None:
-        return NotFound
+        return jsonify({"error": "Not Found"}), 404
     return jsonify({"rating": rating.ratingValue})
 
 
@@ -457,8 +457,8 @@ def get_event(id):
     event = Event.query.filter_by(id=id).first()
     if event is not None:
         # print("timezone is:", event.eventStart.tzname())
-        event.eventStart = event.eventStart.astimezone(eastern)
-        event.eventEnd = event.eventEnd.astimezone(eastern)
+        event.eventStart = event.eventStart
+        event.eventEnd = event.eventEnd
         return jsonify(event.serialize()), 200
     return jsonify({"error": "Event not found"}), 404
 
@@ -483,12 +483,9 @@ def create_event():
     if not n["eventDate"] or not n["eventStart"] or not n["eventEnd"]:
         return jsonify({"Error": "Please enter a valid date and time"}), 400
 
-    eventStart = eastern.localize(
-        datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
-    )
-    eventEnd = eastern.localize(
-        datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
-    )
+    eventStart = utc.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
+
+    eventEnd = utc.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
 
     eventBuilding = n["building"]
     eventRoom = n["room"]
@@ -762,7 +759,10 @@ def get_events_by_user(userid):
 
     else:
         for event in events:
-            dt = datetime.now()
+            dt = datetime.now().replace(tzinfo=None)
+            dt = utc.localize(dt)
+            dt = dt - timedelta(hours=5)
+            print(event.eventEnd, type(event.eventEnd))
             if dt <= event.eventEnd:
                 final.append(event.serialize())
 
