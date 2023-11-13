@@ -16,16 +16,21 @@ import random
 import ast
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}})
+CORS(
+    app,
+    resources={
+        r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}
+    },
+)
 app.config.from_object(Configuration)
-app.config['CORS_HEADERS'] = 'Content-Type'
+app.config["CORS_HEADERS"] = "Content-Type"
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
 
 utc = pytz.UTC
-est = pytz.timezone('US/Eastern')
+est = pytz.timezone("US/Eastern")
 
 
 @app.route("/api/health", methods=["GET"])
@@ -126,7 +131,9 @@ def login():
     password = request.json["password"]
 
     user = User.query.filter_by(email=email).first()
-    if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password.encode('utf-8')):
+    if user is None or not bcrypt.checkpw(
+        password.encode("utf-8"), user.password.encode("utf-8")
+    ):
         return jsonify({"error": "Invalid username or password"}), 401
 
     return jsonify({"greeting": "Welcome, " + user.firstname, "id": user.id}), 202
@@ -428,7 +435,9 @@ def register():
     if user is not None:  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
-    passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode(
+        "utf-8"
+    )
 
     print(passwordHash)
 
@@ -492,9 +501,13 @@ def create_event():
     if not n["eventDate"] or not n["eventStart"] or not n["eventEnd"]:
         return jsonify({"Error": "Please enter a valid date and time"}), 400
 
-    eventStart = utc.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
+    eventStart = utc.localize(
+        datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
+    )
 
-    eventEnd = utc.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
+    eventEnd = utc.localize(
+        datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
+    )
 
     eventBuilding = n["building"]
     eventRoom = n["room"]

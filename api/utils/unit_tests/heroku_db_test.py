@@ -13,6 +13,7 @@ connection = psycopg2.connect(database_url)
 def get_connection():
     return psycopg2.connect(os.environ.get("SQLALCHEMY_DATABASE_URI"))
 
+
 # Checks if the database is connected.
 def test_postgres_connection():
     connection = None
@@ -39,6 +40,7 @@ def test_postgres_connection():
             connection.close()
             print("PostgreSQL connection is closed")
 
+
 # Checks if 'users' table exists within the database.
 def test_users_table_existence():
     connection = None
@@ -46,12 +48,14 @@ def test_users_table_existence():
         connection = get_connection()
 
         cursor = connection.cursor()
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT EXISTS (
                 SELECT FROM information_schema.tables
                 WHERE table_name = 'users'
             );
-        """)
+        """
+        )
         result = cursor.fetchone()
         assert result == (True,)
 
@@ -60,6 +64,7 @@ def test_users_table_existence():
             cursor.close()
             connection.close()
 
+
 # Checks if 'email' column exists within the 'users' table.
 def test_column_existence():
     connection = None
@@ -67,13 +72,15 @@ def test_column_existence():
         connection = get_connection()
 
         cursor = connection.cursor()
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT EXISTS (
                 SELECT *
                 FROM information_schema.columns
                 WHERE table_name = 'users' AND column_name = 'email'
             );
-        """)
+        """
+        )
         result = cursor.fetchone()
         assert result == (True,)
 
