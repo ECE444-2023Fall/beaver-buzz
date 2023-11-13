@@ -768,9 +768,7 @@ def get_events_by_user(userid):
 
     else:
         for event in events:
-            dt = datetime.now()
-            print(dt, type(dt))
-            print(event.eventEnd, type(event.eventEnd))
+            dt = utc.localize(datetime.now().replace(tzinfo=None))
             if dt <= event.eventEnd:
                 final.append(event.serialize())
 
