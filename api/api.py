@@ -434,7 +434,7 @@ def register():
         return jsonify({"error": "User with this email already exists"}), 400
 
     user = User.query.filter_by(phonenumber=phonenumber).first()
-    if user is not None and user.phone is not None:  # An account with this phonenumber exists
+    if user is not None and user.phonenumber is not None:  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
     passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode(
