@@ -71,20 +71,15 @@ const ProfilePage=()=> {
     const [selectedValues, setSelectedValues] = useState([])
 
     function getSubscriberList(mode) {
-        var url = '/api/users/' + userId;
-        if(mode == "Subscribers") {
-            url += '/getSubscribers'
-        }
-        else {
-            url += '/getSubscribedTo'
-        }
-        const requestOptions={
-            method:"POST",
-            headers:{
-               'content-type':'application/json'
+        var endpoint = mode === "Subscribers" ? '/getSubscribers' : '/getSubscribedTo';
+        var url = `${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}${endpoint}`;
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
             },
-            body:JSON.stringify({})
-            }
+            body: JSON.stringify({})
+        };
 
         fetch(url, requestOptions)
         .then(response => response.json())
@@ -115,7 +110,7 @@ const ProfilePage=()=> {
         body:JSON.stringify({option: option, showPastEvents: showPastEvents, myID: userId})
         }
 
-        fetch('/api/users/' + userId + '/events', requestOptions)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}/events`, requestOptions)
         .then(response => response.json())
         .then(data => {
             var eventsArray = [];
@@ -164,7 +159,7 @@ const ProfilePage=()=> {
                     },
                     body: JSON.stringify({id: userId, myID: userId})
                 }
-                fetch('/api/getUserInfo', requestOptions)
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/getUserInfo`, requestOptions)
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
@@ -209,7 +204,7 @@ const ProfilePage=()=> {
                 },
                 body: JSON.stringify({id: userId, firstname: newValue})
             }
-            fetch('/api/setFirstname', requestOptions)
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/setFirstname`, requestOptions)
                 .then(response => response.json())
                 .then(data => {
                 });
@@ -233,7 +228,7 @@ const ProfilePage=()=> {
                 },
                 body: JSON.stringify({id: userId, lastname: newValue})
             }
-            fetch('/api/setLastname', requestOptions)
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/setLastname`, requestOptions)
                 .then(response => response.json())
                 .then(data => {
                 });
@@ -258,7 +253,7 @@ const ProfilePage=()=> {
                     },
                     body: JSON.stringify({id: userId, email: newValue})
                 }
-                fetch('/api/setEmail', requestOptions)
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/setEmail`, requestOptions)
                     .then(response => response.json())
                     .then(data => {
                         if(data.error != null) {
@@ -294,7 +289,7 @@ const ProfilePage=()=> {
                 },
                 body: JSON.stringify({id: userId, phone: newValue})
             }
-            fetch('/api/setPhone', requestOptions)
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/setPhone`, requestOptions)
                 .then(response => response.json())
                 .then(data => {
                     if(data.error != null) {
@@ -325,7 +320,7 @@ const ProfilePage=()=> {
             },
             body: JSON.stringify({id: userId, interests: event})
         }
-        fetch('/api/setInterests', requestOptions)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/setInterests`, requestOptions)
             .then(response => response.json())
             .then(data => {
             });
@@ -403,7 +398,7 @@ const ProfilePage=()=> {
             },
             body: JSON.stringify({id: userId, showContactInfo: showContactInformation, showRegisteredEvents: showRegisteredEvents})
         }
-        fetch('/api/setPrivacy', requestOptions)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/setPrivacy`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 if (data.status) {
