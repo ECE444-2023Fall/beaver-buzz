@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import RateEvent from '../components/Rating';
 import { Link } from "react-router-dom";
 
-function convertDate(date) {
+export function convertDate(date) {
     if (!date) return "";
     // console.log(date);
     const months = {
@@ -31,7 +31,7 @@ function convertDate(date) {
     const time = dateParts[4];
     const newDate = new Date(`${year}-${month}-${day}T${time}Z`);
     // console.log(newDate);
-    let finalDate = newDate.toDateString() + " at " + newDate.toLocaleTimeString()
+    let finalDate = newDate.toDateString() + " at " + newDate.toTimeString()
     return finalDate;
 }
 
