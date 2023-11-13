@@ -121,7 +121,7 @@ export default function EventPage() {
             });
         }
         else {
-            fetch(`/api/events/${id}/unregister/${userId}`, {
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}/unregister/${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

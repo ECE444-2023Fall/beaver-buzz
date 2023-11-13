@@ -37,7 +37,7 @@ export default function EventUpdatePage() {
 
     useEffect(() => {
         const fetchInfo = () => {
-            return fetch(`/api/events/${id}`, {
+            return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ export default function EventUpdatePage() {
             body: JSON.stringify(data)
         }
 
-        fetch(`/api/events/${id}/update`, requestOptions)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}/update`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 if (data['event_id']) {
