@@ -8,12 +8,14 @@ from flask_cors import CORS, cross_origin
 import bcrypt
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
+from utils.emails.mailing import Mailer, get_login, format_email
 import bcrypt
 from datetime import datetime, timedelta
 import pytz
 from sqlalchemy import or_
 import random
 import ast
+import json
 
 app = Flask(__name__)
 CORS(
@@ -449,6 +451,20 @@ def register():
         phonenumber=phonenumber,
         interests=interests,
     )
+
+    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
+    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    subject = 'Registration Confirmation'
+    i_list = [i['name'] for i in request.json["interests"]]
+    i_list = str(i_list).translate({ord(i): None for i in "'[]"})
+    html = open('./utils/emails/registration.html').read().format(
+            subject=subject,firstname=firstname,lastname=lastname,
+            email=email,phonenumber=phonenumber,interests=i_list,
+            potatoemail=mailer.sender)
+    msg = format_email(mailer.sender, email, subject, html)
+    mailer.send_mail(email,msg.as_string())
+    mailer.kill()
+
     db.session.add(newaccount)
     db.session.commit()
 
@@ -561,6 +577,18 @@ def register_event(eventid, userid):
     event.users.append(user)
     event.registered += 1
     db.session.commit()
+
+    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
+    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    subject = 'Event Registration Confirmation'
+    html = open('./utils/emails/event_registration.html').read().format(
+            subject=subject, event_name=event.eventName, 
+            event_date=event.eventStart, 
+            event_loc=event.eventBuilding + ', ' + event.eventRoom)
+    msg = format_email(mailer.sender, user.email, subject, html)
+    mailer.send_mail(user.email,msg.as_string())
+    mailer.kill()
+
     return jsonify(event.serialize())
 
 
