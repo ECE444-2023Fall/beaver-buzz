@@ -54,7 +54,7 @@ const UploadAvatar = (props) => {
           src={null}
         />
       )}
-      {preview  && <img onClick={onClick} src={preview} alt="Preview" />}
+      {preview  && <img onClick={editable ? onClick : null} src={preview} alt="Preview" />}
       
     </div>
   );

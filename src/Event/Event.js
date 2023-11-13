@@ -5,8 +5,9 @@ import './Event.css';
 import { useParams } from "react-router-dom";
 import RateEvent from '../components/Rating';
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function convertDate(date) {
+export function convertDate(date) {
     if (!date) return "";
     // console.log(date);
     const months = {
@@ -31,7 +32,7 @@ function convertDate(date) {
     const time = dateParts[4];
     const newDate = new Date(`${year}-${month}-${day}T${time}Z`);
     // console.log(newDate);
-    let finalDate = newDate.toDateString() + " at " + newDate.toLocaleTimeString()
+    let finalDate = newDate.toString().replace('GMT', 'EST')
     return finalDate;
 }
 
@@ -42,6 +43,7 @@ export default function EventPage() {
     const [ratingVisible, setRatingVisible] = useState([])
     const [userAttending, setUserAttending] = useState([])
     const [eventOwner, setEventOwner] = useState([])
+    const navigate = useNavigate();
 
     const {
         userId,
@@ -149,7 +151,7 @@ export default function EventPage() {
                     <head>
                         <title>{data.eventName}</title>
                     </head>
-                    <body>
+                    <body>s
                         <div id="eventContainer">
                             {eventOwner &&
                                 <div className="editButtonContainer">
@@ -164,7 +166,7 @@ export default function EventPage() {
                             <img id="eventImage" src={data.eventImg} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
                             <div id="eventInfo">
-                                <p><strong>Organizer: </strong>{data.organizerName}</p>
+                                <p><strong>Organizer: </strong><Link to = {'/user/' + data.organizerID}>{data.organizerName}</Link></p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                                 {data.eventCategories && <p><strong>Event Categories: </strong>{
