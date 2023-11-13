@@ -122,7 +122,7 @@ export default function EventPage() {
 
     // eventImage uses default event image when the event data doesn't contain an event image
     return (
-        <div>
+        <div className='event-overall'>
             {data !== -1 ? (
                 <div>
                     <head>
@@ -131,10 +131,11 @@ export default function EventPage() {
                     <body>
                         <div id="eventContainer">
                             <h1 id="eventTitle">{data.eventName}</h1>
+                            <p id="eventOneLiner">{data.oneLiner}</p>
                             {ratingVisible &&
                                 <RateEvent title="" mode="eventrating" disabled={true} userID={userId} eventID={id}></RateEvent>
                             }
-                            <p id="eventOneLiner">{data.oneLiner}</p>
+                            
                             <img id="eventImage" src={data.eventImg ? data.eventImg : eventDefault} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
                             <div id="eventInfo">

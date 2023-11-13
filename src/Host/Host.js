@@ -51,11 +51,11 @@ export default function HostPage() {
 
   return (
     <div>
-      <div className="host-container" style={{ marginTop: '160px' }} >
+      <div className="host-container" >
         <h1 className="form-title" >Want to post an event? </h1>
         {!userId ? (
           <div>
-            <h1 className="form-second-title">Click here to log in first!</h1>
+            <h1 className="form-second-title">Please log in first:</h1>
             <button className="host-button" style={{ marginTop: '20px' }} onClick={() => navigate("/login")}>
               Log In
             </button>
@@ -95,6 +95,7 @@ export default function HostPage() {
             {errors.eventDate && <p className="error">{"Please enter the date of your event"}</p>}
             <div className="space-between-groups"></div>
 
+            <div className="form-row">
             <Form.Group controlId="eventStart">
               <Form.Label className="add-padd">Start Time</Form.Label>
               <Form.Control
@@ -107,6 +108,7 @@ export default function HostPage() {
             <div className="space-between-groups"></div>
             <div className="space-between-groups"></div>
 
+            
             <Form.Group controlId="eventEnd">
               <Form.Label className="add-padd">End Time</Form.Label>
               <Form.Control
@@ -117,7 +119,7 @@ export default function HostPage() {
             </Form.Group>
             {errors.eventEnd && <p className="error">{"Please enter the end time of your event"}</p>}
             <div className="space-between-groups"></div>
-            <div className="space-between-groups"></div>
+            <div className="space-between-groups"></div></div>
 
             <div class="form-row">
               <div class="col">

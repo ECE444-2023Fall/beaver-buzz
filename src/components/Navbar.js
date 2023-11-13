@@ -8,11 +8,16 @@ import { useUserContext } from "../UserContext";
 function Navbar() {
   const [click, setClick] = useState(false);
   const [registerbutton, setRegisterButton] = useState(true);
+  const [currPage, setCurrentPage] = useState(0);
 
   const { userId, setUserId } = useUserContext();
 
   const handleClick = () => setClick(!click);
-  const closeMobileMenu = () => setClick(false);
+  const closeMobileMenu = (i) => {
+    setClick(false);
+    setCurrentPage(i);
+  };
+
   const showButton = () => {
     if (window.innerWidth <= 960) {
       setRegisterButton(false);
@@ -28,24 +33,25 @@ function Navbar() {
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+          <Link to="/" className="navbar-logo" onClick={(e)=>closeMobileMenu(-1)}>
             <img className="logo-img" src = {require("../images/beaver_logo.png")}></img>
             BeaverBuzz
           </Link>
           <div className="menu-icon" onClick={handleClick}>
             <i className={click ? "fas fa-times" : "fas fa-bars"}></i>
           </div>
+          <div className="nav-menu-more">
           <ul className={click ? "nav-menu active" : "nav-menu"}>
             <li className="nav-item">
-              <Link to="/" className="nav-links" onClick={closeMobileMenu}>
+              <Link to="/" className={currPage === 0? "nav-links-selected" :"nav-links"} onClick={(e)=>closeMobileMenu(0)}>
                 HOME
               </Link>
             </li>
             <li className="nav-item">
               <Link
                 to="/post-event"
-                className="nav-links"
-                onClick={closeMobileMenu}
+                className={currPage === 1? "nav-links-selected" :"nav-links"}
+                onClick={(e)=>closeMobileMenu(1)}
               >
                 POST EVENT
               </Link>
@@ -56,8 +62,8 @@ function Navbar() {
               <li className="nav-item">
                 <Link
                   to="/profile"
-                  className="nav-links"
-                  onClick={closeMobileMenu}
+                  className={currPage === 2? "nav-links-selected" :"nav-links"}
+                  onClick={(e)=>closeMobileMenu(2)}
                 >
                   PROFILE
                 </Link>
@@ -67,8 +73,8 @@ function Navbar() {
               {!userId ? (
                 <Link
                   to="/login"
-                  className="nav-links"
-                  onClick={closeMobileMenu}
+                  className={currPage === 3? "nav-links-selected" :"nav-links"}
+                  onClick={(e)=>closeMobileMenu(3)}
                 >
                   LOG IN
                 </Link>
@@ -76,7 +82,7 @@ function Navbar() {
                 <Link
                   className="nav-links"
                   onClick={() => {
-                    closeMobileMenu();
+                    closeMobileMenu(4);
                     setUserId(null);
                     localStorage.setItem("user", null);
                   }}
@@ -86,11 +92,13 @@ function Navbar() {
                 </Link>
               )}
             </li>
-          </ul>
-          {registerbutton && !userId && (
-            <Button buttonStyle="btn--primary" linkTo="/register">
+         
+            
+         </ul></div>
+         {registerbutton && !userId && (
+            <div className="btn-wrapper"><Button buttonStyle="btn--outline" linkTo="/register">
               SIGN UP
-            </Button>
+            </Button></div>
           )}
         </div>
       </nav>
