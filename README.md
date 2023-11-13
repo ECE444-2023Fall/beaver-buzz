@@ -1,4 +1,9 @@
 # BeaverBuzz by Premium Potatoes
+[![CI](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/node_test.yml/badge.svg)](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/node_test.yml)
+[![frontend-format](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/black.yml/badge.svg)](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/black.yml)
+[![frontend-tests](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/pytest_test.yml/badge.svg)](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/pytest_test.yml)
+[![Pylint](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/pylint.yml/badge.svg)](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/pylint.yml)
+[![Taurus](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/taurus.yml/badge.svg)](https://github.com/ECE444-2023Fall/project-1-web-application-design-group22-premium-potatoes/actions/workflows/taurus.yml)
 
 ## About
 BeaverBuzz is a community-based event-sharing platform that enables clubs and organizers to post events and reach out to the University of Toronto (UofT) student community. It also allows UofT students to explore new communities and discover new interests and activities. This app aims to create a better-connected student body at UofT and provide access to a range of extracurricular activities. 
