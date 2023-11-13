@@ -1,5 +1,5 @@
 execution:
-- concurrency: 10
+- concurrency: 100
   hold-for: 3m
   ramp-up: 2m
   scenario: load_test
