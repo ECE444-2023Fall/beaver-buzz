@@ -37,6 +37,9 @@ export default function EventPage() {
 
     const [data, setData] = useState([]);
     const { id } = useParams();
+    const [ratingVisible, setRatingVisible] = useState([])
+    const [userAttending, setUserAttending] = useState([])
+    const [eventOwner, setEventOwner] = useState([])
 
     const {
         userId,
@@ -72,22 +75,49 @@ export default function EventPage() {
 
 
     const register = () => {
-        fetch(`/api/events/${id}/register/${userId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({}),
-        }).then((res) => {
-            if (res.status === 200) {
-                console.log("Successfully registered");
-            } else {
-                console.log("Failed to register");
-            }
-            console.log(res);
-        }).catch((error) => {
-            console.log(error);
-        });
+        if (userId == null) {
+            // redirect to login page
+            window.location.href = "/login";
+        }
+        else if (!userAttending) {
+            fetch(`/api/events/${id}/register/${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+            }).then((res) => {
+                if (res.status === 200) {
+                    console.log("Successfully registered");
+                    setUserAttending(true);
+                } else {
+                    console.log("Failed to register");
+                }
+                console.log(res);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+        else {
+            fetch(`/api/events/${id}/unregister/${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+            }).then((res) => {
+                if (res.status === 200) {
+                    console.log("Successfully un-registered");
+                    setUserAttending(false);
+                } else {
+                    console.log("Failed to un-register");
+                }
+                console.log(res);
+            }).catch((error) => {
+                console.log(error);
+            });
+
+        }
     }
 
     // eventImage uses default event image when the event data doesn't contain an event image
@@ -101,7 +131,9 @@ export default function EventPage() {
                     <body>
                         <div id="eventContainer">
                             <h1 id="eventTitle">{data.eventName}</h1>
-                            <RateEvent title = "" mode="eventrating" disabled='disabled' userID ={userId} eventID={id}></RateEvent>
+                            {ratingVisible &&
+                                <RateEvent title="" mode="eventrating" disabled={true} userID={userId} eventID={id}></RateEvent>
+                            }
                             <p id="eventOneLiner">{data.oneLiner}</p>
                             <img id="eventImage" src={data.eventImg ? data.eventImg : eventDefault} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
@@ -111,7 +143,12 @@ export default function EventPage() {
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                             </div>
                             <Button buttonStyle='btn--primary' onClick={register}>Register</Button>
-                            <RateEvent title = "Rate this event" mode="myrating" disabled='' userID ={userId} eventID={id}></RateEvent>
+                            {!userAttending && !eventOwner &&
+                                <Button buttonStyle='btn--primary' onClick={register}>Register</Button>
+                            }
+                            {ratingVisible && userAttending &&
+                                <RateEvent title="Rate this event" mode="myrating" userID={userId} eventID={id}></RateEvent>
+                            }
                         </div>
                     </body>
                 </div>

@@ -1,4 +1,4 @@
-.person-name-font{
+.person-name-font {
 
     color: #1E3765;
     font-family: "Open Sans", sans-serif;
@@ -48,7 +48,7 @@
     flex-shrink: 0;
 }
 
-.item-name-font{
+.item-name-font {
     color: black;
     font-family: "Open Sans", sans-serif;
     font-size: 16px;
@@ -56,6 +56,7 @@
     font-weight: 400;
     line-height: normal;
 }
+
 .person-picture {
 
     width: 179.82px;
@@ -67,12 +68,13 @@
 
 .checkboxTitle {
     margin-right: 20px;
-    
+
 }
 
 .checkbox {
     margin-left: auto;
 }
+
 .comboBoxOption {
     margin-left: auto;
     width: 100px;
@@ -95,15 +97,13 @@
     gap: 50px;
     justify-content: center;
     margin-top: 2%;
-    align-items: flex-start; /* Change align-items to flex-start */
+    align-items: flex-start;
+    /* Change align-items to flex-start */
     height: 100vh;
     width: 100vw;
     padding: 35px;
 }
 
-.followerList {
-    
-}
 
 .flexbox-user-container {
     position: relative;
@@ -130,12 +130,12 @@
 
 }
 
-.person-table{
+.person-table {
     position: relative;
     display: flex;
     flex-direction: column;
     padding: 20px;
-    gap:    10px;
+    gap: 10px;
     flex-shrink: 0;
     border-radius: 10px;
     background: #D9D9D9;
@@ -146,7 +146,7 @@
     object-fit: contain;
 }
 
-.event-wish-list-table{
+.event-wish-list-table {
     position: relative;
     width: 55vw;
     flex-shrink: 0;
@@ -156,53 +156,53 @@
     padding: 20px;
 }
 
- .inputField:focus {
-   border: 1px solid #d9d9d9;
-   border-radius: 4px;
-   box-sizing: border-box;
-   padding: 10px;
-     background-color: white;
-   width: 100%;
-     resize: none;
- }
+.inputField:focus {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: white;
+    width: 100%;
+    resize: none;
+}
 
-  .inputField{
-   border: 1px solid #d9d9d9;
-   border-radius: 4px;
-   box-sizing: border-box;
-   padding: 10px;
-      background-color: transparent;
-   width: 100%;
-     resize: none;
- }
+.inputField {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: transparent;
+    width: 100%;
+    resize: none;
+}
 
-   .textAreaField:focus {
-   border: 1px solid #d9d9d9;
-   border-radius: 4px;
-   box-sizing: border-box;
-   padding: 10px;
-     background-color: white;
-   width: 100%;
-     resize: none;
- }
+.textAreaField:focus {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: white;
+    width: 100%;
+    resize: none;
+}
 
-  .textAreaField{
-   border: 1px solid #d9d9d9;
-   border-radius: 4px;
-   box-sizing: border-box;
-   padding: 10px;
-      background-color: transparent;
-   width: 100%;
-     resize: none;
- }
-  .eventList {
-      list-style-type: none;
-  }
+.textAreaField {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: transparent;
+    width: 100%;
+    resize: none;
+}
 
-  .event-list-title{
+.eventList {
+    list-style-type: none;
+}
+
+.event-list-title {
     color: #1E3765;
-
-    font-family: BemboStd;
+    font-family: "Open Sans", sans-serif;
     font-size: 30px;
     font-style: normal;
     font-weight: 700;
@@ -210,7 +210,7 @@
     flex-shrink: 0;
 }
 
-.event-list-title-font{
+.event-list-title-font {
     position: relative;
     color: black;
     font-family: "Open Sans", sans-serif;
@@ -220,7 +220,7 @@
     line-height: normal;
 }
 
-.event-list-title-right{
+.event-list-title-right {
     position: relative;
     display: flex;
     flex-direction: row;
@@ -230,7 +230,7 @@
     margin-left: auto;
 }
 
-.event-list-font{
+.event-list-font {
     color: black;
     font-family: "Open Sans", sans-serif;
     font-size: 16px;
@@ -239,7 +239,7 @@
     line-height: normal;
 }
 
-.event-list-value-font{
+.event-list-value-font {
     color: black;
     font-family: "Open Sans", sans-serif;
     font-size: 16px;
@@ -250,7 +250,7 @@
 }
 
 
-.profile-nav-bar{
+.profile-nav-bar {
     width: 190px;
     height: 82px;
     flex-shrink: 0;
@@ -269,7 +269,7 @@
 }
 
 
-.user-name-nav-bar{
+.user-name-nav-bar {
     width: 81.67px;
     height: 19.503px;
     flex-shrink: 0;

@@ -17,7 +17,7 @@ const getBase64 = (blob) =>
   });
 
 export default function HostPage() {
-const { register, handleSubmit, formState: { errors } } = useForm();  const [tags, setTags] = useState(null);
+  const { register, handleSubmit, formState: { errors } } = useForm(); const [tags, setTags] = useState(null);
   const navigate = useNavigate();
   const { userId } = useContext(UserContext);
 
@@ -52,11 +52,11 @@ const { register, handleSubmit, formState: { errors } } = useForm();  const [tag
   return (
     <div>
       <div className="host-container" style={{ marginTop: '160px' }} >
-      <h1 className="form-title" >Want to post an event? </h1>
+        <h1 className="form-title" >Want to post an event? </h1>
         {!userId ? (
           <div>
             <h1 className="form-second-title">Click here to log in first!</h1>
-            <button className="host-button" style={{ marginTop: '20px' }}onClick={() => navigate("/login")}>
+            <button className="host-button" style={{ marginTop: '20px' }} onClick={() => navigate("/login")}>
               Log In
             </button>
           </div>
@@ -79,7 +79,7 @@ const { register, handleSubmit, formState: { errors } } = useForm();  const [tag
                 type="text"
                 placeholder="Enter one-liner"
                 maxLength={75}
-                {...register("oneLiner", {required: true})}
+                {...register("oneLiner", { required: true })}
               />
             </Form.Group>
             {errors.oneLiner && <p className="error">{"Please enter a 1 line description of your event"}</p>}
@@ -93,26 +93,31 @@ const { register, handleSubmit, formState: { errors } } = useForm();  const [tag
               />
             </Form.Group>
             {errors.eventDate && <p className="error">{"Please enter the date of your event"}</p>}
+            <div className="space-between-groups"></div>
 
             <Form.Group controlId="eventStart">
-                <Form.Label className="add-padd">Start Time</Form.Label>
-                <Form.Control
+              <Form.Label className="add-padd">Start Time</Form.Label>
+              <Form.Control
                 type="time"
                 placeholder="Enter start time"
                 {...register("eventStart", { required: true })}
-                />
+              />
             </Form.Group>
             {errors.eventStart && <p className="error">{"Please enter the start time of your event"}</p>}
+            <div className="space-between-groups"></div>
+            <div className="space-between-groups"></div>
 
             <Form.Group controlId="eventEnd">
-                <Form.Label className="add-padd">End Time</Form.Label>
-                <Form.Control
+              <Form.Label className="add-padd">End Time</Form.Label>
+              <Form.Control
                 type="time"
                 placeholder="Enter end time"
                 {...register("eventEnd", { required: true })}
-                />
+              />
             </Form.Group>
             {errors.eventEnd && <p className="error">{"Please enter the end time of your event"}</p>}
+            <div className="space-between-groups"></div>
+            <div className="space-between-groups"></div>
 
             <div class="form-row">
               <div class="col">
@@ -128,7 +133,8 @@ const { register, handleSubmit, formState: { errors } } = useForm();  const [tag
                 </Form.Group>
                 {errors.building && <p className="error">{"Please enter the building of your event"}</p>}
               </div>
-              <div class="col">
+
+              <div class="col mb-3"> {/* Added mb-3 for bottom margin */}
                 <Form.Group controlId="room">
                   <Form.Label className="add-padd">Room</Form.Label>
                   <Form.Control
@@ -142,7 +148,7 @@ const { register, handleSubmit, formState: { errors } } = useForm();  const [tag
                 {errors.room && <p className="error">{"Please enter the room of your event"}</p>}
               </div>
             </div>
-
+            <div className="space-between-groups"></div>
             <Form.Group controlId="description" className="left-right">
               <Form.Label className="add-padd">Description (optional)</Form.Label>
               <Form.Control
