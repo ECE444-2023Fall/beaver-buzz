@@ -7,5 +7,5 @@ execution:
 scenarios:
   load_test:
     requests:
-    - https://beaver-buzz.ca
+    - https://www.beaver-buzz.ca
     think-time: 1s
