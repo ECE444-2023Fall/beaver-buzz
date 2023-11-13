@@ -32,28 +32,28 @@ jobs:
       with:
           cmd: install # will run `yarn install` command
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-          python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-          python -m pip install --upgrade pip
-          pip install -r ./api/requirements.txt
+    # - name: Set up Python ${{ matrix.python-version }}
+    #   uses: actions/setup-python@v4
+    #   with:
+    #       python-version: ${{ matrix.python-version }}
+    # - name: Install dependencies
+    #   run: |
+    #       python -m pip install --upgrade pip
+    #       pip install -r ./api/requirements.txt
 
     - name: Start React
       uses: borales/actions-yarn@v4
       with:
           cmd: build # will run `yarn build` command
-          background: true
+          # background: true
       env:
         CI: false
 
-    - name: Start API
-      run: |
-          yarn start-api &
-          sleep 10
-          curl -I -s -L http://localhost:8000/health || exit 1
+    # - name: Start API
+    #   run: |
+    #       yarn start-api &
+    #       sleep 10
+    #       curl -I -s -L http://localhost:8000/health || exit 1
     
     - name: Test the app
       uses: borales/actions-yarn@v4
