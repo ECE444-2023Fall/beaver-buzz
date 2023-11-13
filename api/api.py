@@ -8,18 +8,20 @@ from flask_cors import CORS, cross_origin
 import bcrypt
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
+from utils.emails.mailing import Mailer, get_login, format_email
 import bcrypt
 from datetime import datetime, timedelta
 import pytz
 from sqlalchemy import or_
 import random
 import ast
+import json
 
 app = Flask(__name__)
 CORS(
     app,
     resources={
-        r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}
+        r"/api/*": {"origins": ["https://premiumpotatoes-4fb5418fe273.herokuapp.com", "https://www.beaver-buzz.ca"]}
     },
 )
 app.config.from_object(Configuration)
@@ -30,7 +32,7 @@ with app.app_context():
     db.create_all()
 
 utc = pytz.UTC
-est = pytz.timezone("US/Eastern")
+# est = pytz.timezone("US/Eastern")
 
 
 @app.route("/api/health", methods=["GET"])
@@ -449,6 +451,20 @@ def register():
         phonenumber=phonenumber,
         interests=interests,
     )
+
+    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
+    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    subject = 'Registration Confirmation'
+    i_list = [i['name'] for i in request.json["interests"]]
+    i_list = str(i_list).translate({ord(i): None for i in "'[]"})
+    html = open('./utils/emails/registration.html').read().format(
+            subject=subject,firstname=firstname,lastname=lastname,
+            email=email,phonenumber=phonenumber,interests=i_list,
+            potatoemail=mailer.sender)
+    msg = format_email(mailer.sender, email, subject, html)
+    mailer.send_mail(email,msg.as_string())
+    mailer.kill()
+
     db.session.add(newaccount)
     db.session.commit()
 
@@ -470,8 +486,8 @@ def get_event(id):
     if event is not None:
         user = db.get_or_404(User, event.organizerID)
         # print("timezone is:", event.eventStart.tzname())
-        event.eventStart = event.eventStart.astimezone(eastern)
-        event.eventEnd = event.eventEnd.astimezone(eastern)
+        event.eventStart = event.eventStart
+        event.eventEnd = event.eventEnd
         results = event.serialize()
         results["organizerName"] = str(user.firstname) + " " + str(user.lastname)
         results["attendeeList"] = [int(id) for user in event.users]
@@ -561,6 +577,18 @@ def register_event(eventid, userid):
     event.users.append(user)
     event.registered += 1
     db.session.commit()
+
+    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
+    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    subject = 'Event Registration Confirmation'
+    html = open('./utils/emails/event_registration.html').read().format(
+            subject=subject, event_name=event.eventName, 
+            event_date=event.eventStart, 
+            event_loc=event.eventBuilding + ', ' + event.eventRoom)
+    msg = format_email(mailer.sender, user.email, subject, html)
+    mailer.send_mail(user.email,msg.as_string())
+    mailer.kill()
+
     return jsonify(event.serialize())
 
 
@@ -611,10 +639,10 @@ def updateEvent(eventid):
     event = Event.query.filter_by(id=eventid).first()
 
     date_format = "%Y-%m-%d %H:%M"
-    eventStart = eastern.localize(
+    eventStart = utc.localize(
         datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
     )
-    eventEnd = eastern.localize(
+    eventEnd = utc.localize(
         datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
     )
 
@@ -768,10 +796,7 @@ def get_events_by_user(userid):
 
     else:
         for event in events:
-            dt = datetime.now().replace(tzinfo=None)
-            dt = utc.localize(dt)
-            dt = dt - timedelta(hours=5)
-            print(event.eventEnd, type(event.eventEnd))
+            dt = utc.localize(datetime.now().replace(tzinfo=None))
             if dt <= event.eventEnd:
                 final.append(event.serialize())
 

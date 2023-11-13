@@ -10,6 +10,7 @@ import UserContext from '../UserContext';
 import "./Discover.css";
 import {CATEGORIES} from '../constants/Constants';
 import default_photo from "../images/default-event-photo.png";
+import {convertDate} from  "../Event/Event.js"
 
 const DiscoverPage=()=>{
     const[searchitems, setsearchitems] = useState([])
@@ -208,7 +209,7 @@ const DiscoverPage=()=>{
                         <div class = "eventdetails">
 
                         <h1 className="card-detail-oneliner">{item.oneLiner}</h1>
-                        <h1 className="card-detail-time">{item.eventStart}</h1>
+                        <h1 className="card-detail-time">{convertDate(item.eventStart)}</h1>
                         <h1 className="card-detail-location">Location: {item.eventBuilding} {item.eventRoom}</h1>
                         <h1 className="card-detail">Brought to you by {item.organizerName}</h1>
                         </div>
