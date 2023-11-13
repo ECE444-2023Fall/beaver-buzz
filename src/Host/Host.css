@@ -20,7 +20,7 @@
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  
+
   .add-padd {
     margin-right: 10px;
   }
@@ -44,14 +44,17 @@
     align-items: flex-start;
     margin-bottom: 15px;
 
-    .col{
+    .col {
       text-align: left;
+
       .w-25 {
         width: 25%;
       }
+
       .w-50 {
         width: 50%;
       }
+
       .w-60 {
         width: 60%;
       }
@@ -60,7 +63,7 @@
 }
 
 .host-button {
-  width: 100%;
+  width: 165px;
   padding: 0.5rem;
   border: 1px solid #1E3765;
   border-radius: 5px;
@@ -89,9 +92,9 @@
   line-height: 24px;
   padding: 10px;
   text-align: center;
-  }
+}
 
-  .form {
+.form {
   background: white;
   border: 1px solid #dedede;
   display: flex;
@@ -100,78 +103,79 @@
   margin: 0 auto;
   max-width: 500px;
   padding: 30px 50px;
-  }
+}
 
-  .input {
-    display: flex;
-    width: 404px;
-    height: 32px;
-    padding: 10px 0px 10px 10px;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-    border-radius: 10px;
-    border: 1px solid #D9D9D9;
-  }
+.input {
+  display: flex;
+  width: 404px;
+  height: 32px;
+  padding: 10px 0px 10px 10px;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid #D9D9D9;
+}
 
-  .form-title{
-    color: #000;
-    font-family: Poppins;
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+.space-between-groups {
+  margin-bottom: 10px;
+  /* You can adjust the value to control the amount of space */
+}
 
+.form-title {
+  color: #000;
+  font-family: "Open Sans", sans-serif;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 20px;
 }
 
 .host-form {
-  max-width: 400px; /* Adjust the max-width according to your design */
+  max-width: 400px;
+  /* Adjust the max-width according to your design */
   margin: auto;
 }
 
 .form-label {
   font-weight: bold;
-  font-family: Poppins;
+  font-family: "Open Sans", sans-serif;
   margin-bottom: 8px;
 }
 
 .form-input {
   width: 100%;
-  font-family: Poppins;
+  font-family: "Open Sans", sans-serif;
   margin-bottom: 16px;
 }
 
 
-.form-name{
+.form-name {
   color: #000;
-  font-family: Poppins;
-  font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 20px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
 }
 
-  .label {
+.label {
   color: #3d3d3d;
   display: block;
   font-family: sans-serif;
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 5px;
-  }
+}
 
-  .error {
+.error {
   color: red;
   font-family: sans-serif;
   font-size: 12px;
   height: 30px;
-  }
+}
 
-    * {
-      font-family: 'PT Sans', sans-serif;
-    }
-    
-    .tags {
-      background-color: white;
-    }
-
+.tags {
+  background-color: white;
+}

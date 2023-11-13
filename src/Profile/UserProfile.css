@@ -1,7 +1,7 @@
-.person-name-font{
+.person-name-font {
 
     color: #1E3765;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     text-align: center;
     font-size: 30px;
     font-style: normal;
@@ -23,7 +23,7 @@
 
 .sectionFont {
     color: #1E3765;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 700;
@@ -48,14 +48,15 @@
     flex-shrink: 0;
 }
 
-.item-name-font{
+.item-name-font {
     color: black;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
 }
+
 .person-picture {
 
     width: 179.82px;
@@ -66,23 +67,26 @@
 }
 
 .checkboxTitle {
-    margin-left: auto;
+    margin-right: 20px;
+
 }
 
 .checkbox {
     margin-left: auto;
 }
+
 .comboBoxOption {
     margin-left: auto;
     width: 100px;
 }
 
 .flexbox-horizontal-container {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 15px;
-
+    justify-content: space-between;
 }
 
 
@@ -90,19 +94,19 @@
 .mainFlexBox {
     display: flex;
     flex-direction: row;
-    gap: 50px;
-    justify-content: center;
     margin-top: 2%;
-    align-items: flex-start; /* Change align-items to flex-start */
+    align-items: flex-start;
+    /* Change align-items to flex-start */
     height: 100vh;
+    padding: 40px;
+    justify-content: center;
 }
 
-.followerList {
-    margin-top: 180px;
-}
 
 .flexbox-user-container {
-
+    position: relative;
+    max-width: 300px;
+    width: 25vw;
     padding: 0;
     gap: 20px;
     align-items: center;
@@ -113,7 +117,11 @@
 .flexbox-vertical-container {
     display: flex;
     flex-direction: column;
+    position: relative;
 
+}
+
+.followerList{
 
 }
 
@@ -124,117 +132,119 @@
 
 }
 
-.person-table{
-
+.person-table {
+    position: relative;
     display: flex;
     flex-direction: column;
     padding: 20px;
-    gap:    10px;
-    width: 260px;
-    height: 550px;
+    gap: 10px;
     flex-shrink: 0;
     border-radius: 10px;
     background: #D9D9D9;
 }
 
 .eventImage {
-    width: 700px;
-    height: 300px;
+    max-height: 300px;
     object-fit: contain;
-
 }
 
-.event-wish-list-table{
-    width: 733.334px;
-    height: 828px;
+.event-wish-list-table {
+    position: relative;
+    width: 55vw;
     flex-shrink: 0;
     border-radius: 10px;
     background: #D9D9D9;
     overflow: auto;
     padding: 20px;
+    margin-bottom: 20px;
 }
 
- .inputField:focus {
-   border: 1px solid #d9d9d9;
-   border-radius: 4px;
-   box-sizing: border-box;
-   padding: 10px;
-     background-color: white;
-   width: 100%;
-     resize: none;
- }
+.inputField:focus {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: white;
+    width: 100%;
+    resize: none;
+}
 
-  .inputField{
-   border: 1px solid #d9d9d9;
-   border-radius: 4px;
-   box-sizing: border-box;
-   padding: 10px;
-      background-color: transparent;
-   width: 100%;
-     resize: none;
- }
+.inputField {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: transparent;
+    width: 100%;
+    resize: none;
+}
 
-   .textAreaField:focus {
-   border: 1px solid #d9d9d9;
-   border-radius: 4px;
-   box-sizing: border-box;
-   padding: 10px;
-     background-color: white;
-   width: 100%;
-     resize: none;
- }
+.textAreaField:focus {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: white;
+    width: 100%;
+    resize: none;
+}
 
-  .textAreaField{
-   border: 1px solid #d9d9d9;
-   border-radius: 4px;
-   box-sizing: border-box;
-   padding: 10px;
-      background-color: transparent;
-   width: 100%;
-     resize: none;
- }
-  .eventList {
-      list-style-type: none;
-  }
+.textAreaField {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: transparent;
+    width: 100%;
+    resize: none;
+}
 
-  .event-list-title{
+.eventList {
+    list-style-type: none;
+}
+
+.event-list-title {
     color: #1E3765;
-
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 30px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    width: 478px;
-    height: 62px;
     flex-shrink: 0;
 }
 
-.event-list-title-font{
+.event-list-title-font {
+    position: relative;
     color: black;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
 }
 
+.event-list-title-right {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
 .eventControls {
     margin-left: auto;
 }
 
-.event-list-font{
+.event-list-font {
     color: black;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
 }
 
-.event-list-value-font{
+.event-list-value-font {
     color: black;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
@@ -243,7 +253,7 @@
 }
 
 
-.profile-nav-bar{
+.profile-nav-bar {
     width: 190px;
     height: 82px;
     flex-shrink: 0;
@@ -262,14 +272,31 @@
 }
 
 
-.user-name-nav-bar{
+.user-name-nav-bar {
     width: 81.67px;
     height: 19.503px;
     flex-shrink: 0;
     color: #FFF;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 12px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+}
+
+.left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.chip {
+    background-color: #377ea0;
+}
+
+.img-edit:hover {
+    cursor: url('../images/pencil.png'), auto;
 }
