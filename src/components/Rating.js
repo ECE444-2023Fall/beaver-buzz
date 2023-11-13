@@ -25,17 +25,17 @@ const RateEvent = (props) => {
         },
         body: JSON.stringify()
       }
-            const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/${props.userID}/getreviewfor/${eventID}`;
-            fetch(url, requestOptions)
-              .then(response => response.json())
-              .then(data => {
-                console.log(data);
-                  if(data.rating) {
-                    setValue(data.rating);
-                  }
-                  
-              });
-        }
+      const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/${props.userID}/getreviewfor/${eventID}`;
+      fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if (data.rating) {
+            setValue(data.rating);
+          }
+
+        });
+    }
 
     function fetchEventRating() {
 
@@ -47,7 +47,7 @@ const RateEvent = (props) => {
         },
         body: JSON.stringify()
       }
-      const url = '/api/events/' + eventID + '/getRating'
+      const url = `${process.env.REACT_APP_BACKEND_URL}/api/events/${eventID}/getRating`;
       fetch(url, requestOptions)
         .then(response => response.json())
         .then(data => {
