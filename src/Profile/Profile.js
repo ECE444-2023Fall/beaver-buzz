@@ -14,6 +14,7 @@ import { CATEGORIES } from "../constants/Constants";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Paper from "@material-ui/core/Paper";
+import defaultUser from "../images/defaultUser.png"
 
 class User {
     constructor(firstname, lastname, id) {
@@ -169,7 +170,13 @@ const ProfilePage=()=> {
                         setLastName(data.lastname)
                         setInterests(data.interests)
                         setPrivacy(data.privacy);
-                        setAvatar(data.avatar);
+                        if(data.avatar) {
+                            setAvatar(data.avatar);
+                        }
+                        else {
+                            setAvatar(defaultUser);
+                        }
+
                         var values = []
                         if(data.privacy['showContactInformation']) {
                             values.push(state.options[0])
