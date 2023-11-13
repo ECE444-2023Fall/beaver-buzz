@@ -250,7 +250,8 @@ const UserPage=()=> {
     return(
         <div className="mainFlexBox">
             <div className="flexbox-user-container">
-            <UploadAvatar id={userId} avatar={avatar}/>
+                <div className="img-edit">
+            <UploadAvatar id={userId} avatar={avatar} /></div>
             <Button className="subscribeButton" onClick={(e) => {subscribeButtonClicked()}}>{buttonState} </Button>
                 <div className="person-name-font">{firstName} {lastName}</div>
                  <div className= "person-table">

@@ -296,3 +296,7 @@
 .chip {
     background-color: #377ea0;
 }
+
+.img-edit:hover {
+    cursor: url('../images/pencil.png'), auto;
+}

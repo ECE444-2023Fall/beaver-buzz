@@ -201,7 +201,7 @@
   font-size: 14px;
 }
 .sortDropdown:hover {
-  background-color: rgb(36, 55, 98);
+  background-color: #4b99bf;
 }
 
 .organizer {
@@ -267,21 +267,18 @@
   position: relative;
   text-align: center;
   width: 100px;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   min-height: 50vh;
 }
 
 .page-link-btn {
-  background-color: rgb(11, 49, 49);
+  background-color: #377ea0;
   color: white;
   margin: 20px;
-  margin-top: 150px;
-  margin-bottom: 100px;
 }
 .page-link-btn:hover {
-  background-color: rgb(25, 110, 110);
-  box-shadow: 5px 5px 5px 5px rgb(11, 49, 49);
+  background-color: #4b99bf;
 }
 .page-container {
   flex-direction: row;
@@ -295,18 +292,11 @@
 
 
 .nrferror {
-  margin-left: 360px;
   font-size: large;
-  width: 220px;
-  margin-top: 100px;
   cursor: pointer;
   background-color: rgb(48, 95, 95);
   height: 65px;
   padding: 10px;
   border-radius: 5px;
   color: white;
-}
-.nrferror:hover {
-  box-shadow: 5px 5px rgb(2, 22, 22);
-  background-color: rgb(13, 117, 117);
 }

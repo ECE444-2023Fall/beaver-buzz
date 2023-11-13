@@ -259,11 +259,24 @@ const DiscoverPage = () => {
           </div> */}
           </div>
           {nores ? (
-            <h1 className="nrferror" onClick={() => noEventClick()}>
-              {" "}
-              No Results Found. Click here to Post Your Own Event
-            </h1>
+            <div>
+              <br></br>
+              <h1 className="form-second-title">No Results Found</h1>
+              <br></br>
+              <p>Can't find the event you want? Host it yourself! </p>
+              <button
+                className="host-button"
+                style={{ marginTop: "20px" }}
+                onClick={() => noEventClick()}
+              >
+                Host
+              </button>
+            </div>
           ) : (
+            // <h1 className="nrferror" onClick={() => noEventClick()}>
+            //   {" "}
+            //   No Results Found. Click here to Post Your Own Event
+            // </h1>
             <CardGrid>
               {currentRecords?.map((item) => (
                 <div onClick={() => handleClick(item.id)}>

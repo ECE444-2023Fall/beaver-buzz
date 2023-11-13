@@ -423,7 +423,8 @@ const ProfilePage = () => {
     <div className="mainFlexBox">
       <div className="left">
         <div className="flexbox-user-container">
-          <UploadAvatar editable={true} id={userId} avatar={avatar} />
+            <div className="img-edit">
+          <UploadAvatar editable={true} id={userId} avatar={avatar} /></div>
           <div className="person-name-font">
             {firstName} {lastName}
           </div>
