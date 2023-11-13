@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router";
 import Multiselect from "multiselect-react-dropdown";
 import { CATEGORIES } from "../constants/Constants";
 import "../LoginSignup/Form.css"
+import defaultUser from "../images/defaultUser.png";
 
 class Event {
     constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
@@ -187,7 +188,13 @@ const UserPage=()=> {
                         setLastName(data.lastname)
                         setInterests(data.interests)
                         setPrivacy(data.privacy)
-                        setAvatar(data.avatar);
+
+                        if(data.avatar) {
+                            setAvatar(data.avatar);
+                        }
+                        else {
+                            setAvatar(defaultUser);
+                        }
                     });
             }
         }
