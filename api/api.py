@@ -14,6 +14,7 @@ from pytz import timezone
 from sqlalchemy import or_
 import random
 import ast
+from werkzeug.exceptions import NotFound
 
 eastern = timezone("EST")
 
@@ -192,7 +193,7 @@ def get_review(userid, eventid):
     user = db.get_or_404(User, userid)
     rating = UserRatings.query.filter_by(userID=userid, eventID=eventid).first()
     if rating is None:
-        return 404
+        return NotFound
     return jsonify({"rating": rating.ratingValue})
 
 
