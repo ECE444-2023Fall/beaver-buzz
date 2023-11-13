@@ -933,7 +933,7 @@ def search():
 
     results = [e.serialize() for e in filtered_results]
     for result in results:
-        result["display_time"] = str(result["eventStart"].time().strftime("%I:%M %p"))
+        result["display_time"] = str(result["eventStart"].time().strftime("%I:%M %p").astimezone(est))
         if result["organizerID"] in users_dict:
             name = users_dict[result["organizerID"]]
             result["organizerName"] = name

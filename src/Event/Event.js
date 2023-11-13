@@ -31,7 +31,6 @@ function convertDate(date) {
     const time = dateParts[4];
     const newDate = new Date(`${year}-${month}-${day}T${time}Z`);
     // console.log(newDate);
-    let finalDate = newDate.toDateString() + " at " + newDate.toLocaleTimeString('en-US')
     return finalDate;
 }
 
