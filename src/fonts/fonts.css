@@ -1,0 +1,7 @@
+
+@font-face {
+    font-family: 'UofTLogoFont';
+    src: local('BemboStd'),
+         url('./fonts/BemboStd.woff') format('woff'),
+         url('./fonts/BemboStd.woff2') format('woff2');
+}
