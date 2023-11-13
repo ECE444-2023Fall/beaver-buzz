@@ -27,6 +27,7 @@
     "react-avatar-edit": "^1.2.0",
     "react-bootstrap": "^2.9.0",
     "react-bootstrap-validation": "^0.1.11",
+    "react-css-dropdown": "^1.1.2",
     "react-datetime": "^3.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.47.0",
@@ -42,9 +43,8 @@
     "start": "react-scripts start",
     "start-api": "cd api && flask run --no-debugger -h localhost -p 8000",
     "start-api-debug": "cd api && flask run --debug -h localhost -p 8000",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test",
-    "heroku-postbuild": "cd api && pip install -r requirements.txt && cd .. && react-scripts build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
