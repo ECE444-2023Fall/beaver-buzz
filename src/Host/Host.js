@@ -26,7 +26,7 @@ const { register, handleSubmit, formState: { errors } } = useForm();  const [tag
     data["organizerID"] = userId;
     data["image"] =
       data["image"].length == 0
-        ? "../images/defaultEvent.png"
+        ? "https://img.freepik.com/premium-photo/business-entrepreneurship-symposium-speaker-giving-talk-business-meeting_386094-31.jpg?size=626&ext=jpg&ga=GA1.1.44546679.1699574400&semt=ais"
         : await getBase64(data["image"].item(0));
     data["tags"] = tags == null ? [] : tags.map((tag) => tag.name);
     console.log(data);

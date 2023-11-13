@@ -10,6 +10,11 @@
     z-index: 999;
   }
   
+  .logo-img{
+    height:55px;
+    align-items:center;
+  }
+
   .navbar-container {
     display: flex;
     justify-content: center;
@@ -21,7 +26,6 @@
   .navbar-logo {
     color: #fff;
     justify-self: start;
-    margin-left: 20px;
     cursor: pointer;
     text-decoration: none;
     font-size: 2rem;
@@ -59,10 +63,12 @@
     display: flex;
     align-items: center;
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    height: 80px;
+    height: 76px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
   
+ 
   .nav-links:hover {
     border-bottom: 4px solid #fff;
     transition: all 0.2s ease-out;

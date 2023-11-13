@@ -28,6 +28,7 @@ function Navbar() {
     <>
       <nav className="navbar">
         <div className="navbar-container">
+          <img className="logo-img" src = {require("../images/beaver_logo.png")}></img>
           <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
             BeaverBuzz
           </Link>

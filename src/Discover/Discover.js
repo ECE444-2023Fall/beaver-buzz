@@ -1,14 +1,15 @@
-import React, {useEffect, useState, useContext} from 'react'
-import {Form,Button} from 'react-bootstrap'
-import "../LoginSignup/Form.css"
+import React, {useEffect, useState, useContext} from 'react';
+import {Form,Button} from 'react-bootstrap';
+import "../LoginSignup/Form.css";
 import {useForm} from "react-hook-form";
-import Card from '../components/Card'
+import Card from '../components/Card';
 import CardGrid from '../components/CardGrid';
 import Pagination from '../components/Pagination';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../UserContext';
-import "./Discover.css"
-import {CATEGORIES} from '../constants/Constants'
+import "./Discover.css";
+import {CATEGORIES} from '../constants/Constants';
+import default_photo from "../images/default-event-photo.png";
 
 const DiscoverPage=()=>{
     const[searchitems, setsearchitems] = useState([])
@@ -141,11 +142,11 @@ const DiscoverPage=()=>{
 
     return(
         <div>
-        <div className ="container">
             <div className="form-left">
-
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <label htmlFor="searchbar" class="title" onClick={() => titleClick()}>Discover Events on Campus!</label>
+                        <img src="https://boundless.utoronto.ca/wp-content/uploads/give/Give@2x.jpg" alt="Adventure" className="adventure-image" />
+                        <h1 className="title">Your Next Adventure Starts Here ...</h1>
+                        
                         <br/><br/>
                         <Form.Group>
                             <Form.Control type="text"
@@ -170,12 +171,9 @@ const DiscoverPage=()=>{
                             />
                         </div>
                         
-
-
-
                         <div key={`default-checkbox`} className="filters">
-                            <label>Search Filters </label> <br/><br/><br/>
-
+                            <h1 className="search-title">Search Filters</h1>
+                            
                             {locations.map((item, index) => (
                                 <Form.Check
                                 type={"checkbox"}
@@ -190,20 +188,22 @@ const DiscoverPage=()=>{
 
             </div>
 
-        </div>
+        
         <div class="searchresults">
             {nores ? <h1 class="nrferror" onClick={() => noEventClick()}> No Results Found. Click here to Post Your Own Event</h1>:
             <CardGrid>
                 {currentRecords?.map(item=>
                     <div onClick={() => handleClick(item.id)}>
-                    <Card key={item} style = {{display:"flex"}}>
-                        <img src={item.eventImg} alt="Event" class="eventimg"></img>
-                        <div class ="cardtext">
-                        <h1>{item.eventName}</h1>
+                    <Card key={item} style = {{display:"flex",alignItems:"flex-start"}}>
+                        <img src={item.eventImg?item.eventImg:"https://mlpcesocsoqj.i.optimole.com/w:auto/h:auto/q:mauto/ig:avif/f:best/https://eventimaging.ca/wp-content/uploads/2021/03/Toronto-Event-Photographer-scaled.jpg"} alt="Event" class="eventimg"></img>
+                        <div class ="cardtext" style={{ marginLeft: "10px" }}>
+                        <h1 className="card-title">{item.eventName}</h1>
                         <div class = "eventdetails">
-                        <h2>Location: {item.eventBuilding}</h2>
-                        <h2>Time: {item.display_time}</h2>
-                        <h2>Organizer: {item.organizerName}</h2>  
+
+                        <h1 className="card-detail-oneliner">{item.oneLiner}</h1>
+                        <h1 className="card-detail-time">{item.eventStart}</h1>
+                        <h1 className="card-detail-location">Location: {item.eventBuilding} {item.eventRoom}</h1>
+                        <h1 className="card-detail">Brought to you by {item.organizerName}</h1>
                         </div>
                         </div>                      
                     </Card>
