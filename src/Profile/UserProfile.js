@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router";
 import Multiselect from "multiselect-react-dropdown";
 import { CATEGORIES } from "../constants/Constants";
 import "../LoginSignup/Form.css"
+import defaultUser from "../images/defaultUser.png";
 
 class Event {
     constructor(eventBuilding, eventDesc, eventEnd, eventImg, eventImgType, eventName, eventRoom, eventStart, id, oneLiner, organizerID, registered) {
@@ -88,8 +89,8 @@ const UserPage=()=> {
             },
             body:JSON.stringify({})
             }
-    
-            fetch('/api/users/' + userId + '/' + mode + '/' + requestedUserId, requestOptions)
+
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}/${mode}/${requestedUserId}`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data)
@@ -105,7 +106,7 @@ const UserPage=()=> {
             body:JSON.stringify({})
             }
     
-            fetch('/api/users/' + userId + '/isSubscribedTo/' + requestedUserId, requestOptions)
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}/isSubscribedTo/${requestedUserId}`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 var res = data.result;
@@ -133,7 +134,7 @@ const UserPage=()=> {
         body:JSON.stringify({option: option, showPastEvents: showPastEvents, myID: userId})
         }
 
-        fetch('/api/users/' + requestedUserId + '/events', requestOptions)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${requestedUserId}/events`, requestOptions)
         .then(response => response.json())
         .then(data => {
 
@@ -178,7 +179,7 @@ const UserPage=()=> {
                     },
                     body: JSON.stringify({id: requestedUserId, myID: userId})
                 }
-                fetch('/api/getUserInfo', requestOptions)
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/getUserInfo`, requestOptions)
                     .then(response => response.json())
                     .then(data => {
                         setEmail(data.emailaddr)
@@ -187,7 +188,13 @@ const UserPage=()=> {
                         setLastName(data.lastname)
                         setInterests(data.interests)
                         setPrivacy(data.privacy)
-                        setAvatar(data.avatar);
+
+                        if(data.avatar) {
+                            setAvatar(data.avatar);
+                        }
+                        else {
+                            setAvatar(defaultUser);
+                        }
                     });
             }
         }
@@ -248,7 +255,7 @@ const UserPage=()=> {
     }
 
     return(
-        <div className="alternateFlexBox">
+        <div className="mainFlexBox">
             <div className="flexbox-user-container">
             <UploadAvatar id={userId} avatar={avatar}/>
             <Button className="subscribeButton" onClick={(e) => {subscribeButtonClicked()}}>{buttonState} </Button>
@@ -320,7 +327,7 @@ const UserPage=()=> {
                     </select>
 
                 </div>
-                {events.length == 0 ? <div className="event-list-title">No events of this catagory or this information is private</div> : <ul className="eventList">{arrayDataItems}</ul>}
+                {events.length == 0 ? <div className="event-list-title">No events of this category or this information is private</div> : <ul className="eventList">{arrayDataItems}</ul>}
                 
             </div>
         </div>
