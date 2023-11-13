@@ -168,7 +168,7 @@ const DiscoverPage = () => {
           Search
         </Button>
       </div>
-      <Form onSubmit={handleSubmit(onSubmit)} className="overall-search">
+      {/* <Form onSubmit={handleSubmit(onSubmit)} className="overall-search"> */}
         <div className="search-class">
           {/* <Form.Group>
             <Form.Control
@@ -198,13 +198,20 @@ const DiscoverPage = () => {
             <option value="EventTime">Event Time</option>
           </select>
           <div className="organizer">
+            <input type="checkbox" id="org-checkbox" name="organizer" value="Organizer" onClick={e => {
+                setSendToBack({...sendToBack, Organizer: e.target.checked});
+                onSubmit({...sendToBack, Organizer: e.target.checked});
+                }}></input>
+                <label for="org-checkbox">Organizer</label>
+          </div>
+          {/* <div className="organizer">
             <Form.Check
               type={"checkbox"}
               id={`org-checkbox`}
               label={"  Organizer"}
               {...register("Organizer", { required: false })}
             />
-          </div>
+          </div> */}
         </div>
         <div className="discover-body">
           <div key={`default-checkbox`} className="filters">
@@ -252,7 +259,7 @@ const DiscoverPage = () => {
                             : "https://mlpcesocsoqj.i.optimole.com/w:auto/h:auto/q:mauto/ig:avif/f:best/https://eventimaging.ca/wp-content/uploads/2021/03/Toronto-Event-Photographer-scaled.jpg"
                         }
                         alt="Event"
-                        className="eventimg"
+                        className="card-img"
                       ></img>
                       <div className="cardtext" style={{ marginLeft: "10px" }}>
                         <h1 className="card-title">{item.eventName}</h1>
@@ -287,7 +294,7 @@ const DiscoverPage = () => {
             )}
           </div>
         </div>
-      </Form>
+      {/* </Form> */}
     </div>
   );
 };

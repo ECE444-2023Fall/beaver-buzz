@@ -51,13 +51,33 @@
 .card {
   background-color: white;
   border-radius: 10px;
+  border-color: #e3e4e6;
+  border-style: solid;
+  border-width: thin;
   display: flexbox;
   margin-bottom: 10px;
   text-align: center;
   margin: 50px;
   box-sizing: border-box;
   width: 25vw;
+  flex-direction: column;
+  transition: all 0.5s ease;
+  overflow: hidden;
 }
+
+.card-img {
+  display: block;
+    width: 25vw;
+    height: 15vw;
+    object-fit: cover;
+    position: relative;
+    object-position: bottom;
+}
+
+.cardtext {
+  margin-bottom: 50px;
+}
+
 .card:hover {
   box-shadow: 0 4px 8px 0 var(--uoft-blue), 0 6px 20px 0 var(--uoft-blue);
   cursor: pointer;
@@ -77,14 +97,14 @@
 .filter-title {
   color: #b4ebea;
   font-family: BemboStd;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: normal;
   margin-bottom: 10px;
 }
 .card-title {
   color: #000;
-  font-family: Poppins;
-  font-size: 32px;
+  font-family: BemboStd;
+  font-size: 20px;
   font-style: normal;
   font-weight: bold;
   line-height: normal;
@@ -140,15 +160,6 @@
   background-color: rgb(36, 55, 98);
 }
 
-.eventimg {
-  margin: 33px;
-  margin-left: 15px;
-  border-radius: 10px;
-  border: 10px solid rgba(0, 0, 0, 0.111);
-  height: 200px;
-  width: 80%;
-  object-fit: fill;
-}
 
 .overall-search{
   display: flex;
@@ -182,10 +193,6 @@
   align-items: center;
 }
 
-.cardtext {
-  margin-bottom: 50px;
-}
-
 .searchButton {
   background-color: rgb(55, 126, 160);
   color: white;
@@ -215,8 +222,9 @@
   background-color: #aab3b3;
   background-color: rgb(36, 55, 98);
   color: white;
-  font-size: 25px;
+  font-size: 20px;
   padding: 20px;
+  font-family: 'Open Sans', sans-serif;
 }
 .searchresults {
   display: flex;

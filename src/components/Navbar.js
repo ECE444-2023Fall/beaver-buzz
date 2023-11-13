@@ -28,8 +28,8 @@ function Navbar() {
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <img className="logo-img" src = {require("../images/beaver_logo.png")}></img>
           <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+            <img className="logo-img" src = {require("../images/beaver_logo.png")}></img>
             BeaverBuzz
           </Link>
           <div className="menu-icon" onClick={handleClick}>
@@ -38,7 +38,7 @@ function Navbar() {
           <ul className={click ? "nav-menu active" : "nav-menu"}>
             <li className="nav-item">
               <Link to="/" className="nav-links" onClick={closeMobileMenu}>
-                Home
+                HOME
               </Link>
             </li>
             <li className="nav-item">
@@ -47,7 +47,7 @@ function Navbar() {
                 className="nav-links"
                 onClick={closeMobileMenu}
               >
-                Post Event
+                POST EVENT
               </Link>
             </li>
             {!userId ? (
@@ -59,7 +59,7 @@ function Navbar() {
                   className="nav-links"
                   onClick={closeMobileMenu}
                 >
-                  Profile
+                  PROFILE
                 </Link>
               </li>
             )}
@@ -70,7 +70,7 @@ function Navbar() {
                   className="nav-links"
                   onClick={closeMobileMenu}
                 >
-                  Login
+                  LOG IN
                 </Link>
               ) : (
                 <Link
@@ -82,13 +82,13 @@ function Navbar() {
                   }}
                   to={"/"}
                 >
-                  Logout
+                  LOG OUT
                 </Link>
               )}
             </li>
           </ul>
           {registerbutton && !userId && (
-            <Button buttonStyle="btn--outline" linkTo="/register">
+            <Button buttonStyle="btn--primary" linkTo="/register">
               SIGN UP
             </Button>
           )}
