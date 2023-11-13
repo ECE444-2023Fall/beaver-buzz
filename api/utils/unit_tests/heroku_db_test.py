@@ -12,7 +12,7 @@ def test_postgres_connection():
             password=os.environ.get("DB_PASSWORD"),
             host=os.environ.get("DB_HOST"),
             port=os.environ.get("DB_PORT"),
-            database=os.environ.get("DB_NAME")
+            database=os.environ.get("DB_NAME"),
         )
 
         cursor = connection.cursor()
@@ -35,8 +35,10 @@ def test_postgres_connection():
             connection.close()
             print("PostgreSQL connection is closed")
 
+
 # Checks if 'users' table exists within the database.
 # This test case was made by Steven Zhang.
+
 
 def test_users_table_existence():
     try:
@@ -45,24 +47,28 @@ def test_users_table_existence():
             password=os.environ.get("DB_PASSWORD"),
             host=os.environ.get("DB_HOST"),
             port=os.environ.get("DB_PORT"),
-            database=os.environ.get("DB_NAME")
+            database=os.environ.get("DB_NAME"),
         )
 
         cursor = connection.cursor()
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT EXISTS (
                 SELECT FROM information_schema.tables 
                 WHERE table_name = 'users'
             );
-        """)
+        """
+        )
         result = cursor.fetchone()
         assert result == (True,)
     finally:
         cursor.close()
         connection.close()
 
+
 # Checks if 'email' column exists within the 'users' table.
 # This test case was made by Steven Zhang.
+
 
 def test_column_existence():
     try:
@@ -71,20 +77,21 @@ def test_column_existence():
             password=os.environ.get("DB_PASSWORD"),
             host=os.environ.get("DB_HOST"),
             port=os.environ.get("DB_PORT"),
-            database=os.environ.get("DB_NAME")
+            database=os.environ.get("DB_NAME"),
         )
 
         cursor = connection.cursor()
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT EXISTS (
                 SELECT *
                 FROM information_schema.columns
                 WHERE table_name = 'users' AND column_name = 'email'
             );
-        """)
+        """
+        )
         result = cursor.fetchone()
         assert result == (True,)
     finally:
         cursor.close()
         connection.close()
-
