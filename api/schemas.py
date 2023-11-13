@@ -122,7 +122,7 @@ class Event(db.Model):
         eventRoom,
         oneLiner,
         eventDesc=None,
-        eventImg=None,
+        eventImg="https://mlpcesocsoqj.i.optimole.com/w:auto/h:auto/q:mauto/ig:avif/f:best/https://eventimaging.ca/wp-content/uploads/2021/03/Toronto-Event-Photographer-scaled.jpg",
         eventImgType=None,
         eventCategories=None,
     ):
