@@ -252,7 +252,7 @@ const DiscoverPage = () => {
                 Sort by
               </option>
               <option value="Popularity">Popularity</option>
-              <option value="EventTime">Event Time</option>
+              <option value="EventTime">Event Date</option>
             </select>
 
             {/* <div className="organizer">
@@ -306,7 +306,7 @@ const DiscoverPage = () => {
                         <h1 className="card-detail-oneliner">
                           {item.oneLiner}
                         </h1>
-                        <h1 className="card-detail-time">{item.eventStart}</h1>
+                        <h1 className="card-detail-time">{item.eventStart.toString().replace('GMT','')}</h1>
                         <h1 className="card-detail-location">
                           Location: {item.eventBuilding} {item.eventRoom}
                         </h1>
