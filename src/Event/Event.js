@@ -52,7 +52,7 @@ export default function EventPage() {
 
     useEffect(() => {
         const fetchInfo = () => {
-            return fetch(`/api/events/${id}`, {
+            return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,7 +102,7 @@ export default function EventPage() {
             window.location.href = "/login";
         }
         else if (!userAttending) {
-            fetch(`/api/events/${id}/register/${userId}`, {
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}/register/${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

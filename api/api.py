@@ -1,4 +1,4 @@
-""" 
+"""
 This file contains the API endpoints for the backend.
 """
 
@@ -9,21 +9,23 @@ import bcrypt
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
 import bcrypt
-from datetime import datetime
-from pytz import timezone
+from datetime import datetime, timedelta
+import pytz
 from sqlalchemy import or_
 import random
 import ast
 
-eastern = timezone("EST")
-
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}})
 app.config.from_object(Configuration)
-app.config["CORS_HEADERS"] = "Content-Type"
+app.config['CORS_HEADERS'] = 'Content-Type'
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+utc = pytz.UTC
+est = pytz.timezone('US/Eastern')
 
 
 @app.route("/api/health", methods=["GET"])
@@ -124,7 +126,7 @@ def login():
     password = request.json["password"]
 
     user = User.query.filter_by(email=email).first()
-    if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password):
+    if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password.encode('utf-8')):
         return jsonify({"error": "Invalid username or password"}), 401
 
     return jsonify({"greeting": "Welcome, " + user.firstname, "id": user.id}), 202
@@ -426,7 +428,9 @@ def register():
     if user is not None:  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
-    passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+    passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+    print(passwordHash)
 
     newaccount = User(
         email=email,
@@ -488,12 +492,9 @@ def create_event():
     if not n["eventDate"] or not n["eventStart"] or not n["eventEnd"]:
         return jsonify({"Error": "Please enter a valid date and time"}), 400
 
-    eventStart = eastern.localize(
-        datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format)
-    )
-    eventEnd = eastern.localize(
-        datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format)
-    )
+    eventStart = utc.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
+
+    eventEnd = utc.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
 
     eventBuilding = n["building"]
     eventRoom = n["room"]
@@ -754,7 +755,10 @@ def get_events_by_user(userid):
 
     else:
         for event in events:
-            dt = datetime.now()
+            dt = datetime.now().replace(tzinfo=None)
+            dt = utc.localize(dt)
+            dt = dt - timedelta(hours=5)
+            print(event.eventEnd, type(event.eventEnd))
             if dt <= event.eventEnd:
                 final.append(event.serialize())
 
