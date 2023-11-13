@@ -62,7 +62,7 @@ export default function EventPage() {
                     })
                 })
                 .then((d) => {
-                    console.log(d);
+                    console.log(d.eventImg);
                     setData(d)
                 })
                 .catch((error) => { console.log(error); setData(-1); })

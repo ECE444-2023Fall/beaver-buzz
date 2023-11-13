@@ -1,34 +1,68 @@
 .filters{
     text-align: left;
-    margin-left: -210px;
+    margin-left: -20%;
     margin-top: 50px;
     width:200px;
     padding-bottom: 100px;
     padding-left: 50px;
+    padding-right: 50px;
     padding-top: 10px;
     background-color: #aab3b3;
     border-radius: 10px;
-    background-color: rgb(48, 95, 95);
+    background-color: rgb(36,55,98);
+    box-shadow: 5px 5px 5px 5px rgb(7,30,64);
     color: white;
+    font-size:25px;
   }
   
+  /* Add this CSS to your stylesheet */
+
+.adventure-image {
+  width: 100%; 
+  height: auto;
+  mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  margin-bottom: 20px;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.title {
+  color: #000;
+  font-family: 'Poppins';
+  font-size: 42px;
+  font-style: bold; /* Note: 'bold' is not a valid value for font-style, use font-weight for that */
+  font-weight: 500;
+  line-height: normal;
+  animation: flash 3s infinite; /* Adjust the duration (2s) as needed */
+}
+
   .filters:hover{
     box-shadow: 5px 5px rgb(2, 22, 22);
-    background-color: rgb(13, 117, 117);
+    background-color:rgb(55,126,160);
   }
   .searchresults{
     text-align: center;
-    margin-left: 250px;
+    margin-left: 30%;
     width: 100px;
     justify-content: center;
-    margin-top: -500px;
+    margin-top: 00px;
   }
   .filters{
     padding-bottom: 50px;
   }
   
   .card{
-    background-color: rgba(5, 233, 233, 0.398);
+    background-color: rgba(233, 237, 246, 0.516);
     border-radius: 10px;
     display: flexbox;
     margin-bottom: 10px;
@@ -37,11 +71,11 @@
     margin:50px;
     box-sizing: border-box;
     width: 266px;
-    box-shadow: 5px 5px rgb(2, 131, 131);
+    box-shadow: 5px 5px 5px 5px #1E3765;
   }
   .card:hover{
-    background-color: rgb(158, 83, 158);
-    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+    background-color: rgba(5, 233,233,0.158);
+    box-shadow:10px 10px 10px 10px #1E3765;
     cursor: pointer;
   }
   .cardGrid{
@@ -58,6 +92,66 @@
   .dropdown{
     margin-left: 50px;
   }
+
+
+  .search-title{
+    color: #b4ebea;
+    font-family: Poppins;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    margin-bottom:10px;
+}
+  .card-title{
+    color: #000;
+    font-family: Poppins;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+
+}
+
+.card-detail-oneliner{
+  color: #000;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: bold;
+  line-height: normal;
+
+}
+
+.card-detail-location{
+  color: #000;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+
+}
+
+.card-detail-time{
+  color: #d84747;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+
+}
+
+.card-detail{
+  color: #504242;
+  font-family: Poppins;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+
+}
   
   .organizer{
     margin-top: -110px;
@@ -67,13 +161,12 @@
     padding: 5px;
     border-radius: 10px;
     padding-top: 7px;
-    background-color: rgba(85, 3, 85, 0.926);
+    background-color: rgb(55, 126, 160);
     color: white;
   }
   
   .organizer:hover{
-    background-color: rgba(85, 3, 85, 0.748);
-    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+    background-color: rgb(36,55,98);
   }
   
   .eventimg{
@@ -83,12 +176,10 @@
     border: 10px solid rgba(0, 0, 0, 0.111);
     height: 200px;
     width: 80%;
-    object-fit: scale-down;
+    object-fit: fill;
     
   }
-  .eventimg:hover{
-    box-shadow: 5px 5px 5px 5px rgb(85, 3, 85);
-  }
+
   .search{
     border: 1px solid #d9d9d9;
     border-radius: 4px;
@@ -96,8 +187,6 @@
     padding: 10px;
     width: 100%;
     resize: none;
-  
-    
   
   }
   .search:hover {
@@ -110,7 +199,7 @@
 
 
   .searchButton {
-    background-color: rgb(85, 3, 85);
+    background-color: rgb(55, 126, 160);
     color: white;
     font-family: sans-serif;
     font-size: 14px;
@@ -119,8 +208,7 @@
     margin-right: 340px;
   }
 .searchButton:hover{
-    background-color: rgb(158, 83, 158);
-    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+    background-color: rgb(36,55,98);
 }
 
 .title:hover{
@@ -159,14 +247,13 @@
     width: 120px;
     height: 32px;
     text-align: center;
-    background-color: rgb(85, 3, 85);
+    background-color: rgb(55,126,160);
     color: white;
     font-family: sans-serif;
     font-size: 14px;
   }
 .sortDropdown:hover{
-    background-color: rgb(158, 83, 158);
-    box-shadow: 5px 5px 5px 5px rgb(107, 35, 107);
+    background-color: rgb(36,55,98);
 }
 
 .nrferror{
