@@ -1,7 +1,7 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: 'PT Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .home,
@@ -41,13 +41,19 @@
   line-height: normal;
 }
 
-.form-button{
-    color: #FFF;
-    font-family: Poppins;
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;  
+.form-button {
+  color: #FFF;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-align: center;
+  h1 {
+    text-align: center;
+    margin: auto;
+  }
+  
 }
 
 .form-name{
