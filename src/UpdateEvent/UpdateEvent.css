@@ -45,3 +45,31 @@
   position: relative;
   display: inline-block;
 }
+
+.alert-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.alert {
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #cce5ff;
+  /* Light blue background */
+  color: #004085;
+  /* Dark blue text */
+}
+
+.close {
+  float: right;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Hover effect for close button */
+.close:hover {
+  color: #007bff;
+  /* Blue color on hover */
+}
