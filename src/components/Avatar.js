@@ -17,7 +17,7 @@ const UploadAvatar = (props) => {
       },
       body: JSON.stringify({id: id, avatar: newImage})
   }
-  fetch(`${process.env.REACT_APP_BACKEND_URL}/api/setAvatar`, requestOptions)
+  fetch('/api/setAvatar', requestOptions)
       .then(response => response.json())
       .then(data => {
         // console.log(data)

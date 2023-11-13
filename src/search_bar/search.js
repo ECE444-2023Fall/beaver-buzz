@@ -13,7 +13,7 @@ const SearchBar=()=>{
         },
         body:JSON.stringify(data)
         }
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/search`, requestOptions)
+        fetch('/search', requestOptions) 
         .then(response => response.json())
         .then(data => {
             setResult(data.result)

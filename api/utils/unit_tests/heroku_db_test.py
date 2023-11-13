@@ -1,24 +1,19 @@
 import pytest
 import psycopg2
 import os
-import re
-
-database_url = os.environ.get("SQLALCHEMY_DATABASE_URI")
-if database_url.startswith("postgres://"):
-    database_url = re.sub("^postgres://", "postgresql://", database_url)
-connection = psycopg2.connect(database_url)
-
-
-# Function to create a connection using DATABASE_URL from Heroku's environment variables
-def get_connection():
-    return psycopg2.connect(os.environ.get("SQLALCHEMY_DATABASE_URI"))
 
 
 # Checks if the database is connected.
+# This test case was made by Steven Zhang.
 def test_postgres_connection():
-    connection = None
     try:
-        connection = get_connection()
+        connection = psycopg2.connect(
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            host=os.environ.get("DB_HOST"),
+            port=os.environ.get("DB_PORT"),
+            database=os.environ.get("DB_NAME"),
+        )
 
         cursor = connection.cursor()
         # Print PostgreSQL Connection properties
@@ -42,34 +37,48 @@ def test_postgres_connection():
 
 
 # Checks if 'users' table exists within the database.
+# This test case was made by Steven Zhang.
+
+
 def test_users_table_existence():
-    connection = None
     try:
-        connection = get_connection()
+        connection = psycopg2.connect(
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            host=os.environ.get("DB_HOST"),
+            port=os.environ.get("DB_PORT"),
+            database=os.environ.get("DB_NAME"),
+        )
 
         cursor = connection.cursor()
         cursor.execute(
             """
             SELECT EXISTS (
-                SELECT FROM information_schema.tables
+                SELECT FROM information_schema.tables 
                 WHERE table_name = 'users'
             );
         """
         )
         result = cursor.fetchone()
         assert result == (True,)
-
     finally:
-        if connection:
-            cursor.close()
-            connection.close()
+        cursor.close()
+        connection.close()
 
 
 # Checks if 'email' column exists within the 'users' table.
+# This test case was made by Steven Zhang.
+
+
 def test_column_existence():
-    connection = None
     try:
-        connection = get_connection()
+        connection = psycopg2.connect(
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            host=os.environ.get("DB_HOST"),
+            port=os.environ.get("DB_PORT"),
+            database=os.environ.get("DB_NAME"),
+        )
 
         cursor = connection.cursor()
         cursor.execute(
@@ -83,8 +92,6 @@ def test_column_existence():
         )
         result = cursor.fetchone()
         assert result == (True,)
-
     finally:
-        if connection:
-            cursor.close()
-            connection.close()
+        cursor.close()
+        connection.close()

@@ -45,6 +45,7 @@
     "start-api-debug": "cd api && flask run --debug -h localhost -p 8000",
     "build": "CI=false react-scripts build",
     "test": "react-scripts test",
+    "heroku-postbuild": "cd api && pip install -r requirements.txt && cd .. && react-scripts build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

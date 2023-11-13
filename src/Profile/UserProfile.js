@@ -88,8 +88,8 @@ const UserPage=()=> {
             },
             body:JSON.stringify({})
             }
-
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}/${mode}/${requestedUserId}`, requestOptions)
+    
+            fetch('/api/users/' + userId + '/' + mode + '/' + requestedUserId, requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data)
@@ -105,7 +105,7 @@ const UserPage=()=> {
             body:JSON.stringify({})
             }
     
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}/isSubscribedTo/${requestedUserId}`, requestOptions)
+            fetch('/api/users/' + userId + '/isSubscribedTo/' + requestedUserId, requestOptions)
             .then(response => response.json())
             .then(data => {
                 var res = data.result;
@@ -133,7 +133,7 @@ const UserPage=()=> {
         body:JSON.stringify({option: option, showPastEvents: showPastEvents, myID: userId})
         }
 
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${requestedUserId}/events`, requestOptions)
+        fetch('/api/users/' + requestedUserId + '/events', requestOptions)
         .then(response => response.json())
         .then(data => {
 
@@ -178,7 +178,7 @@ const UserPage=()=> {
                     },
                     body: JSON.stringify({id: requestedUserId, myID: userId})
                 }
-                fetch(`${process.env.REACT_APP_BACKEND_URL}/api/getUserInfo`, requestOptions)
+                fetch('/api/getUserInfo', requestOptions)
                     .then(response => response.json())
                     .then(data => {
                         setEmail(data.emailaddr)

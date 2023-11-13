@@ -10,7 +10,6 @@ import UserContext from "../UserContext";
 import "./Discover.css";
 import { CATEGORIES } from "../constants/Constants";
 import default_photo from "../images/default-event-photo.png";
-import {convertDate} from  "../Event/Event.js"
 
 const DiscoverPage = () => {
   const [searchitems, setsearchitems] = useState([]);
