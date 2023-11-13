@@ -24,13 +24,15 @@ function convertDate(date) {
         Dec: "12"
     };
     const dateParts = date.split(" ");
+    console.log(dateParts)
     const month = months[dateParts[2]];
-    const day = dateParts[2];
+    const day = dateParts[1];
     const year = dateParts[3];
     const time = dateParts[4];
     const newDate = new Date(`${year}-${month}-${day}T${time}Z`);
     // console.log(newDate);
-    return newDate.toString();
+    let finalDate = newDate.toDateString() + " at " + newDate.toLocaleTimeString('en-US')
+    return finalDate;
 }
 
 export default function EventPage() {
@@ -67,7 +69,7 @@ export default function EventPage() {
                     })
                 })
                 .then((d) => {
-                    console.log(d);
+                    // console.log(d);
                     setData(d)
                     let currentDate = new Date();
                     let eventEnd = new Date(d.eventEnd)
@@ -95,7 +97,7 @@ export default function EventPage() {
 
 
     const register = () => {
-        if (userId === null) {
+        if (userId == null) {
             // redirect to login page
             window.location.href = "/login";
         }
@@ -172,11 +174,12 @@ export default function EventPage() {
                                         </tr>)}
                                 </p>}
                             </div>
-                            {userAttending ? (
+                            {userAttending && !eventOwner &&
                                 <Button buttonStyle='btn--primary' onClick={register}>Unregister</Button>
-                            ) : (
+                            }
+                            {!userAttending && !eventOwner &&
                                 <Button buttonStyle='btn--primary' onClick={register}>Register</Button>
-                            )}
+                            }
                             {ratingVisible && userAttending &&
                                 <RateEvent title="Rate this event" mode="myrating" userID={userId} eventID={id}></RateEvent>
                             }
