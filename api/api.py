@@ -5,10 +5,11 @@ from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
 import bcrypt
 from datetime import datetime
-from pytz import timezone
+import pytz
 import ast
 
-eastern = timezone('EST')
+est = pytz.EST
+utc = pytz.UTC
 
 app = Flask(__name__)
 app.config.from_object(Configuration)
@@ -132,7 +133,7 @@ def getReview(userid, eventid):
     user = db.get_or_404(User, userid)
     rating = UserRatings.query.filter_by(userID = userid, eventID = eventid).first()
     if rating is None:
-        return 404
+        return jsonify({"error": "Not Found"}), 404
     return jsonify({
         "rating": rating.ratingValue
     })
@@ -343,9 +344,8 @@ def register():
 def getEvent(id):
     event = Event.query.filter_by(id=id).first()
     if event is not None:
-        # print("timezone is:", event.eventStart.tzname())
-        event.eventStart = event.eventStart.astimezone(eastern)
-        event.eventEnd = event.eventEnd.astimezone(eastern)
+        event.eventStart = event.eventStart
+        event.eventEnd = event.eventEnd
         return jsonify(event.serialize()), 200
     return jsonify({"error": "Event not found"}), 404
 
@@ -365,8 +365,8 @@ def createEvent():
     if not n["eventDate"] or not n["eventStart"] or not n["eventEnd"]:
         return jsonify({"Error": "Please enter a valid date and time"}), 400
     
-    eventStart = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
-    eventEnd = eastern.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
+    eventStart = est.localize(datetime.strptime(n["eventDate"] + " " + n["eventStart"], date_format))
+    eventEnd = est.localize(datetime.strptime(n["eventDate"] + " " + n["eventEnd"], date_format))
 
     eventBuilding = n["building"]
     eventRoom = n["room"]
