@@ -1,14 +1,14 @@
 """
 This file contains the API endpoints for the backend.
 """
-
+import os
 from re import T
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS, cross_origin
 import bcrypt
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
-from utils.emails.mailing import Mailer, get_login, format_email
+from utils.emails.mailing import Mailer, format_email
 import bcrypt
 from datetime import datetime, timedelta
 import pytz
@@ -452,8 +452,7 @@ def register():
         interests=interests,
     )
 
-    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
-    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
     subject = 'Registration Confirmation'
     i_list = [i['name'] for i in request.json["interests"]]
     i_list = str(i_list).translate({ord(i): None for i in "'[]"})
@@ -578,8 +577,7 @@ def register_event(eventid, userid):
     event.registered += 1
     db.session.commit()
 
-    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
-    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
     subject = 'Event Registration Confirmation'
     html = open('./utils/emails/event_registration.html').read().format(
             subject=subject, event_name=event.eventName, 
