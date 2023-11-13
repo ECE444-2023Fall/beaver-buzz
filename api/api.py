@@ -351,7 +351,7 @@ def set_phone():
     user = db.get_or_404(User, id)
 
     otherUser = User.query.filter_by(phonenumber=phone).first()
-    if otherUser is not None and otherUser != user:
+    if otherUser is not None and otherUser != user and phone is not None:
         return jsonify({"error": "phone number is already in use"}), 400
 
     user.phonenumber = phone
