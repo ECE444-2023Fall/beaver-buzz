@@ -19,7 +19,7 @@ app = Flask(__name__)
 CORS(
     app,
     resources={
-        r"/api/*": {"origins": "https://premiumpotatoes-4fb5418fe273.herokuapp.com"}
+        r"/api/*": {"origins": ["https://premiumpotatoes-4fb5418fe273.herokuapp.com", "https://www.beaver-buzz.com"]}
     },
 )
 app.config.from_object(Configuration)
