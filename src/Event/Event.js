@@ -5,6 +5,7 @@ import './Event.css';
 import { useParams } from "react-router-dom";
 import RateEvent from '../components/Rating';
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function convertDate(date) {
     if (!date) return "";
@@ -42,6 +43,7 @@ export default function EventPage() {
     const [ratingVisible, setRatingVisible] = useState([])
     const [userAttending, setUserAttending] = useState([])
     const [eventOwner, setEventOwner] = useState([])
+    const navigate = useNavigate();
 
     const {
         userId,
@@ -164,7 +166,7 @@ export default function EventPage() {
                             <img id="eventImage" src={data.eventImg} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
                             <div id="eventInfo">
-                                <p><strong>Organizer: </strong>{data.organizerName}</p>
+                                <p><strong>Organizer: </strong><Link onClick={event => {navigate('/user/' + user.id);}}>{data.organizerName}</Link></p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                                 {data.eventCategories && <p><strong>Event Categories: </strong>{
