@@ -1,0 +1,11 @@
+execution:
+- concurrency: 10
+  hold-for: 5m
+  ramp-up: 2m
+  scenario: load_test
+      
+scenarios:
+  load_test:
+    requests:
+    - https://beaver-buzz.ca
+    think-time: 1s
