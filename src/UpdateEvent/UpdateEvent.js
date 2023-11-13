@@ -170,8 +170,12 @@ export default function EventUpdatePage() {
                         <Form.Control as="textarea" rows={3} maxLength={256} defaultValue={eventDesc} onChange={(e) => setEventDesc(e.target.value)} />
                     </Form.Group>
 
+                    <p><strong>Previous Image</strong></p>
+                    <div class="img-container">
+                        <img src={data.eventImg} alt="Description of the image" />
+                    </div>
                     <Form.Group controlId="image">
-                        <Form.Label>Upload Image</Form.Label>
+                        <Form.Label>Upload New Image</Form.Label>
                         <Form.Control type="file" accept=".jpg,.gif,.png" {...register("image")} />
                     </Form.Group>
 

@@ -44,6 +44,8 @@
 .dropdown {
   position: relative;
   display: inline-block;
+  justify-content: center;
+  align-items: center;
 }
 
 .alert-container {
