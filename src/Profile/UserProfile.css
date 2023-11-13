@@ -1,7 +1,7 @@
 .person-name-font{
 
     color: #1E3765;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     text-align: center;
     font-size: 30px;
     font-style: normal;
@@ -23,7 +23,7 @@
 
 .sectionFont {
     color: #1E3765;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 700;
@@ -50,7 +50,7 @@
 
 .item-name-font{
     color: black;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -66,7 +66,8 @@
 }
 
 .checkboxTitle {
-    margin-left: auto;
+    margin-right: 20px;
+    
 }
 
 .checkbox {
@@ -78,11 +79,12 @@
 }
 
 .flexbox-horizontal-container {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 15px;
-
+    justify-content: space-between;
 }
 
 
@@ -95,14 +97,18 @@
     margin-top: 2%;
     align-items: flex-start; /* Change align-items to flex-start */
     height: 100vh;
+    width: 100vw;
+    padding: 35px;
 }
 
 .followerList {
-    margin-top: 180px;
+    
 }
 
 .flexbox-user-container {
-
+    position: relative;
+    max-width: 300px;
+    width: 25vw;
     padding: 0;
     gap: 20px;
     align-items: center;
@@ -113,7 +119,7 @@
 .flexbox-vertical-container {
     display: flex;
     flex-direction: column;
-
+    position: relative;
 
 }
 
@@ -125,28 +131,24 @@
 }
 
 .person-table{
-
+    position: relative;
     display: flex;
     flex-direction: column;
     padding: 20px;
     gap:    10px;
-    width: 260px;
-    height: 550px;
     flex-shrink: 0;
     border-radius: 10px;
     background: #D9D9D9;
 }
 
 .eventImage {
-    width: 700px;
-    height: 300px;
+    max-height: 300px;
     object-fit: contain;
-
 }
 
 .event-wish-list-table{
-    width: 733.334px;
-    height: 828px;
+    position: relative;
+    width: 55vw;
     flex-shrink: 0;
     border-radius: 10px;
     background: #D9D9D9;
@@ -200,23 +202,28 @@
   .event-list-title{
     color: #1E3765;
 
-    font-family: Nunito;
+    font-family: BemboStd;
     font-size: 30px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    width: 478px;
-    height: 62px;
     flex-shrink: 0;
 }
 
 .event-list-title-font{
+    position: relative;
     color: black;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+}
+
+.event-list-title-right{
+    position: relative;
+    display: flex;
+    flex-direction: row;
 }
 
 .eventControls {
@@ -225,7 +232,7 @@
 
 .event-list-font{
     color: black;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
@@ -234,7 +241,7 @@
 
 .event-list-value-font{
     color: black;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
@@ -267,9 +274,15 @@
     height: 19.503px;
     flex-shrink: 0;
     color: #FFF;
-    font-family: Nunito;
+    font-family: "Open Sans", sans-serif;
     font-size: 12px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+}
+
+.left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }

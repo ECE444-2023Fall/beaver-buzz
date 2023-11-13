@@ -420,41 +420,7 @@ const ProfilePage=()=> {
 
     return(
         <div className="mainFlexBox">
-                <div className="flexbox-vertical-container">
-                    <div className="privacy">
-                        <Multiselect    
-                            options={state.options} // Options to display in the dropdown
-                            selectedValues={selectedValues} // Preselected value to persist in dropdown
-                            showCheckbox='true'
-                            placeholder='Privacy settings'
-                            
-                            onSelect={privacyChanged} // Function will trigger on select event
-                            onRemove={privacyChanged} // Function will trigger on remove event
-                            displayValue="name" // Property name to display in the dropdown options
-                        />
-                    </div>
-                    <Paper square className="followerList">
-                            <Tabs
-                                value={tab}
-                                textColor="primary"
-                                indicatorColor="primary"
-                                onChange={(event, newValue) => {
-                                    console.log(newValue);
-                                    setTab(newValue);
-                                    if(newValue == 0) {
-                                        getSubscriberList("Subscribers")
-                                    }
-                                    else {
-                                        getSubscriberList("Subscribed to")
-                                    }
-                                }}
-                            >
-                                <Tab label="Subscribers"></Tab>
-                                <Tab label="Subscribed to"></Tab>
-                            </Tabs>
-                            <ul className="eventList">{subscribeDataItems}</ul>
-                        </Paper>
-                </div>
+            <div className="left">
 
             <div className="flexbox-user-container">
                 <UploadAvatar editable={true} id={userId} avatar={avatar}/>
@@ -569,20 +535,58 @@ const ProfilePage=()=> {
             
 
             </div>
+            <div className="flexbox-vertical-container">
+                    <div className="privacy">
+                        <Multiselect    
+                            options={state.options} // Options to display in the dropdown
+                            selectedValues={selectedValues} // Preselected value to persist in dropdown
+                            showCheckbox='true'
+                            placeholder='Privacy settings'
+                            
+                            onSelect={privacyChanged} // Function will trigger on select event
+                            onRemove={privacyChanged} // Function will trigger on remove event
+                            displayValue="name" // Property name to display in the dropdown options
+                        />
+                    </div>
+                    <Paper square className="followerList">
+                            <Tabs
+                                value={tab}
+                                textColor="primary"
+                                indicatorColor="primary"
+                                onChange={(event, newValue) => {
+                                    console.log(newValue);
+                                    setTab(newValue);
+                                    if(newValue == 0) {
+                                        getSubscriberList("Subscribers")
+                                    }
+                                    else {
+                                        getSubscriberList("Subscribed to")
+                                    }
+                                }}
+                            >
+                                <Tab label="Subscribers"></Tab>
+                                <Tab label="Subscribed to"></Tab>
+                            </Tabs>
+                            <ul className="eventList">{subscribeDataItems}</ul>
+                        </Paper>
+                </div>
+            </div>
 
             <div className="event-wish-list-table">
 
 
                 <div className="flexbox-horizontal-container">
 
-                    <div className="event-list-title">Events</div>
-                    <p className="checkboxTitle">Show past events</p>
+                    <div className="event-list-title">EVENTS</div>
+                    <div className="event-list-title-right">
                     <input type="checkbox" className = "checkbox"  checked={showPastEvents} onChange={onCheck}></input>
+                    <p className="checkboxTitle">Show past events</p>
+                
                     <select className="comboBoxOption" id="option" value = {value} onChange={(e) => onOptionChange((e.target.value))}>
                         <option value="Attending">Attending</option>
                         <option value="Hosting">Hosting</option>
                     </select>
-
+                    </div>
                 </div>
 
                 <ul className="eventList">{arrayDataItems}</ul>
