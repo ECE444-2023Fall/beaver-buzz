@@ -31,7 +31,7 @@ export function convertDate(date) {
     const time = dateParts[4];
     const newDate = new Date(`${year}-${month}-${day}T${time}Z`);
     // console.log(newDate);
-    let finalDate = newDate.toDateString() + " at " + newDate.toTimeString()
+    let finalDate = newDate.toString().replace('GMT', 'EST')
     return finalDate;
 }
 
