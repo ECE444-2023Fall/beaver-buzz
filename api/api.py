@@ -121,7 +121,7 @@ def login():
     password = request.json["password"]
 
     user = User.query.filter_by(email=email).first()
-    if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password):
+    if user is None or not bcrypt.checkpw(password.encode("utf-8"), user.password.encode('utf-8')):
         return jsonify({"error": "Invalid username or password"}), 401
 
     return jsonify({"greeting": "Welcome, " + user.firstname, "id": user.id}), 202
