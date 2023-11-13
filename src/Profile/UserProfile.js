@@ -327,7 +327,7 @@ const UserPage=()=> {
                     </select>
 
                 </div>
-                {events.length == 0 ? <div className="event-list-title">No events of this catagory or this information is private</div> : <ul className="eventList">{arrayDataItems}</ul>}
+                {events.length == 0 ? <div className="event-list-title">No events of this category or this information is private</div> : <ul className="eventList">{arrayDataItems}</ul>}
                 
             </div>
         </div>
