@@ -179,3 +179,8 @@
 .tags {
   background-color: white;
 }
+
+.prev-img {
+  object-fit: contain;
+  max-width: 400px;
+}

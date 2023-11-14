@@ -72,7 +72,7 @@ export default function EventPage() {
                     })
                 })
                 .then((d) => {
-                    // console.log(d);
+                    console.log(d);
                     setData(d)
                     let currentDate = new Date();
                     let eventEnd = new Date(d.eventEnd)
@@ -152,7 +152,7 @@ export default function EventPage() {
                     <head>
                         <title>{data.eventName}</title>
                     </head>
-                    <body>s
+                    <body>
                         <div id="eventContainer">
                             {eventOwner &&
                                 <div className="editButtonContainer">

@@ -272,7 +272,6 @@ const DiscoverPage = () => {
               <p>Can't find the event you want? Host it yourself! </p>
               <button
                 className="host-button"
-                style={{ marginTop: "20px" }}
                 onClick={() => noEventClick()}
               >
                 Host

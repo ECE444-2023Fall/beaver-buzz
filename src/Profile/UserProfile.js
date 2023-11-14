@@ -269,109 +269,116 @@ const UserPage = () => {
 
   return (
     <div className="mainFlexBox">
-      <div className="flexbox-user-container">
-          <UploadAvatar id={userId} avatar={avatar} />
-        <Button
-          className="subscribeButton"
-          onClick={(e) => {
-            subscribeButtonClicked();
-          }}
-        >
-          {buttonState}{" "}
-        </Button>
-        <div className="person-name-font">
-          {firstName} {lastName}
-        </div>
-        <div className="person-table">
-          <div className="sectionFont">First name</div>
-          <div className="flexbox-horizontal-container">
-            <input
-              className="inputField"
-              disabled="disabled"
-              defaultValue={firstName}
-            />
+      <div className="left">
+        <div className="flexbox-user-container">
+            <UploadAvatar id={userId} avatar={avatar} />
+          <Button
+            className="subscribeButton"
+            onClick={(e) => {
+              subscribeButtonClicked();
+            }}
+          >
+            {buttonState}{" "}
+          </Button>
+          <div className="person-name-font">
+            {firstName} {lastName}
           </div>
-
-          <div className="sectionFont">Last name</div>
-          <div className="flexbox-horizontal-container">
-            <input
-              className="inputField"
-              disabled="disabled"
-              defaultValue={lastName}
-            />
-          </div>
-
-          <Divider></Divider>
-          <div className="sectionFont">Contact info</div>
-          <Divider></Divider>
-
-          <div className="flexbox-horizontal-container">
-            <div>
-              <img src={mailIcon} />
+          <div className="person-table">
+            <div className="sectionFont">First name</div>
+            <div className="flexbox-horizontal-container">
+              <input
+                className="inputField"
+                disabled="disabled"
+                defaultValue={firstName}
+              />
             </div>
-            <input
-              className="inputField"
-              disabled="disabled"
-              defaultValue={email}
-            />
-          </div>
 
-          <div className="horizontal_divider"></div>
-
-          <div className="flexbox-horizontal-container">
-            <div>
-              <img src={phoneIcon} />
+            <div className="sectionFont">Last name</div>
+            <div className="flexbox-horizontal-container">
+              <input
+                className="inputField"
+                disabled="disabled"
+                defaultValue={lastName}
+              />
             </div>
-            <input
-              className="inputField"
-              disabled="disabled"
-              defaultValue={phone}
+
+            <Divider></Divider>
+            <div className="sectionFont">Contact info</div>
+            <Divider></Divider>
+
+            <div className="flexbox-horizontal-container">
+              <div>
+                <img src={mailIcon} />
+              </div>
+              <input
+                className="inputField"
+                disabled="disabled"
+                defaultValue={email}
+              />
+            </div>
+
+            <div className="horizontal_divider"></div>
+
+            <div className="flexbox-horizontal-container">
+              <div>
+                <img src={phoneIcon} />
+              </div>
+              <input
+                className="inputField"
+                disabled="disabled"
+                defaultValue={phone}
+              />
+            </div>
+
+            <Divider></Divider>
+            <div className="sectionFont">Interests</div>
+            <Divider></Divider>
+            <Multiselect
+              //options={CATEGORIES} // Options to display in the dropdown
+              selectedValues={interests}
+              showCheckbox="true"
+              className="interests"
+              //disablePreSelectedValues='true'
+              placeholder=""
+              disable="true"
+              displayValue="name" // Property name to display in the dropdown options
             />
           </div>
-
-          <Divider></Divider>
-          <div className="sectionFont">Interests</div>
-          <Divider></Divider>
-          <Multiselect
-            //options={CATEGORIES} // Options to display in the dropdown
-            selectedValues={interests}
-            showCheckbox="true"
-            className="interests"
-            //disablePreSelectedValues='true'
-            placeholder=""
-            disable="true"
-            displayValue="name" // Property name to display in the dropdown options
-          />
         </div>
       </div>
+      
+      <div className="left">
+        <div className="event-wish-list-table">
+          <div className="flexbox-horizontal-container">
+            <div className="event-list-title">{firstName}'s events</div>
+            <div className="event-list-title-right">
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={showPastEvents}
+                onChange={onCheck}
+              ></input>
+              <p className="checkboxTitle">Show past events</p>
 
-      <div className="event-wish-list-table">
-        <div className="flexbox-horizontal-container">
-          <div className="event-list-title">{firstName}'s events</div>
-          <p className="checkboxTitle">Show past events</p>
-          <input
-            type="checkbox"
-            className="checkbox"
-            checked={showPastEvents}
-            onChange={onCheck}
-          ></input>
-          <select
-            className="comboBoxOption"
-            id="option"
-            value={value}
-            onChange={(e) => onOptionChange(e.target.value)}
-          >
-            <option value="Hosting">Hosting</option>
-            <option value="Attending">Attending</option>
-          </select>
-        </div>
-        {events.length == 0 ? (
-          <div className="event-list-title">
-            No events of this category or this information is private
+              <select
+                className="comboBoxOption"
+                id="option"
+                value={value}
+                onChange={(e) => onOptionChange(e.target.value)}
+              >
+                <option value="Hosting">Hosting</option>
+                <option value="Attending">Attending</option>
+              </select>
+            </div>
           </div>
-        ) : (
-          <ul className="eventList">{arrayDataItems}</ul>
-        )}
+          {events.length == 0 ? (
+            <div className="event-list-title">
+              No events of this category or this information is private
+            </div>
+          ) : (
+            <ul className="eventList">{arrayDataItems}</ul>
+          )}
+        </div>
       </div>
     </div>
   );
