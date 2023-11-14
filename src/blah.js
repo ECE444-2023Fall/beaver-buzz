@@ -17,6 +17,7 @@ function Navbar() {
     setClick(false);
     setCurrentPage(i);
   };
+
   const showButton = () => {
     if (window.innerWidth <= 960) {
       setRegisterButton(false);
@@ -29,7 +30,6 @@ function Navbar() {
   }, []);
   window.addEventListener("resize", showButton);
   return (
-    
     <>
       <nav className="navbar">
         <div className="navbar-container">

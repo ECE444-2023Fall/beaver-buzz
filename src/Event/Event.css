@@ -4,14 +4,23 @@ body {
     text-align: center;
 }
 
+.event-overall{
+    width: 90vw;
+    justify-content: center;
+    margin:auto;
+    height: 90vh;
+}
+
 #eventContainer {
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    margin: 50px auto;
     padding: 20px;
     max-width: 600px;
     position: relative;
+    justify-content: center;
+    margin: auto;
+    margin-top: 20px;
 }
 
 .editButtonContainer {
@@ -52,4 +61,24 @@ body {
 
 .iconWithSpace {
     margin-left: 8px;
+}
+
+.btn--primary{
+    background-color: #1e3765;
+    color: white;
+    
+}
+
+.btn--primary:hover{
+    background-color: #377ea0;
+    color: white
+}
+
+p {
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+img {
+    max-height: 35vh;
 }

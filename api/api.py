@@ -1,18 +1,18 @@
 """
 This file contains the API endpoints for the backend.
 """
-
+import os
 from re import T
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS, cross_origin
 import bcrypt
 from Configuration import Configuration
 from schemas import db, event_attendance, User, Event, UserRatings
-from utils.emails.mailing import Mailer, get_login, format_email
+from utils.emails.mailing import Mailer, format_email
 import bcrypt
 from datetime import datetime, timedelta
 import pytz
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 import random
 import ast
 import json
@@ -351,7 +351,7 @@ def set_phone():
     user = db.get_or_404(User, id)
 
     otherUser = User.query.filter_by(phonenumber=phone).first()
-    if otherUser is not None and otherUser != user:
+    if otherUser is not None and otherUser != user and phone is not None:
         return jsonify({"error": "phone number is already in use"}), 400
 
     user.phonenumber = phone
@@ -434,7 +434,7 @@ def register():
         return jsonify({"error": "User with this email already exists"}), 400
 
     user = User.query.filter_by(phonenumber=phonenumber).first()
-    if user is not None:  # An account with this phonenumber exists
+    if user is not None and user.phonenumber is not None:  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
     passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode(
@@ -452,8 +452,7 @@ def register():
         interests=interests,
     )
 
-    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
-    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
     subject = 'Registration Confirmation'
     i_list = [i['name'] for i in request.json["interests"]]
     i_list = str(i_list).translate({ord(i): None for i in "'[]"})
@@ -578,8 +577,7 @@ def register_event(eventid, userid):
     event.registered += 1
     db.session.commit()
 
-    app_login = get_login('./utils/emails/credentials.txt', 'app_login')
-    mailer = Mailer('smtp.gmail.com', 465, app_login)
+    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
     subject = 'Event Registration Confirmation'
     html = open('./utils/emails/event_registration.html').read().format(
             subject=subject, event_name=event.eventName, 
@@ -858,7 +856,7 @@ def search():
     else:
         location_filters = []
     org_filter = request.args.get("Organizer")
-    temp_q = query.split(" ")
+    temp_q = query.capitalize().split(" ")
     if org_filter:
         if len(temp_q) > 1:
             fn = temp_q[0]
@@ -881,7 +879,7 @@ def search():
                             for i in range(len(location_filters))
                         ]
                     ),
-                    Event.eventName.contains(query),
+                    func.lower(Event.eventName).contains(query.lower()),
                 ).all()
             else:
                 filtered_results = Event.query.filter(
@@ -896,11 +894,11 @@ def search():
         else:
             if fn == ln:
                 users = User.query.filter(
-                    or_(User.firstname.contains(fn), User.lastname.contains(ln))
+                    or_(func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln))
                 ).all()
             else:
                 users = User.query.filter(
-                    User.firstname.contains(fn), User.lastname.contains(ln)
+                    func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower())
                 ).all()
 
             user_ids = [user.id for user in users]
@@ -933,7 +931,7 @@ def search():
         if org_filter is False:
             if query.capitalize() not in eventtags:
                 filtered_results = Event.query.filter(
-                    Event.eventName.contains(query)
+                    func.lower(Event.eventName).contains(query.lower())
                 ).all()
             else:
                 filtered_results = Event.query.filter(
@@ -942,11 +940,11 @@ def search():
         else:
             if fn == ln:
                 users = User.query.filter(
-                    or_(User.firstname.contains(fn), User.lastname.contains(ln))
+                    or_(func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower()))
                 ).all()
             else:
                 users = User.query.filter(
-                    User.firstname.contains(fn), User.lastname.contains(ln)
+                    func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower())
                 ).all()
 
             user_ids = [user.id for user in users]

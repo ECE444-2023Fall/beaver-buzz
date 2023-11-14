@@ -10,6 +10,7 @@ import ProfilePage from './Profile/Profile';
 import UserPage from './Profile/UserProfile';
 import HostPage from './Host/Host';
 import EventUpdatePage from './UpdateEvent/UpdateEvent';
+import './fonts/fonts.css';
 
 function App() {
 

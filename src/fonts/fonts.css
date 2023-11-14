@@ -1,0 +1,6 @@
+@font-face {
+    font-family: 'BemboStd';
+    src: local('BemboStd'),
+         url(BemboStd.woff) format('woff'),
+         url(BemboStd.woff2) format('woff2');
+}
