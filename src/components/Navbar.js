@@ -84,7 +84,7 @@ function Navbar() {
                   onClick={() => {
                     closeMobileMenu(4);
                     setUserId(null);
-                    localStorage.setItem("user", null);
+                    localStorage.removeItem('user')
                   }}
                   to={"/"}
                 >

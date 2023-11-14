@@ -37,8 +37,7 @@ const LoginPage=()=>{
             }
             if (data.id) {
                 setUserId(data.id);
-                console.log(data.id)
-                console.log(userId)
+                localStorage.setItem('user', data.id)
                 navigate("/profile")
             }
             console.log(data)

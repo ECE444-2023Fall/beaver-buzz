@@ -9,7 +9,7 @@ export function useUserContext() {
 
 function getInitialState() {
   const user = localStorage.getItem('user');
-  return user ? user : null;
+  return user
 }
 
 export const UserProvider = ({ children }) => {
@@ -22,15 +22,17 @@ export const UserProvider = ({ children }) => {
 
     }
 
-    useEffect(() => {
-      if(userId == "null") {
-        localStorage.removeItem('user');
-      }
-      else {
-        localStorage.setItem('user', userId)
-      }
+    // useEffect(() => {
+    //   setUserId(localStorage.getItem('user'))
+    //   console.log(userId)
+    //   // if(userId == "null") {
+    //   //   localStorage.removeItem('user');
+    //   // }
+    //   // else {
+    //   //   localStorage.setItem('user', userId)
+    //   // }
       
-    }, [userId])
+    // }, [userId])
   
     return (
       <UserContext.Provider value={value}>
