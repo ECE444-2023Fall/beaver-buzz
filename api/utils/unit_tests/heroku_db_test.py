@@ -3,7 +3,7 @@ import psycopg2
 import os
 import re
 
-database_url = os.environ.get("SQLALCHEMY_DATABASE_URI")
+database_url = os.getenv("SQLALCHEMY_DATABASE_URI")
 if database_url.startswith("postgres://"):
     database_url = re.sub("^postgres://", "postgresql://", database_url)
 connection = psycopg2.connect(database_url)
@@ -11,7 +11,7 @@ connection = psycopg2.connect(database_url)
 
 # Function to create a connection using DATABASE_URL from Heroku's environment variables
 def get_connection():
-    return psycopg2.connect(os.environ.get("SQLALCHEMY_DATABASE_URI"))
+    return psycopg2.connect(os.getenv("SQLALCHEMY_DATABASE_URI"))
 
 
 # Checks if the database is connected.

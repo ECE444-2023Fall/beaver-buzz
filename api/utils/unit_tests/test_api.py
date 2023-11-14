@@ -3,10 +3,12 @@ from pathlib import Path
 from schemas import User, Event, db
 from api import app
 import datetime
+from datetime import timedelta
 import json
 import bcrypt
 
 TEST_DB = "test.db"
+default_event_image = "https://mlpcesocsoqj.i.optimole.com/w:auto/h:auto/q:mauto/ig:avif/f:best/https://eventimaging.ca/wp-content/uploads/2021/03/Toronto-Event-Photographer-scaled.jpg"
 
 
 # Done by Julia Wang
@@ -27,7 +29,9 @@ def client():
 def populate_login_db():
     newaccount = User(
         email="afilkostic@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Filip",
         lastname="Kostic",
     )
@@ -39,7 +43,9 @@ def populate_login_db():
 def populate_user_info_db():
     newaccount = User(
         email="afilkostic@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Filip",
         lastname="Kostic",
         phonenumber="647-760-9134",
@@ -53,7 +59,9 @@ def populate_user_info_db():
 def populate_set_info_db():
     newaccount = User(
         email="afilkostic@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Filip",
         lastname="Kostic",
         phonenumber="647-760-9134",
@@ -62,7 +70,9 @@ def populate_set_info_db():
 
     newaccount2 = User(
         email="benny@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Benny",
         lastname="Guy",
         phonenumber="123-456-7890",
@@ -79,7 +89,9 @@ def populate_set_info_db():
 def populate_db():
     newaccount = User(
         email="prempotat@gmail.com",
-        password="password",
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Prem",
         lastname="Potat",
     )
@@ -94,7 +106,13 @@ def populate_db():
         eventBuilding="Test Building",
         eventRoom="Test Room",
         oneLiner="Test One Liner",
-        eventCategories="Arts,Food",
+        eventCategories=str(
+            [
+                {"name": "Academic", "id": 1},
+                {"name": "Sports", "id": 2},
+                {"name": "Science", "id": 3},
+            ]
+        ),
     )
     newevent2 = Event(
         eventName="ECE444 Study Session",
@@ -104,7 +122,13 @@ def populate_db():
         eventBuilding="Sanford Fleming",
         eventRoom="Test Room",
         oneLiner="Test One Liner",
-        eventCategories="Academic",
+        eventCategories=str(
+            [
+                {"name": "Academic", "id": 1},
+                {"name": "Sports", "id": 2},
+                {"name": "Science", "id": 3},
+            ]
+        ),
     )
     db.session.add(newevent2)
     db.session.add(newevent)
@@ -116,13 +140,17 @@ def populate_db():
 def populate_db2():
     newaccount = User(
         email="prempotat@gmail.com",
-        password="password",
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Prem",
         lastname="Potat",
     )
     newaccount2 = User(
         email="joebrandon@gmail.com",
-        password="password",
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Joe",
         lastname="Brandon",
     )
@@ -132,8 +160,8 @@ def populate_db2():
     newevent = Event(
         eventName="Test Event",
         organizerID=newaccount.id,
-        eventStart=datetime.datetime.now(),
-        eventEnd=datetime.datetime.now(),
+        eventStart=datetime.datetime.now() + timedelta(days=1),
+        eventEnd=datetime.datetime.now() + timedelta(days=1),
         eventBuilding="Test Building",
         eventRoom="Test Room",
         oneLiner="Test One Liner",
@@ -142,8 +170,8 @@ def populate_db2():
     newevent2 = Event(
         eventName="ECE444 Study Session",
         organizerID=newaccount2.id,
-        eventStart=datetime.datetime.now(),
-        eventEnd=datetime.datetime.now(),
+        eventStart=datetime.datetime.now() + timedelta(days=1),
+        eventEnd=datetime.datetime.now() + timedelta(days=1),
         eventBuilding="Sanford Fleming",
         eventRoom="Test Room",
         oneLiner="Help with project",
@@ -155,6 +183,9 @@ def populate_db2():
 
 
 # Done by Julia Wang
+@pytest.mark.skip(
+    reason="Register function calls mailer which does not work on GitHub Flows"
+)
 def test_registerEvent(client, populate_db):
     # create a test user and event, register the user for the event
     res = client.post("/api/events/1/register/1")
@@ -166,6 +197,9 @@ def test_registerEvent(client, populate_db):
 
 
 # Done by Julia Wang
+@pytest.mark.skip(
+    reason="Register function calls mailer which does not work on GitHub Flows"
+)
 def test_unregisterEvent(client, populate_db):
     # create a test user and event, register the user for the event
     res = client.post("/api/events/1/register/1")
@@ -247,6 +281,9 @@ def test_login(client, populate_login_db):
 
 
 # Done by Filip Kostic
+@pytest.mark.skip(
+    reason="Register function calls mailer which does not work on GitHub Flows"
+)
 def test_register(client):
     # Test valid registration
     res = client.post(
@@ -670,6 +707,9 @@ def test_user_subscription(client, populate_set_info_db):
 
 
 # Done by Julia Wang
+@pytest.mark.skip(
+    reason="Register function calls mailer which does not work on GitHub Flows"
+)
 def test_createEvent(client, populate_db):
     # test that everything works
     res = client.post(
@@ -790,7 +830,7 @@ def test_getEvent(client, populate_db):
     assert res.get_json()["eventRoom"] == "Test Room"
     assert res.get_json()["oneLiner"] == "Test One Liner"
     assert res.get_json()["eventDesc"] == None
-    assert res.get_json()["eventImg"] == None
+    assert res.get_json()["eventImg"] == default_event_image
 
     # try to get an event that doesn't exist
     res = client.get("/api/events/3")

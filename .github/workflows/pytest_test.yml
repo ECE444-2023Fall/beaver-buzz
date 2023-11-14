@@ -1,0 +1,30 @@
+name: Run Python unit tests
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ./api/requirements.txt
+      - name: Running unit tests with pytest
+        run: |
+          python -m pytest -s ./api/utils/unit_tests/test_api.py
+          # python -m pytest -s ./api/utils/unit_tests/mailing_test/
+          python -m pytest -s ./api/utils/unit_tests/database_test/
+        env:
+          SQLALCHEMY_DATABASE_URI: sqlite:///./db.sqlite
+          GMAIL_APP_PWD: ${{ secrets.GMAIL_APP_PWD }}
+          GMAIL_LOGIN: ${{ secrets.GMAIL_LOGIN }}

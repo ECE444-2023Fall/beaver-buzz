@@ -986,10 +986,6 @@ def search():
             ln = temp_q[0]
     if not org_filter:
         org_filter = False
-    print("ORGANIZER")
-    print(org_filter)
-    print("QUERY")
-    print(query)
     filtered_results = []
     users_dict = {}
     current_time = datetime.now(est).replace(tzinfo=utc)

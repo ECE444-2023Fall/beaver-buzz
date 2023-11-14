@@ -1,4 +1,4 @@
-import os.path
+import os, os.path
 import sys
 import smtplib, ssl
 from email_validator import validate_email, EmailNotValidError
@@ -11,7 +11,7 @@ pwd = os.path.dirname(__file__)
 emails_path = os.path.join(pwd, "../../emails")
 sys.path.append(emails_path)
 
-from mailing import Mailer, Inbox, get_login, format_email, print_dir
+from mailing import Mailer, Inbox, format_email, print_dir
 
 
 smtp_local = "localhost"
@@ -35,9 +35,7 @@ class TestEmail:
         """
         self.smtp_server = goog_smtp
         self.smtp_port = goog_ports_smtp[0]
-        self.login = get_login(
-            os.path.join(emails_path, "credentials.txt"), "app_login"
-        )
+        self.login = (os.environ["GMAIL_LOGIN"], os.environ["GMAIL_APP_PWD"])
         self.mailer = Mailer(self.smtp_server, self.smtp_port, self.login)
         verif = self.mailer.server.verify(self.smtp_server)
         assert verif[0] in [250, 251, 252]
@@ -49,9 +47,7 @@ class TestEmail:
         """
         self.imap_server = goog_imap
         self.imap_port = goog_ports_imap[0]
-        self.login = get_login(
-            os.path.join(emails_path, "credentials.txt"), "app_login"
-        )
+        self.login = (os.environ["GMAIL_LOGIN"], os.environ["GMAIL_APP_PWD"])
         self.inbox = Inbox(self.imap_server, self.imap_port, self.login)
         self.inbox.server.select("Inbox")
         assert self.inbox.server.check()
@@ -66,9 +62,7 @@ class TestEmail:
         """
         self.smtp_server = goog_smtp
         self.smtp_port = goog_ports_smtp[0]
-        self.login = get_login(
-            os.path.join(emails_path, "credentials.txt"), "app_login"
-        )
+        self.login = (os.environ["GMAIL_LOGIN"], os.environ["GMAIL_APP_PWD"])
         self.mailer = Mailer(self.smtp_server, self.smtp_port, self.login)
 
         self.imap_server = goog_imap
