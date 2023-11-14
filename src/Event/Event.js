@@ -159,9 +159,9 @@ export default function EventPage() {
                     <body>
                         <div id="eventContainer">
                             {eventOwner &&
-
-                                <Button className="page-link-btn" onClick={(e) => {navigate('/events/${id}/update-event')}}>Edit event</Button>
-
+                                <div className="editButtonContainer">
+                                    <Button className="page-link-btn" onClick={(e) => {navigate(`/events/${id}/update-event`)}}>Edit event</Button>
+                                </div>
                             }
                             <h1 id="eventTitle">{data.eventName}</h1>
                             {ratingVisible &&
