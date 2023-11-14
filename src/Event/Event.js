@@ -60,7 +60,6 @@ export default function EventPage() {
             initialRender=false;
         } 
         else{
-            setButtonState(false)
             navigate(`/events/${id}/update-event`);
             
         }
