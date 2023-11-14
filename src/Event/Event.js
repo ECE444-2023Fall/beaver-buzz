@@ -53,11 +53,7 @@ export default function EventPage() {
 
 
 
-    const InterestsDataItems = data.eventCategories.map((item) => (
-        <li className='interestListElement' key={item}>
-            {item}
-        </li>
-      ));
+
 
 
 
@@ -178,7 +174,13 @@ export default function EventPage() {
                                 <p><strong>Organizer: </strong><Link to = {'/user/' + data.organizerID}>{data.organizerName}</Link></p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
-                                <ul className="interestList">{InterestsDataItems}</ul>
+                                <ul className="interestList">
+                                {data.eventCategories.map((item) => (
+                                <li className='interestListElement' key={item}>
+                                    {item}
+                                </li>
+                                ))}
+                                </ul>
                             </div>
                             {userAttending && !eventOwner &&
                                 <Button buttonStyle='btn--primary' onClick={register}>Unregister</Button>
