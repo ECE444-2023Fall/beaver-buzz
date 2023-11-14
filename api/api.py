@@ -509,7 +509,7 @@ def get_event(id):
         event.eventEnd = event.eventEnd
         results = event.serialize()
         results["organizerName"] = str(user.firstname) + " " + str(user.lastname)
-        results["attendeeList"] = [int(id) for user in event.users]
+        results["attendeeList"] = [int(user.id) for user in event.users]
         if event.eventCategories is not None:
             results["eventCategories"] = ast.literal_eval(event.eventCategories)
         return jsonify(results), 200
