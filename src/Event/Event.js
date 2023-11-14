@@ -47,6 +47,7 @@ export default function EventPage() {
     const navigate = useNavigate();
     const [visibility, setVisibility] = useState(false)
     const [alertMessage, setAlertMessage] = useState([]);
+    const [numAttendees, setNumAttendees] = useState([]);
 
     const {
         userId,
@@ -91,7 +92,8 @@ export default function EventPage() {
                         return false;
                     });
                     setUserAttending(isFound);
-                    setEventOwner(d.organizerID == userId ? true : false)
+                    setEventOwner(d.organizerID == userId ? true : false);
+                    setNumAttendees(d.registered);
 
                 })
                 .catch((error) => { console.log(error); setData(-1); })
@@ -116,6 +118,7 @@ export default function EventPage() {
             }).then((res) => {
                 if (res.status === 200) {
                     console.log("Successfully registered");
+                    setNumAttendees(numAttendees + 1);
                     setAlertMessage("You have been successfully registered to the event!");
                     setVisibility(true);
                     setTimeout(() => {
@@ -141,6 +144,7 @@ export default function EventPage() {
             }).then((res) => {
                 if (res.status === 200) {
                     console.log("Successfully un-registered");
+                    setNumAttendees(numAttendees - 1);
                     setAlertMessage("You have been successfully un-registered to the event!");
                     setVisibility(true);
                     setTimeout(() => {
@@ -221,6 +225,7 @@ export default function EventPage() {
                                 <p><strong>Organizer: </strong><Link style={{ color: '#1e3765' }} to={'/user/' + data.organizerID}>{data.organizerName}</Link></p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
+                                <p><strong>Number of Attendees: </strong>{numAttendees}</p>
                                 <ul className="interestList">
                                     {data.eventCategories && data.eventCategories.map((item) => (
                                         <li className='interestListElement' key={item.id}>
