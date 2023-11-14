@@ -21,7 +21,12 @@ app = Flask(__name__)
 CORS(
     app,
     resources={
-        r"/api/*": {"origins": ["https://premiumpotatoes-4fb5418fe273.herokuapp.com", "https://www.beaver-buzz.ca"]}
+        r"/api/*": {
+            "origins": [
+                "https://premiumpotatoes-4fb5418fe273.herokuapp.com",
+                "https://www.beaver-buzz.ca",
+            ]
+        }
     },
 )
 app.config.from_object(Configuration)
@@ -434,7 +439,9 @@ def register():
         return jsonify({"error": "User with this email already exists"}), 400
 
     user = User.query.filter_by(phonenumber=phonenumber).first()
-    if user is not None and user.phonenumber is not None:  # An account with this phonenumber exists
+    if (
+        user is not None and user.phonenumber is not None
+    ):  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
     passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode(
@@ -452,16 +459,29 @@ def register():
         interests=interests,
     )
 
-    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
-    subject = 'Registration Confirmation'
-    i_list = [i['name'] for i in request.json["interests"]]
+    mailer = Mailer(
+        "smtp.gmail.com",
+        465,
+        (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+    )
+    subject = "Registration Confirmation"
+    i_list = [i["name"] for i in request.json["interests"]]
     i_list = str(i_list).translate({ord(i): None for i in "'[]"})
-    html = open('./utils/emails/registration.html').read().format(
-            subject=subject,firstname=firstname,lastname=lastname,
-            email=email,phonenumber=phonenumber,interests=i_list,
-            potatoemail=mailer.sender)
+    html = (
+        open("./utils/emails/registration.html")
+        .read()
+        .format(
+            subject=subject,
+            firstname=firstname,
+            lastname=lastname,
+            email=email,
+            phonenumber=phonenumber,
+            interests=i_list,
+            potatoemail=mailer.sender,
+        )
+    )
     msg = format_email(mailer.sender, email, subject, html)
-    mailer.send_mail(email,msg.as_string())
+    mailer.send_mail(email, msg.as_string())
     mailer.kill()
 
     db.session.add(newaccount)
@@ -577,14 +597,24 @@ def register_event(eventid, userid):
     event.registered += 1
     db.session.commit()
 
-    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
-    subject = 'Event Registration Confirmation'
-    html = open('./utils/emails/event_registration.html').read().format(
-            subject=subject, event_name=event.eventName, 
-            event_date=event.eventStart, 
-            event_loc=event.eventBuilding + ', ' + event.eventRoom)
+    mailer = Mailer(
+        "smtp.gmail.com",
+        465,
+        (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+    )
+    subject = "Event Registration Confirmation"
+    html = (
+        open("./utils/emails/event_registration.html")
+        .read()
+        .format(
+            subject=subject,
+            event_name=event.eventName,
+            event_date=event.eventStart,
+            event_loc=event.eventBuilding + ", " + event.eventRoom,
+        )
+    )
     msg = format_email(mailer.sender, user.email, subject, html)
-    mailer.send_mail(user.email,msg.as_string())
+    mailer.send_mail(user.email, msg.as_string())
     mailer.kill()
 
     return jsonify(event.serialize())
@@ -808,7 +838,9 @@ def allevents():
     Returns all events for initialization purposes. search() function is used when a search is executed.
     """
     current_time = datetime.now()
-    results = [e.serialize() for e in Event.query.filter(Event.eventStart > current_time).all()]
+    results = [
+        e.serialize() for e in Event.query.filter(Event.eventStart > current_time).all()
+    ]
     users = User.query.all()
     users_dict = {}
     for u in users:
@@ -888,7 +920,7 @@ def search():
                         ]
                     ),
                     func.lower(Event.eventName).contains(query.lower()),
-                    Event.eventStart > current_time
+                    Event.eventStart > current_time,
                 ).all()
             else:
                 filtered_results = Event.query.filter(
@@ -899,16 +931,20 @@ def search():
                         ]
                     ),
                     Event.eventCategories.contains(query.capitalize()),
-                    Event.eventStart > current_time
+                    Event.eventStart > current_time,
                 ).all()
         else:
             if fn == ln:
                 users = User.query.filter(
-                    or_(func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln))
+                    or_(
+                        func.lower(User.firstname).contains(fn.lower()),
+                        func.lower(User.lastname).contains(ln),
+                    )
                 ).all()
             else:
                 users = User.query.filter(
-                    func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower())
+                    func.lower(User.firstname).contains(fn.lower()),
+                    func.lower(User.lastname).contains(ln.lower()),
                 ).all()
 
             user_ids = [user.id for user in users]
@@ -923,7 +959,7 @@ def search():
                     ]
                 ),
                 Event.organizerID.in_(user_ids),
-                Event.eventStart > current_time
+                Event.eventStart > current_time,
             ).all()
 
     # No Query and Have Filter
@@ -944,28 +980,34 @@ def search():
             if query.capitalize() not in eventtags:
                 filtered_results = Event.query.filter(
                     func.lower(Event.eventName).contains(query.lower()),
-                    Event.eventStart > current_time
+                    Event.eventStart > current_time,
                 ).all()
             else:
                 filtered_results = Event.query.filter(
                     Event.eventCategories.contains(query.capitalize()),
-                    Event.eventStart > current_time
+                    Event.eventStart > current_time,
                 ).all()
         else:
             if fn == ln:
                 users = User.query.filter(
-                    or_(func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower()))
+                    or_(
+                        func.lower(User.firstname).contains(fn.lower()),
+                        func.lower(User.lastname).contains(ln.lower()),
+                    )
                 ).all()
             else:
                 users = User.query.filter(
-                    func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower())
+                    func.lower(User.firstname).contains(fn.lower()),
+                    func.lower(User.lastname).contains(ln.lower()),
                 ).all()
 
             user_ids = [user.id for user in users]
             for u in users:
                 users_dict[u.id] = u.firstname + " " + u.lastname
 
-            filtered_results = Event.query.filter(Event.organizerID.in_(user_ids),Event.eventStart > current_time).all()
+            filtered_results = Event.query.filter(
+                Event.organizerID.in_(user_ids), Event.eventStart > current_time
+            ).all()
     else:
         filtered_results = Event.query.filter(Event.eventStart > current_time).all()
     results = [e.serialize() for e in filtered_results]
