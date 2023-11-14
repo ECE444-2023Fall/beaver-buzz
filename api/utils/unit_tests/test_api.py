@@ -707,6 +707,9 @@ def test_user_subscription(client, populate_set_info_db):
 
 
 # Done by Julia Wang
+@pytest.mark.skip(
+    reason="Register function calls mailer which does not work on GitHub Flows"
+)
 def test_createEvent(client, populate_db):
     # test that everything works
     res = client.post(
