@@ -27,7 +27,7 @@ def client():
 def populate_login_db():
     newaccount = User(
         email="afilkostic@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
         firstname="Filip",
         lastname="Kostic",
     )
@@ -39,7 +39,7 @@ def populate_login_db():
 def populate_user_info_db():
     newaccount = User(
         email="afilkostic@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
         firstname="Filip",
         lastname="Kostic",
         phonenumber="647-760-9134",
@@ -53,7 +53,7 @@ def populate_user_info_db():
 def populate_set_info_db():
     newaccount = User(
         email="afilkostic@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
         firstname="Filip",
         lastname="Kostic",
         phonenumber="647-760-9134",
@@ -62,7 +62,7 @@ def populate_set_info_db():
 
     newaccount2 = User(
         email="benny@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
         firstname="Benny",
         lastname="Guy",
         phonenumber="123-456-7890",
@@ -79,7 +79,7 @@ def populate_set_info_db():
 def populate_db():
     newaccount = User(
         email="prempotat@gmail.com",
-        password="password",
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
         firstname="Prem",
         lastname="Potat",
     )
@@ -116,13 +116,13 @@ def populate_db():
 def populate_db2():
     newaccount = User(
         email="prempotat@gmail.com",
-        password="password",
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
         firstname="Prem",
         lastname="Potat",
     )
     newaccount2 = User(
         email="joebrandon@gmail.com",
-        password="password",
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
         firstname="Joe",
         lastname="Brandon",
     )
