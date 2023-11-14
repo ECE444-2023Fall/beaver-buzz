@@ -12,7 +12,7 @@ from utils.emails.mailing import Mailer, format_email
 import bcrypt
 from datetime import datetime, timedelta
 import pytz
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 import random
 import ast
 import json
@@ -856,7 +856,7 @@ def search():
     else:
         location_filters = []
     org_filter = request.args.get("Organizer")
-    temp_q = query.split(" ")
+    temp_q = query.capitalize().split(" ")
     if org_filter:
         if len(temp_q) > 1:
             fn = temp_q[0]
@@ -879,7 +879,7 @@ def search():
                             for i in range(len(location_filters))
                         ]
                     ),
-                    Event.eventName.contains(query),
+                    func.lower(Event.eventName).contains(query.lower()),
                 ).all()
             else:
                 filtered_results = Event.query.filter(
@@ -894,11 +894,11 @@ def search():
         else:
             if fn == ln:
                 users = User.query.filter(
-                    or_(User.firstname.contains(fn), User.lastname.contains(ln))
+                    or_(func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln))
                 ).all()
             else:
                 users = User.query.filter(
-                    User.firstname.contains(fn), User.lastname.contains(ln)
+                    func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower())
                 ).all()
 
             user_ids = [user.id for user in users]
@@ -931,7 +931,7 @@ def search():
         if org_filter is False:
             if query.capitalize() not in eventtags:
                 filtered_results = Event.query.filter(
-                    Event.eventName.contains(query)
+                    func.lower(Event.eventName).contains(query.lower())
                 ).all()
             else:
                 filtered_results = Event.query.filter(
@@ -940,11 +940,11 @@ def search():
         else:
             if fn == ln:
                 users = User.query.filter(
-                    or_(User.firstname.contains(fn), User.lastname.contains(ln))
+                    or_(func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower()))
                 ).all()
             else:
                 users = User.query.filter(
-                    User.firstname.contains(fn), User.lastname.contains(ln)
+                    func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower())
                 ).all()
 
             user_ids = [user.id for user in users]
