@@ -4,10 +4,10 @@ body {
     text-align: center;
 }
 
-.event-overall{
+.event-overall {
     width: 90vw;
     justify-content: center;
-    margin:auto;
+    margin: auto;
     height: 90vh;
 }
 
@@ -26,6 +26,7 @@ body {
 .interestList {
     margin-top: 1vh;
 }
+
 .interestListElement {
     display: inline-block;
     margin-right: 4px;
@@ -37,7 +38,7 @@ body {
     font-size: 10px;
     padding-left: 10px;
     padding-right: 10px;
-  }
+}
 
 .editButtonContainer {
     position: absolute;
@@ -79,13 +80,13 @@ body {
     margin-left: 8px;
 }
 
-.btn--primary{
+.btn--primary {
     background-color: #1e3765;
     color: white;
-    
+
 }
 
-.btn--primary:hover{
+.btn--primary:hover {
     background-color: #377ea0;
     color: white
 }
@@ -97,4 +98,32 @@ p {
 
 img {
     max-height: 35vh;
+}
+
+.alert-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #cce5ff;
+    /* Light blue background */
+    color: #004085;
+    /* Dark blue text */
+}
+
+.close {
+    float: right;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Hover effect for close button */
+.close:hover {
+    color: #007bff;
+    /* Blue color on hover */
 }

@@ -45,7 +45,7 @@ export default function EventPage() {
     const [userAttending, setUserAttending] = useState([])
     const [eventOwner, setEventOwner] = useState([])
     const navigate = useNavigate();
-    const [visibility, setVisibility] = useState([])
+    const [visibility, setVisibility] = useState(false)
     const [alertMessage, setAlertMessage] = useState([]);
 
     const {
@@ -76,7 +76,7 @@ export default function EventPage() {
                     console.log(d);
                     setData(d)
                     let currentDate = new Date();
-                    let eventEnd = new Date(d.eventEnd)
+                    let eventEnd = new Date(d.eventEnd.replace("GMT", "EST"))
                     if (eventEnd <= currentDate) {
                         setRatingVisible(true);
                     }
