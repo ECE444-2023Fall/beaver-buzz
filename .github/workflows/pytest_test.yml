@@ -26,3 +26,5 @@ jobs:
           python -m pytest -s ./api/utils/unit_tests/database_test/
         env:
           SQLALCHEMY_DATABASE_URI: sqlite:///./db.sqlite
+          GMAIL_APP_LOGIN: ${{secrets.GMAIL_APP_PWD}}
+          GMAIL_LOGIN: ${{secrets.GMAIL_LOGIN}}
