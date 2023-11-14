@@ -60,8 +60,11 @@ const DiscoverPage = () => {
   }, []);
 
   const onSubmit = (data) => {
+    console.log('Before set to null')
+    console.log(data)
     setSelectedItem(null);
-    //console.log(data);
+    console.log('After set to null')
+    console.log(data);
     var temp_data = { filters: [] };
     var filters = locations;
     for (const key in data) {
@@ -69,7 +72,7 @@ const DiscoverPage = () => {
       if (key === "searchbar") {
         temp_data["searchbar"] = data["searchbar"];
       }
-      if (key === "Organizer" && data[key] === true) {
+      if (key == "Organizer" && data[key] == true) {
         temp_data["Organizer"] = data["Organizer"];
       }
       if (filters.includes(key) && data[key] === true) {
