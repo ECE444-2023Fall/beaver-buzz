@@ -3,6 +3,7 @@ from pathlib import Path
 from schemas import User, Event, db
 from api import app
 import datetime
+from datetime import timedelta
 import json
 import bcrypt
 
@@ -106,9 +107,9 @@ def populate_db():
         oneLiner="Test One Liner",
         eventCategories=str(
             [
-                {"name": "Academic", id: 1},
-                {"name": "Sports", id: 2},
-                {"name": "Science", id: 3},
+                {"name": "Academic", "id": 1},
+                {"name": "Sports", "id": 2},
+                {"name": "Science", "id": 3},
             ]
         ),
     )
@@ -158,8 +159,8 @@ def populate_db2():
     newevent = Event(
         eventName="Test Event",
         organizerID=newaccount.id,
-        eventStart=datetime.datetime.now(),
-        eventEnd=datetime.datetime.now(),
+        eventStart=datetime.datetime.now() + timedelta(days=1),
+        eventEnd=datetime.datetime.now() + timedelta(days=1),
         eventBuilding="Test Building",
         eventRoom="Test Room",
         oneLiner="Test One Liner",
@@ -168,8 +169,8 @@ def populate_db2():
     newevent2 = Event(
         eventName="ECE444 Study Session",
         organizerID=newaccount2.id,
-        eventStart=datetime.datetime.now(),
-        eventEnd=datetime.datetime.now(),
+        eventStart=datetime.datetime.now() + timedelta(days=1),
+        eventEnd=datetime.datetime.now() + timedelta(days=1),
         eventBuilding="Sanford Fleming",
         eventRoom="Test Room",
         oneLiner="Help with project",
