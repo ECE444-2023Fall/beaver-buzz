@@ -227,7 +227,7 @@ export default function EventUpdatePage() {
           <p>
             <strong>Previous Image</strong>
           </p>
-          <div class="img-container">
+          <div class="prev-img">
             <img src={data.eventImg} alt="Description of the image" />
           </div>
           <Form.Group controlId="image">
