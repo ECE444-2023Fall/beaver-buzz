@@ -53,6 +53,14 @@ export default function EventPage() {
 
 
 
+    const InterestsDataItems = data.eventCategories.map((item) => (
+        <li className='interestListElement' key={item}>
+            {item}
+        </li>
+      ));
+
+
+
     useEffect(() => {
         const fetchInfo = () => {
             return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}`, {
@@ -170,12 +178,7 @@ export default function EventPage() {
                                 <p><strong>Organizer: </strong><Link to = {'/user/' + data.organizerID}>{data.organizerName}</Link></p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
-                                {data.eventCategories && <p><strong>Event Categories: </strong>{
-                                    data.eventCategories && data.eventCategories.map(item =>
-                                        <tr key={item}>
-                                            <td>- {item}</td>
-                                        </tr>)}
-                                </p>}
+                                <ul className="interestList">{InterestsDataItems}</ul>
                             </div>
                             {userAttending && !eventOwner &&
                                 <Button buttonStyle='btn--primary' onClick={register}>Unregister</Button>
