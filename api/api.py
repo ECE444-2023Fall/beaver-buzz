@@ -856,6 +856,8 @@ def search():
     else:
         location_filters = []
     org_filter = request.args.get("Organizer")
+    if query == None:
+        query = ""
     temp_q = query.capitalize().split(" ")
     if org_filter:
         if len(temp_q) > 1:
@@ -866,6 +868,10 @@ def search():
             ln = temp_q[0]
     if not org_filter:
         org_filter = False
+    print("ORGANIZER")
+    print(org_filter)
+    print("QUERY")
+    print(query)
     filtered_results = []
     users_dict = {}
     # Both Query and Filters
