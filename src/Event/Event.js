@@ -152,7 +152,7 @@ export default function EventPage() {
                     <head>
                         <title>{data.eventName}</title>
                     </head>
-                    <body>s
+                    <body>
                         <div id="eventContainer">
                             {eventOwner &&
                                 <div className="editButtonContainer">
