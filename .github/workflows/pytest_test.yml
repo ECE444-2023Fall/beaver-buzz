@@ -21,7 +21,7 @@ jobs:
           pip install -r ./api/requirements.txt
       - name: Running unit tests with pytest
         run: |
-          # python -m pytest -s ./api/utils/unit_tests/test_api.py
+          python -m pytest -s ./api/utils/unit_tests/test_api.py
           # python -m pytest -s ./api/utils/unit_tests/mailing_test/
           python -m pytest -s ./api/utils/unit_tests/database_test/
         env:
