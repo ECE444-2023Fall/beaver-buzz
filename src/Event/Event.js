@@ -177,7 +177,7 @@ export default function EventPage() {
                     </head>
                     <body>
                         <div id="eventContainer">
-                            {eventOwner &&
+                            {eventOwner && !ratingVisible &&
                                 <div className="editButtonContainer">
                                     <Link to="update-event" className="btn btn-primary" id="editButton">Edit Event</Link>
                                 </div>
@@ -195,8 +195,8 @@ export default function EventPage() {
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                                 <ul className="interestList">
                                     {data.eventCategories && data.eventCategories.map((item) => (
-                                        <li className='interestListElement' key={item}>
-                                            {item}
+                                        <li className='interestListElement' key={item.id}>
+                                            {item.name}
                                         </li>
                                     ))}
                                 </ul>
