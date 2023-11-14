@@ -44,7 +44,9 @@ def test_add_user(client):
     """Add user to database and ensure database is updated"""
     new_user = User(
         email="jhimanish@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Himanish",
         lastname="Jindal",
         phonenumber="4167211873",
@@ -64,7 +66,9 @@ def test_add_event(client):
     # new user is needed as event has a field for organizer (foreign relational key to user)
     new_user = User(
         email="jhimanish@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Himanish",
         lastname="Jindal",
         phonenumber="4167211873",
@@ -94,7 +98,9 @@ def test_event_attendance(client):
     # Creating test users and test event
     new_user1 = User(
         email="jhimanish@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Himanish",
         lastname="Jindal",
         phonenumber="4167211873",
@@ -102,7 +108,9 @@ def test_event_attendance(client):
     )
     new_user2 = User(
         email="test@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Himanish",
         lastname="Jindal",
         phonenumber="4167211873",
