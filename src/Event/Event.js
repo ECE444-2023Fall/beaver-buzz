@@ -52,19 +52,6 @@ export default function EventPage() {
     } = useUserContext()
 
 
-    const[buttonState, setButtonState] = useState(false);
-    let initialRender=true;
-    useEffect(() => {
-
-        if(initialRender){
-            initialRender=false;
-        } 
-        else{
-            navigate(`/events/${id}/update-event`);
-            
-        }
-
-      }, [buttonState]);
 
 
 
@@ -175,7 +162,7 @@ export default function EventPage() {
                         <div id="eventContainer">
                             {eventOwner &&
                                 <div className="editButtonContainer">
-                                    <Button className="page-link-btn" onClick={(e) => {setButtonState(true)}}>Edit event</Button>
+                                    <Link to="update-event" className="btn btn-primary" id="editButton">Edit Event</Link>
                                 </div>
                             }
                             <h1 id="eventTitle">{data.eventName}</h1>
