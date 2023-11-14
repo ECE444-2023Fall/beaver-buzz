@@ -27,7 +27,9 @@ def client():
 def populate_login_db():
     newaccount = User(
         email="afilkostic@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Filip",
         lastname="Kostic",
     )
@@ -39,7 +41,9 @@ def populate_login_db():
 def populate_user_info_db():
     newaccount = User(
         email="afilkostic@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Filip",
         lastname="Kostic",
         phonenumber="647-760-9134",
@@ -53,7 +57,9 @@ def populate_user_info_db():
 def populate_set_info_db():
     newaccount = User(
         email="afilkostic@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Filip",
         lastname="Kostic",
         phonenumber="647-760-9134",
@@ -62,7 +68,9 @@ def populate_set_info_db():
 
     newaccount2 = User(
         email="benny@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Benny",
         lastname="Guy",
         phonenumber="123-456-7890",
@@ -79,7 +87,9 @@ def populate_set_info_db():
 def populate_db():
     newaccount = User(
         email="prempotat@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Prem",
         lastname="Potat",
     )
@@ -94,7 +104,13 @@ def populate_db():
         eventBuilding="Test Building",
         eventRoom="Test Room",
         oneLiner="Test One Liner",
-        eventCategories="Arts,Food",
+        eventCategories=str(
+            [
+                {"name": "Academic", id: 1},
+                {"name": "Sports", id: 2},
+                {"name": "Science", id: 3},
+            ]
+        ),
     )
     newevent2 = Event(
         eventName="ECE444 Study Session",
@@ -104,7 +120,13 @@ def populate_db():
         eventBuilding="Sanford Fleming",
         eventRoom="Test Room",
         oneLiner="Test One Liner",
-        eventCategories="Academic",
+        eventCategories=str(
+            [
+                {"name": "Academic", id: 1},
+                {"name": "Sports", id: 2},
+                {"name": "Science", id: 3},
+            ]
+        ),
     )
     db.session.add(newevent2)
     db.session.add(newevent)
@@ -116,13 +138,17 @@ def populate_db():
 def populate_db2():
     newaccount = User(
         email="prempotat@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Prem",
         lastname="Potat",
     )
     newaccount2 = User(
         email="joebrandon@gmail.com",
-        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8"),
+        password=bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode(
+            "utf-8"
+        ),
         firstname="Joe",
         lastname="Brandon",
     )
@@ -216,6 +242,7 @@ def test_allevents(client, populate_db2):
     eventnames = []
     for i in temp:
         eventnames.append(i["eventName"])
+    print(eventnames)
     assert set(eventnames) == set(["ECE444 Study Session", "Test Event"])
 
 
