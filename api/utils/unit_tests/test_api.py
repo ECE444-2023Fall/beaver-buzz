@@ -8,6 +8,7 @@ import json
 import bcrypt
 
 TEST_DB = "test.db"
+default_event_image = "https://mlpcesocsoqj.i.optimole.com/w:auto/h:auto/q:mauto/ig:avif/f:best/https://eventimaging.ca/wp-content/uploads/2021/03/Toronto-Event-Photographer-scaled.jpg"
 
 
 # Done by Julia Wang
@@ -818,7 +819,7 @@ def test_getEvent(client, populate_db):
     assert res.get_json()["eventRoom"] == "Test Room"
     assert res.get_json()["oneLiner"] == "Test One Liner"
     assert res.get_json()["eventDesc"] == None
-    assert res.get_json()["eventImg"] == None
+    assert res.get_json()["eventImg"] == default_event_image
 
     # try to get an event that doesn't exist
     res = client.get("/api/events/3")
