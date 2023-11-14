@@ -111,8 +111,8 @@ const RegisterPage=()=>{
                             <Form.Group>
                                 <Form.Control type="tel"
                                     placeholder="Phone number"
-                                   pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}" 
-                                   className="input"
+                                    pattern = "[0-9]{3}[0-9]{3}[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                    className="input"
                                     id="phonenumber"
                                      {...register("phonenumber", { required: false})}
                                 />
