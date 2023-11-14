@@ -201,10 +201,10 @@ export default function EventPage() {
                                     ))}
                                 </ul>
                             </div>
-                            {userAttending && !eventOwner &&
+                            {userAttending && !eventOwner && !ratingVisible &&
                                 <Button buttonStyle='btn--primary' onClick={register}>Unregister</Button>
                             }
-                            {!userAttending && !eventOwner &&
+                            {!userAttending && !eventOwner && !ratingVisible &&
                                 <Button buttonStyle='btn--primary' onClick={register}>Register</Button>
                             }
                             {ratingVisible && userAttending &&
