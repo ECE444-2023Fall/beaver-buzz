@@ -4,7 +4,7 @@ import { useUserContext } from '../UserContext';
 import './Event.css';
 import { useParams } from "react-router-dom";
 import RateEvent from '../components/Rating';
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export function convertDate(date) {
@@ -45,18 +45,13 @@ export default function EventPage() {
     const [userAttending, setUserAttending] = useState([])
     const [eventOwner, setEventOwner] = useState([])
     const navigate = useNavigate();
+    const [visibility, setVisibility] = useState([])
+    const [alertMessage, setAlertMessage] = useState([]);
 
     const {
         userId,
         setUserId
     } = useUserContext()
-
-
-
-
-
-
-
 
 
     useEffect(() => {
@@ -111,6 +106,7 @@ export default function EventPage() {
             window.location.href = "/login";
         }
         else if (!userAttending) {
+            setUserAttending(true);
             fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}/register/${userId}`, {
                 method: "POST",
                 headers: {
@@ -120,9 +116,14 @@ export default function EventPage() {
             }).then((res) => {
                 if (res.status === 200) {
                     console.log("Successfully registered");
-                    setUserAttending(true);
+                    setAlertMessage("You have been successfully registered to the event!");
+                    setVisibility(true);
+                    setTimeout(() => {
+                        setVisibility(false);
+                    }, 5000);
                 } else {
                     console.log("Failed to register");
+                    setUserAttending(false);
                 }
                 console.log(res);
             }).catch((error) => {
@@ -130,6 +131,7 @@ export default function EventPage() {
             });
         }
         else {
+            setUserAttending(false);
             fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}/unregister/${userId}`, {
                 method: "POST",
                 headers: {
@@ -139,9 +141,14 @@ export default function EventPage() {
             }).then((res) => {
                 if (res.status === 200) {
                     console.log("Successfully un-registered");
-                    setUserAttending(false);
+                    setAlertMessage("You have been successfully un-registered to the event!");
+                    setVisibility(true);
+                    setTimeout(() => {
+                        setVisibility(false);
+                    }, 5000);
                 } else {
                     console.log("Failed to un-register");
+                    setUserAttending(true);
                 }
                 console.log(res);
             }).catch((error) => {
@@ -155,6 +162,16 @@ export default function EventPage() {
         <div>
             {data !== -1 ? (
                 <div>
+                    <div>
+                        {visibility && (
+                            <div className="alert-container">
+                                <div className="alert alert-info">
+                                    <span className="close">X</span>
+                                    <p>{alertMessage}</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                     <head>
                         <title>{data.eventName}</title>
                     </head>
@@ -173,15 +190,15 @@ export default function EventPage() {
                             <img id="eventImage" src={data.eventImg} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
                             <div id="eventInfo">
-                                <p><strong>Organizer: </strong><Link style = {{color: '#1e3765'}} to = {'/user/' + data.organizerID}>{data.organizerName}</Link></p>
+                                <p><strong>Organizer: </strong><Link style={{ color: '#1e3765' }} to={'/user/' + data.organizerID}>{data.organizerName}</Link></p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                                 <ul className="interestList">
-                                {data.eventCategories && data.eventCategories.map((item) => (
-                                <li className='interestListElement' key={item}>
-                                    {item}
-                                </li>
-                                ))}
+                                    {data.eventCategories && data.eventCategories.map((item) => (
+                                        <li className='interestListElement' key={item}>
+                                            {item}
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                             {userAttending && !eventOwner &&

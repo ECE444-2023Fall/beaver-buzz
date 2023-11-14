@@ -33,6 +33,7 @@ export default function EventUpdatePage() {
   const [eventBuilding, setEventBuilding] = useState([]);
   const [eventRoom, setEventRoom] = useState([]);
   const [eventDesc, setEventDesc] = useState([]);
+  const [alertMessage, setAlertMessage] = useState([]);
 
   useEffect(() => {
     const fetchInfo = () => {
@@ -52,6 +53,14 @@ export default function EventUpdatePage() {
           });
         })
         .then((d) => {
+          if (d.organizerID != userId) {
+            setVisibility(true);
+            setAlertMessage("You are not the organizer for this event. Please login to edit this event");
+            setTimeout(() => {
+              setVisibility(false);
+              navigate("/login");
+            }, 4000);
+          }
           // console.log(d);
           let date = new Date(d["eventStart"]);
           let endDate = new Date(d["eventEnd"]);
@@ -111,6 +120,7 @@ export default function EventUpdatePage() {
       .then((response) => response.json())
       .then((data) => {
         if (data["event_id"]) {
+          setAlertMessage("Event has been successfully update! Routing to event page in 5 seconds");
           setVisibility(true);
           setTimeout(() => {
             setVisibility(false);
@@ -128,8 +138,7 @@ export default function EventUpdatePage() {
           <div className="alert-container">
             <div className="alert alert-info">
               <span className="close">X</span>
-              <p>Event has been successfully updated!</p>
-              <p>Routing to event page in 5 seconds</p>
+              <p>{alertMessage}</p>
             </div>
           </div>
         )}
@@ -174,7 +183,7 @@ export default function EventUpdatePage() {
             </Form.Group>
             <div className="space-between-groups"></div>
             <div className="space-between-groups"></div>
-            
+
             <Form.Group controlId="eventEnd">
               <Form.Label className="add-padd">End Time</Form.Label>
               <Form.Control
@@ -192,7 +201,7 @@ export default function EventUpdatePage() {
               <Form.Group controlId="building">
                 <Form.Label className="add-padd">Building</Form.Label>
                 <Form.Control
-                className="w-60"
+                  className="w-60"
                   type="text"
                   defaultValue={eventBuilding}
                   onChange={(e) => setEventBuilding(e.target.value)}
@@ -228,7 +237,7 @@ export default function EventUpdatePage() {
             <strong>Previous Image</strong>
           </p>
           {/* <div className="prev-img"> */}
-            <img className="prev-img" src={data.eventImg} alt="Description of the image" />
+          <img className="prev-img" src={data.eventImg} alt="Description of the image" />
           {/* </div> */}
           <Form.Group controlId="image">
             <Form.Label>Upload New Image</Form.Label>
@@ -238,23 +247,23 @@ export default function EventUpdatePage() {
               {...register("image")}
             />
           </Form.Group>
-        <div className="space-between-groups"></div>
-        <div className="space-between-groups"></div>
+          <div className="space-between-groups"></div>
+          <div className="space-between-groups"></div>
           <Form.Group controlId="tags" className="left-right">
             <Form.Label>Select related topics</Form.Label>
             <div className="dropdown">
-            <Multiselect
-                  options={CATEGORIES}
-                  onSelect={(e) => setTags(e)}
-                  onRemove={(e) => setTags(e)}
-                  selectedValues={selectedTags}
-                  showCheckbox="true"
-                  placeholder="Click to select"
-                  className="tags"
-                  hidePlaceholder="true"
-                  displayValue="name"
-                  optionLabel="name"
-                />
+              <Multiselect
+                options={CATEGORIES}
+                onSelect={(e) => setTags(e)}
+                onRemove={(e) => setTags(e)}
+                selectedValues={selectedTags}
+                showCheckbox="true"
+                placeholder="Click to select"
+                className="tags"
+                hidePlaceholder="true"
+                displayValue="name"
+                optionLabel="name"
+              />
             </div>
           </Form.Group>
 
