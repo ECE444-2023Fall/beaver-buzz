@@ -159,9 +159,9 @@ export default function EventPage() {
                     <body>
                         <div id="eventContainer">
                             {eventOwner &&
-                                <div className="editButtonContainer">
-                                    <Link to="update-event" className="btn btn-primary" id="editButton">Edit Event</Link>
-                                </div>
+
+                                <Button className="page-link-btn" onClick={(e) => {navigate('/events/${id}/update-event')}}>Edit event</Button>
+
                             }
                             <h1 id="eventTitle">{data.eventName}</h1>
                             {ratingVisible &&
@@ -171,7 +171,7 @@ export default function EventPage() {
                             <img id="eventImage" src={data.eventImg} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
                             <div id="eventInfo">
-                                <p><strong>Organizer: </strong><Link to = {'/user/' + data.organizerID}>{data.organizerName}</Link></p>
+                                <p><strong>Organizer: </strong><Link style = {{color: '#1e3765'}} to = {'/user/' + data.organizerID}>{data.organizerName}</Link></p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                                 <ul className="interestList">
