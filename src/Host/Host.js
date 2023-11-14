@@ -171,7 +171,7 @@ export default function HostPage() {
                     className="w-25"
                     type="text"
                     placeholder="#"
-                    maxLength={10}
+                    maxLength={20}
                     {...register("room", { required: true })}
                   />
                 </Form.Group>

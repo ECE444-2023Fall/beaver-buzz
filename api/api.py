@@ -578,6 +578,33 @@ def create_event():
         eventCategories=eventTags,
     )
 
+    if organizer.subscribers:
+        email_array = [u.email for u in organizer.subscribers]
+
+        mailer = Mailer(
+            "smtp.gmail.com",
+            465,
+            (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+        )
+        subject = f"New Event From {organizer.firstname} {organizer.lastname}"
+        for attendee_email in email_array:
+            html = (
+                open("./utils/emails/event_notif.html")
+                .read()
+                .format(
+                    subject=subject,
+                    event_name=eventName,
+                    first_name=organizer.firstname,
+                    last_name=organizer.lastname,
+                    event_date=eventStart,
+                    event_loc=eventBuilding + ", " + eventRoom,
+                )
+            )
+            msg = format_email(mailer.sender, attendee_email, subject, html)
+            mailer.send_mail(attendee_email, msg.as_string())
+
+        mailer.kill()
+
     db.session.add(newevent)
     db.session.commit()
     return jsonify({"event_id": newevent.id})

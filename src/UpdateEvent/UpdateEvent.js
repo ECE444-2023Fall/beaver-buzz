@@ -62,8 +62,8 @@ export default function EventUpdatePage() {
             }, 4000);
           }
           // console.log(d);
-          let date = new Date(d["eventStart"]);
-          let endDate = new Date(d["eventEnd"]);
+          let date = new Date(d["eventStart"].replace("GMT", "EST"));
+          let endDate = new Date(d["eventEnd"].replace("GMT", "EST"));
           d["eventDate"] = date.toISOString().split("T")[0];
           let startTime = date.toLocaleTimeString("it-IT");
           let endTime = endDate.toLocaleTimeString("it-IT");
@@ -120,7 +120,7 @@ export default function EventUpdatePage() {
       .then((response) => response.json())
       .then((data) => {
         if (data["event_id"]) {
-          setAlertMessage("Event has been successfully update! Routing to event page in 5 seconds");
+          setAlertMessage("Event has been successfully updated! Routing to event page in 5 seconds");
           setVisibility(true);
           setTimeout(() => {
             setVisibility(false);
