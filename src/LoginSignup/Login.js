@@ -77,7 +77,8 @@ const LoginPage=()=>{
                          {errors.password && <p className="error">{"Please enter your password"}</p>}
                         <br></br>
                         {credentialsValid ? <p>{greeting}</p> : <p className="error">Invalid email or password</p>}
-                        <Button type='submit' className="submitButton"><h1 className="form-button">Login</h1></Button>
+                        <Button type='submit' className="submitButton"><h1 className="form-button">LOGIN</h1></Button>
+                        <br></br>
                         <h1 className="form-name">Don't have an account?</h1><Link to='/register'><h1 className="form-name">Sign up here</h1></Link>
                     </Form>
 
