@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Multiselect from 'multiselect-react-dropdown';
 import { CATEGORIES } from '../constants/Constants';
 const RegisterPage = () => {
-    const [emailTaken, setTaken] = useState(false)
+    const [errorAccount, setErrorAccount] = useState(false)
     const [greeting, setGreeting] = useState('')
     const [interests, setInterests] = useState(null);
 
@@ -15,7 +15,7 @@ const RegisterPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = (data) => {
         data.interests = interests;
-        if (!data.phonenumber.includes('-')) {
+        if (!data.phonenumber.includes('-') && data.phonenumber != "") {
             data.phonenumber = data.phonenumber.substring(0, 3) + "-" + data.phonenumber.substring(3, 6) + "-" + data.phonenumber.substring(6, 10)
         }
         const requestOptions = {
@@ -31,23 +31,28 @@ const RegisterPage = () => {
                     return response.json();
                 } else {
                     // If the server response wasn't 'ok', throw an error with the status
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.json().then((error) => {
+                        console.log("HTTP Error!")
+                        console.log(error)
+                        setErrorAccount(true);
+                        setGreeting(error.error);
+                        throw new Error(error);
+                    })
                 }
             })
             .then(data => {
                 if (data.greeting) {
-                    setTaken(false);
+                    setErrorAccount(false);
                     setGreeting(data.greeting);
                     navigate("/login");
                 } else {
-                    setTaken(true);
+                    setErrorAccount(true);
                     setGreeting('');
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 // This will catch any error that was thrown in the previous 'then' block
                 console.error('There was a problem with the fetch operation:', error);
-                setGreeting('An error occurred. Please try again.');
             });
     }
 
@@ -149,7 +154,7 @@ const RegisterPage = () => {
                                         {...register("interests", { required: false})}
                                 />
                             </Form.Group>*/}
-                    {!emailTaken ? <p>{greeting}</p> : <p className="error">There is already an account registered with this email</p>}
+                    {errorAccount && <p className="error">{greeting}</p>}
                     <Button type='submit' className="submitButton" style={{ marginTop: '20px' }}><h1 className="form-button">Register</h1></Button>
 
                 </Form>

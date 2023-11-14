@@ -356,7 +356,7 @@ def set_phone():
     user = db.get_or_404(User, id)
 
     otherUser = User.query.filter_by(phonenumber=phone).first()
-    if otherUser is not None and otherUser != user and phone is not None:
+    if otherUser is not None and otherUser != user and phone != "":
         return jsonify({"error": "phone number is already in use"}), 400
 
     user.phonenumber = phone
@@ -440,7 +440,7 @@ def register():
 
     user = User.query.filter_by(phonenumber=phonenumber).first()
     if (
-        user is not None and user.phonenumber is not None
+        user is not None and user.phonenumber is not ""
     ):  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
