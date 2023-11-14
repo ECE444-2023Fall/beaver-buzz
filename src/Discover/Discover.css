@@ -43,6 +43,7 @@
   /* Note: 'bold' is not a valid value for font-style, use font-weight for that */
   font-weight: 500;
   line-height: normal;
+  animation: flash 3s infinite;
 
   &:hover {
     color: var(--uoft-blue);
@@ -236,15 +237,7 @@
 }
 
 .title {
-  color: #000;
-  font-family: 'Poppins';
-  font-size: 42px;
-  font-style: bold;
-  /* Note: 'bold' is not a valid value for font-style, use font-weight for that */
-  font-weight: 500;
-  line-height: normal;
-  animation: flash 3s infinite;
-  /* Adjust the duration (2s) as needed */
+  font-size: 40px;
 }
 
 .discover-body {
