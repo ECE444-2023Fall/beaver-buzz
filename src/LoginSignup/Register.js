@@ -15,7 +15,9 @@ const RegisterPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = (data) => {
         data.interests = interests;
-
+        if (!data.phonenumber.includes('-')) {
+            data.phonenumber = data.phonenumber.substring(0, 3) + "-" + data.phonenumber.substring(3, 6) + "-" + data.phonenumber.substring(6, 10)
+        }
         const requestOptions = {
             method: "POST",
             headers: {

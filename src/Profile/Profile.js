@@ -297,9 +297,12 @@ const ProfilePage = () => {
 
   const submitPhone = (event) => {
     setPhoneDisabled(true);
-    const phoneNumberRegex = /^\d{3}-\d{3}-\d{4}|\d{10}$/;
-    const newValue = event.target.value;
+    const phoneNumberRegex = /^\d{3}-\d{3}-\d{4}$|\d{10}$/;
+    var newValue = event.target.value;
     if (phoneNumberRegex.test(newValue) && newValue != phone) {
+      if (!newValue.includes('-')) {
+        newValue = newValue.substring(0, 3) + "-" + newValue.substring(3, 6) + "-" + newValue.substring(6, 10);
+      }
       const requestOptions = {
         method: "POST",
         headers: {
