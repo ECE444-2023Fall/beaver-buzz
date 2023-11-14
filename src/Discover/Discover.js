@@ -39,7 +39,7 @@ const DiscoverPage = () => {
     const fetchData = async () => {
       try {
         // Your fetch request goes here
-        fetch("http://localhost:8000/api/allevents", {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/allevents`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -49,6 +49,7 @@ const DiscoverPage = () => {
           .then((data) => {
             setsearchitems(data);
           });
+        onSubmit();
         // Process the data
       } catch (error) {
         console.error("Error fetching data:", error);
