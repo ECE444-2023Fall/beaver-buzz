@@ -454,8 +454,11 @@ def register():
 
     mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
     subject = 'Registration Confirmation'
-    i_list = [i['name'] for i in request.json["interests"]]
-    i_list = str(i_list).translate({ord(i): None for i in "'[]"})
+    if request.json["interests"]:
+        i_list = [i['name'] for i in request.json["interests"]]
+        i_list = str(i_list).translate({ord(i): None for i in "'[]"})
+    else:
+        i_list = ""
     html = open('./utils/emails/registration.html').read().format(
             subject=subject,firstname=firstname,lastname=lastname,
             email=email,phonenumber=phonenumber,interests=i_list,
