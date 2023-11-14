@@ -4,7 +4,7 @@ import { useUserContext } from '../UserContext';
 import './Event.css';
 import { useParams } from "react-router-dom";
 import RateEvent from '../components/Rating';
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export function convertDate(date) {
@@ -50,6 +50,11 @@ export default function EventPage() {
         userId,
         setUserId
     } = useUserContext()
+
+    function editClicked() {
+        console.log(`/events/${id}/update-event`); 
+        navigate(`/events/${id}/update-event`);
+    }
 
 
 
@@ -160,7 +165,7 @@ export default function EventPage() {
                         <div id="eventContainer">
                             {eventOwner &&
                                 <div className="editButtonContainer">
-                                    <Button className="page-link-btn" onClick={(e) => {console.log(`/events/${id}/update-event`); navigate(`/events/${id}/update-event`);}}>Edit event</Button>
+                                    <Button className="page-link-btn" onClick={editClicked}>Edit event</Button>
                                 </div>
                             }
                             <h1 id="eventTitle">{data.eventName}</h1>
