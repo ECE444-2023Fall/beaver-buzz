@@ -10,29 +10,30 @@ import { useNavigate } from "react-router-dom";
 export function convertDate(date) {
     if (!date) return "";
     // console.log(date);
-    const months = {
-        Jan: "01",
-        Feb: "02",
-        Mar: "03",
-        Apr: "04",
-        May: "05",
-        Jun: "06",
-        Jul: "07",
-        Aug: "08",
-        Sep: "09",
-        Oct: "10",
-        Nov: "11",
-        Dec: "12"
-    };
-    const dateParts = date.split(" ");
-    console.log(dateParts)
-    const month = months[dateParts[2]];
-    const day = dateParts[1];
-    const year = dateParts[3];
-    const time = dateParts[4];
-    const newDate = new Date(`${year}-${month}-${day}T${time}Z`);
-    // console.log(newDate);
-    let finalDate = newDate.toString().replace('GMT', 'EST')
+    // const months = {
+    //     Jan: "01",
+    //     Feb: "02",
+    //     Mar: "03",
+    //     Apr: "04",
+    //     May: "05",
+    //     Jun: "06",
+    //     Jul: "07",
+    //     Aug: "08",
+    //     Sep: "09",
+    //     Oct: "10",
+    //     Nov: "11",
+    //     Dec: "12"
+    // };
+    // const dateParts = date.split(" ");
+    // console.log(dateParts)
+    // const month = months[dateParts[2]];
+    // const day = dateParts[1];
+    // const year = dateParts[3];
+    // const time = dateParts[4];
+    // const newDate = new Date(`${year}-${month}-${day}T${time}Z`);
+    // // console.log(newDate);
+    // let finalDate = newDate.toString().replace('GMT', 'EST')
+    let finalDate = date.toString().replace('GMT', '')
     return finalDate;
 }
 
@@ -71,7 +72,7 @@ export default function EventPage() {
                     })
                 })
                 .then((d) => {
-                    // console.log(d);
+                    console.log(d);
                     setData(d)
                     let currentDate = new Date();
                     let eventEnd = new Date(d.eventEnd)
@@ -151,7 +152,7 @@ export default function EventPage() {
                     <head>
                         <title>{data.eventName}</title>
                     </head>
-                    <body>s
+                    <body>
                         <div id="eventContainer">
                             {eventOwner &&
                                 <div className="editButtonContainer">
@@ -171,8 +172,8 @@ export default function EventPage() {
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                                 {data.eventCategories && <p><strong>Event Categories: </strong>{
                                     data.eventCategories && data.eventCategories.map(item =>
-                                        <tr key={item.name}>
-                                            <td>- {item.name}</td>
+                                        <tr key={item}>
+                                            <td>- {item}</td>
                                         </tr>)}
                                 </p>}
                             </div>
