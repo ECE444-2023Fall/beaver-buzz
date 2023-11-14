@@ -31,8 +31,8 @@ const DiscoverPage = () => {
     acc[location] = false;
     return acc;
   }, {});
-  //initialObject["searchbar"] = "";
-  //initialObject["Organizer"] = false;
+  initialObject["searchbar"] = "";
+  initialObject["Organizer"] = false;
   const [sendToBack, setSendToBack] = useState(initialObject);
 
   //Initially Fetch all results
@@ -172,7 +172,7 @@ const DiscoverPage = () => {
           placeholder="Start typing your search.."
           className="search"
           onChange={(e) => {
-            setQuery(e.target.value);
+            setSendToBack({ ...sendToBack, searchbar: e.target.value });
             onSubmit({ ...sendToBack, searchbar: e.target.value });
           }}
         ></input>
