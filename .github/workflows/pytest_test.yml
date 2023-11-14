@@ -22,3 +22,6 @@ jobs:
       - name: Running unit tests with pytest
         run: |
           python -m pytest ./api/utils/unit_tests/
+        env:
+          SQLALCHEMY_DATABASE_URI: postgres://qecwoigoozrgyp:e50b6d4b10e8402b7f0fa17b0c5fd89e54ff5913df327e3e20e365f27f0208fc@ec2-54-156-20-209.compute-1.amazonaws.com:5432/decpblpm06ivfj
+          
