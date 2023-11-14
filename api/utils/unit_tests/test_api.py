@@ -123,9 +123,9 @@ def populate_db():
         oneLiner="Test One Liner",
         eventCategories=str(
             [
-                {"name": "Academic", id: 1},
-                {"name": "Sports", id: 2},
-                {"name": "Science", id: 3},
+                {"name": "Academic", "id": 1},
+                {"name": "Sports", "id": 2},
+                {"name": "Science", "id": 3},
             ]
         ),
     )
