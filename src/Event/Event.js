@@ -157,6 +157,31 @@ export default function EventPage() {
         }
     }
 
+    const deleteEvent = () => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/events/${id}/delete`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({}),
+        }).then((res) => {
+            if (res.status === 200) {
+                console.log("Successfully Deleted");
+                setAlertMessage("This event has been deleted. Redirecting to home page in 5 seconds");
+                setVisibility(true);
+                setTimeout(() => {
+                    setVisibility(false);
+                    navigate("/");
+                }, 5000);
+            } else {
+                console.log("Failed to delete event");
+            }
+            console.log(res);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     // eventImage uses default event image when the event data doesn't contain an event image
     return (
         <div>
@@ -177,9 +202,12 @@ export default function EventPage() {
                     </head>
                     <body>
                         <div id="eventContainer">
-                            {eventOwner && !ratingVisible &&
+                            {eventOwner &&
                                 <div className="editButtonContainer">
-                                    <Link to="update-event" className="btn btn-primary" id="editButton">Edit Event</Link>
+                                    <Link onClick={deleteEvent} className="btn btn-primary" id="editButton">Delete Event</Link>
+                                    {!ratingVisible &&
+                                        <Link to="update-event" className="btn btn-primary" id="editButton">Edit Event</Link>
+                                    }
                                 </div>
                             }
                             <h1 id="eventTitle">{data.eventName}</h1>

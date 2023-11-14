@@ -763,6 +763,27 @@ def delete_event(eventid):
         json: json object with field result set to "deleted"
     """
     event = Event.query.filter_by(id=eventid).first()
+
+    if event.users:
+        email_array = [u.email for u in event.users]
+
+        mailer = Mailer(
+            "smtp.gmail.com",
+            465,
+            (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+        )
+        subject = f"{event.eventName} Cancelled"
+        for attendee_email in email_array:
+            html = (
+                open("./utils/emails/event_cancel_notif.html")
+                .read()
+                .format(subject=subject, event_name=event.eventName)
+            )
+            msg = format_email(mailer.sender, attendee_email, subject, html)
+            mailer.send_mail(attendee_email, msg.as_string())
+
+        mailer.kill()
+
     db.session.delete(event)
     db.session.commit()
     return jsonify({"result": "deleted"})
