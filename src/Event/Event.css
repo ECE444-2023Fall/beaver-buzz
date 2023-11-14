@@ -35,7 +35,7 @@ body {
     border-radius: 12px;
     padding: 3px;
     font-family: 'Open Sans', sans-serif;
-    font-size: 10px;
+    font-size: 15px;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -57,6 +57,7 @@ body {
 #eventTitle {
     font-size: 30px;
     color: #333;
+    font-family: BemboStd;
 }
 
 #eventDescription {
@@ -72,6 +73,7 @@ body {
 #eventInfo {
     font-size: 16px;
     text-align: left;
+    margin-bottom: 20px;
 }
 
 .iconWithSpace {
