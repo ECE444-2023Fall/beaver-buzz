@@ -60,8 +60,11 @@ const DiscoverPage = () => {
   }, []);
 
   const onSubmit = (data) => {
+    console.log('Before set to null')
+    console.log(data)
     setSelectedItem(null);
-    //console.log(data);
+    console.log('After set to null')
+    console.log(data);
     var temp_data = { filters: [] };
     var filters = locations;
     for (const key in data) {
