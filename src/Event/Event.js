@@ -118,6 +118,7 @@ export default function EventPage() {
             }).then((res) => {
                 if (res.status === 200) {
                     console.log("Successfully registered");
+                    setNumAttendees(numAttendees + 1);
                     setAlertMessage("You have been successfully registered to the event!");
                     setVisibility(true);
                     setTimeout(() => {
@@ -143,6 +144,7 @@ export default function EventPage() {
             }).then((res) => {
                 if (res.status === 200) {
                     console.log("Successfully un-registered");
+                    setNumAttendees(numAttendees - 1);
                     setAlertMessage("You have been successfully un-registered to the event!");
                     setVisibility(true);
                     setTimeout(() => {
