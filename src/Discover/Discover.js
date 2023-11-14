@@ -69,7 +69,7 @@ const DiscoverPage = () => {
       if (key === "searchbar") {
         temp_data["searchbar"] = data["searchbar"];
       }
-      if (key === "Organizer" && data[key] === true) {
+      if (key == "Organizer" && data[key] == true) {
         temp_data["Organizer"] = data["Organizer"];
       }
       if (filters.includes(key) && data[key] === true) {
