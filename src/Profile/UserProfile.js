@@ -196,7 +196,15 @@ const UserPage = () => {
           `${process.env.REACT_APP_BACKEND_URL}/api/getUserInfo`,
           requestOptions
         )
-          .then((response) => response.json())
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            return response.json().then((error) => {
+              console.log("User does not exist.")
+              navigate("/");
+            })
+          })
           .then((data) => {
             setEmail(data.emailaddr);
             setPhone(data.phonenumber);
@@ -211,6 +219,9 @@ const UserPage = () => {
               setAvatar(defaultUser);
             }
           });
+      }
+      else {
+        navigate("/login");
       }
     }
 
@@ -271,7 +282,7 @@ const UserPage = () => {
     <div className="mainFlexBox">
       <div className="left">
         <div className="flexbox-user-container">
-            <UploadAvatar id={userId} avatar={avatar} />
+          <UploadAvatar id={userId} avatar={avatar} />
           <Button
             className="subscribeButton"
             onClick={(e) => {
@@ -346,7 +357,7 @@ const UserPage = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="left">
         <div className="event-wish-list-table">
           <div className="flexbox-horizontal-container">
