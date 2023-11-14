@@ -8,6 +8,7 @@ import pandas as pd
 from typing import Iterable
 from tqdm import tqdm
 
+
 class Mailer:
     """
     Mailer class handles sending emails to recipients via google's smtp server. Login credentials required for SSL authentication.
@@ -38,7 +39,7 @@ class Mailer:
             except EmailNotValidError as e:
                 print(str(e))
         else:
-            print('Sending email with no validation...')
+            print("Sending email with no validation...")
             self.server.sendmail(self.sender, recipient, content)
 
     def mass_mail(
@@ -114,7 +115,7 @@ def get_login(f_path, account):
     Reads login credentials from a textfile.
     """
     if not os.path.isfile(f_path):
-        print('File does not exist')
+        print("File does not exist")
     else:
         with open(f_path) as f:
             lines = f.read().splitlines()

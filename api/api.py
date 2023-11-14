@@ -21,7 +21,12 @@ app = Flask(__name__)
 CORS(
     app,
     resources={
-        r"/api/*": {"origins": ["https://premiumpotatoes-4fb5418fe273.herokuapp.com", "https://www.beaver-buzz.ca"]}
+        r"/api/*": {
+            "origins": [
+                "https://premiumpotatoes-4fb5418fe273.herokuapp.com",
+                "https://www.beaver-buzz.ca",
+            ]
+        }
     },
 )
 app.config.from_object(Configuration)
@@ -351,7 +356,7 @@ def set_phone():
     user = db.get_or_404(User, id)
 
     otherUser = User.query.filter_by(phonenumber=phone).first()
-    if otherUser is not None and otherUser != user and phone is not None:
+    if otherUser is not None and otherUser != user and phone != "":
         return jsonify({"error": "phone number is already in use"}), 400
 
     user.phonenumber = phone
@@ -434,7 +439,9 @@ def register():
         return jsonify({"error": "User with this email already exists"}), 400
 
     user = User.query.filter_by(phonenumber=phonenumber).first()
-    if user is not None and user.phonenumber is not None:  # An account with this phonenumber exists
+    if (
+        user is not None and user.phonenumber is not ""
+    ):  # An account with this phonenumber exists
         return jsonify({"error": "User with this phone number already exists"}), 400
 
     passwordHash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode(
@@ -452,16 +459,32 @@ def register():
         interests=interests,
     )
 
-    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
-    subject = 'Registration Confirmation'
-    i_list = [i['name'] for i in request.json["interests"]]
-    i_list = str(i_list).translate({ord(i): None for i in "'[]"})
-    html = open('./utils/emails/registration.html').read().format(
-            subject=subject,firstname=firstname,lastname=lastname,
-            email=email,phonenumber=phonenumber,interests=i_list,
-            potatoemail=mailer.sender)
+    mailer = Mailer(
+        "smtp.gmail.com",
+        465,
+        (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+    )
+    subject = "Registration Confirmation"
+    if request.json["interests"]:
+        i_list = [i["name"] for i in request.json["interests"]]
+        i_list = str(i_list).translate({ord(i): None for i in "'[]"})
+    else:
+        i_list = ""
+    html = (
+        open("./utils/emails/registration.html")
+        .read()
+        .format(
+            subject=subject,
+            firstname=firstname,
+            lastname=lastname,
+            email=email,
+            phonenumber=phonenumber,
+            interests=i_list,
+            potatoemail=mailer.sender,
+        )
+    )
     msg = format_email(mailer.sender, email, subject, html)
-    mailer.send_mail(email,msg.as_string())
+    mailer.send_mail(email, msg.as_string())
     mailer.kill()
 
     db.session.add(newaccount)
@@ -489,7 +512,7 @@ def get_event(id):
         event.eventEnd = event.eventEnd
         results = event.serialize()
         results["organizerName"] = str(user.firstname) + " " + str(user.lastname)
-        results["attendeeList"] = [int(id) for user in event.users]
+        results["attendeeList"] = [int(user.id) for user in event.users]
         if event.eventCategories is not None:
             results["eventCategories"] = ast.literal_eval(event.eventCategories)
         return jsonify(results), 200
@@ -555,6 +578,34 @@ def create_event():
         eventCategories=eventTags,
     )
 
+    if organizer.subscribers:
+        email_array = [u.email for u in organizer.subscribers]
+
+        mailer = Mailer(
+            "smtp.gmail.com",
+            465,
+            (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+        )
+        subject = f"New Event From {organizer.firstname} {organizer.lastname}"
+        for attendee_email in email_array:
+            html = (
+                open("./utils/emails/event_notif.html")
+                .read()
+                .format(
+                    subject=subject,
+                    event_name=eventName,
+                    first_name=organizer.firstname,
+                    last_name=organizer.lastname,
+                    event_one_liner=oneLiner,
+                    event_date=eventStart,
+                    event_loc=eventBuilding + ", " + eventRoom,
+                )
+            )
+            msg = format_email(mailer.sender, attendee_email, subject, html)
+            mailer.send_mail(attendee_email, msg.as_string())
+
+        mailer.kill()
+
     db.session.add(newevent)
     db.session.commit()
     return jsonify({"event_id": newevent.id})
@@ -577,14 +628,24 @@ def register_event(eventid, userid):
     event.registered += 1
     db.session.commit()
 
-    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
-    subject = 'Event Registration Confirmation'
-    html = open('./utils/emails/event_registration.html').read().format(
-            subject=subject, event_name=event.eventName, 
-            event_date=event.eventStart, 
-            event_loc=event.eventBuilding + ', ' + event.eventRoom)
+    mailer = Mailer(
+        "smtp.gmail.com",
+        465,
+        (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+    )
+    subject = "Event Registration Confirmation"
+    html = (
+        open("./utils/emails/event_registration.html")
+        .read()
+        .format(
+            subject=subject,
+            event_name=event.eventName,
+            event_date=event.eventStart,
+            event_loc=event.eventBuilding + ", " + event.eventRoom,
+        )
+    )
     msg = format_email(mailer.sender, user.email, subject, html)
-    mailer.send_mail(user.email,msg.as_string())
+    mailer.send_mail(user.email, msg.as_string())
     mailer.kill()
 
     return jsonify(event.serialize())
@@ -654,6 +715,39 @@ def updateEvent(eventid):
     if n["image"] is not False:
         event.eventImg = n["image"]
     event.eventCategories = str(n["eventCategories"])
+
+    organizer = User.query.filter_by(id=n["organizerID"]).first()
+    if not organizer:
+        return jsonify({"Error": "Please log in first!"})
+
+    if organizer.subscribers:
+        email_array = [u.email for u in organizer.subscribers]
+
+        mailer = Mailer(
+            "smtp.gmail.com",
+            465,
+            (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+        )
+        subject = f"Event Update From {organizer.firstname} {organizer.lastname}"
+        for attendee_email in email_array:
+            html = (
+                open("./utils/emails/event_update_notif.html")
+                .read()
+                .format(
+                    subject=subject,
+                    event_name=n["eventName"],
+                    first_name=organizer.firstname,
+                    last_name=organizer.lastname,
+                    event_one_liner=event.oneLiner,
+                    event_date=eventStart,
+                    event_loc=n["building"] + ", " + n["room"],
+                )
+            )
+            msg = format_email(mailer.sender, attendee_email, subject, html)
+            mailer.send_mail(attendee_email, msg.as_string())
+
+        mailer.kill()
+
     db.session.commit()
     return jsonify({"event_id": event.id})
 
@@ -669,6 +763,27 @@ def delete_event(eventid):
         json: json object with field result set to "deleted"
     """
     event = Event.query.filter_by(id=eventid).first()
+
+    if event.users:
+        email_array = [u.email for u in event.users]
+
+        mailer = Mailer(
+            "smtp.gmail.com",
+            465,
+            (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+        )
+        subject = f"{event.eventName} Cancelled"
+        for attendee_email in email_array:
+            html = (
+                open("./utils/emails/event_cancel_notif.html")
+                .read()
+                .format(subject=subject, event_name=event.eventName)
+            )
+            msg = format_email(mailer.sender, attendee_email, subject, html)
+            mailer.send_mail(attendee_email, msg.as_string())
+
+        mailer.kill()
+
     db.session.delete(event)
     db.session.commit()
     return jsonify({"result": "deleted"})
@@ -808,7 +923,9 @@ def allevents():
     Returns all events for initialization purposes. search() function is used when a search is executed.
     """
     current_time = datetime.now(est).replace(tzinfo=utc)
-    results = [e.serialize() for e in Event.query.filter(Event.eventStart > current_time).all()]
+    results = [
+        e.serialize() for e in Event.query.filter(Event.eventStart > current_time).all()
+    ]
     users = User.query.all()
     users_dict = {}
     for u in users:
@@ -888,7 +1005,7 @@ def search():
                         ]
                     ),
                     func.lower(Event.eventName).contains(query.lower()),
-                    Event.eventStart > current_time
+                    Event.eventStart > current_time,
                 ).all()
             else:
                 filtered_results = Event.query.filter(
@@ -899,16 +1016,20 @@ def search():
                         ]
                     ),
                     Event.eventCategories.contains(query.capitalize()),
-                    Event.eventStart > current_time
+                    Event.eventStart > current_time,
                 ).all()
         else:
             if fn == ln:
                 users = User.query.filter(
-                    or_(func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln))
+                    or_(
+                        func.lower(User.firstname).contains(fn.lower()),
+                        func.lower(User.lastname).contains(ln),
+                    )
                 ).all()
             else:
                 users = User.query.filter(
-                    func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower())
+                    func.lower(User.firstname).contains(fn.lower()),
+                    func.lower(User.lastname).contains(ln.lower()),
                 ).all()
 
             user_ids = [user.id for user in users]
@@ -923,7 +1044,7 @@ def search():
                     ]
                 ),
                 Event.organizerID.in_(user_ids),
-                Event.eventStart > current_time
+                Event.eventStart > current_time,
             ).all()
 
     # No Query and Have Filter
@@ -944,28 +1065,34 @@ def search():
             if query.capitalize() not in eventtags:
                 filtered_results = Event.query.filter(
                     func.lower(Event.eventName).contains(query.lower()),
-                    Event.eventStart > current_time
+                    Event.eventStart > current_time,
                 ).all()
             else:
                 filtered_results = Event.query.filter(
                     Event.eventCategories.contains(query.capitalize()),
-                    Event.eventStart > current_time
+                    Event.eventStart > current_time,
                 ).all()
         else:
             if fn == ln:
                 users = User.query.filter(
-                    or_(func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower()))
+                    or_(
+                        func.lower(User.firstname).contains(fn.lower()),
+                        func.lower(User.lastname).contains(ln.lower()),
+                    )
                 ).all()
             else:
                 users = User.query.filter(
-                    func.lower(User.firstname).contains(fn.lower()), func.lower(User.lastname).contains(ln.lower())
+                    func.lower(User.firstname).contains(fn.lower()),
+                    func.lower(User.lastname).contains(ln.lower()),
                 ).all()
 
             user_ids = [user.id for user in users]
             for u in users:
                 users_dict[u.id] = u.firstname + " " + u.lastname
 
-            filtered_results = Event.query.filter(Event.organizerID.in_(user_ids),Event.eventStart > current_time).all()
+            filtered_results = Event.query.filter(
+                Event.organizerID.in_(user_ids), Event.eventStart > current_time
+            ).all()
     else:
         filtered_results = Event.query.filter(Event.eventStart > current_time).all()
     results = [e.serialize() for e in filtered_results]

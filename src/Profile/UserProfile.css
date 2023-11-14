@@ -121,8 +121,8 @@
 
 }
 
-.followerList{
-
+.followerList {
+    cursor: pointer
 }
 
 .event-vertical-container {

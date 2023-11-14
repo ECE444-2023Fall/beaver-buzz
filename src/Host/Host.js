@@ -33,7 +33,7 @@ export default function HostPage() {
       data["image"].length == 0
         ? "https://img.freepik.com/premium-photo/business-entrepreneurship-symposium-speaker-giving-talk-business-meeting_386094-31.jpg?size=626&ext=jpg&ga=GA1.1.44546679.1699574400&semt=ais"
         : await getBase64(data["image"].item(0));
-    data["tags"] = tags == null ? [] : tags.map((tag) => tag.name);
+    data["tags"] = tags;
     console.log(data);
     const requestOptions = {
       method: "POST",
@@ -113,37 +113,37 @@ export default function HostPage() {
             <div className="space-between-groups"></div>
 
             <div className="form-row">
-            <Form.Group controlId="eventStart">
-              <Form.Label className="add-padd">Start Time</Form.Label>
-              <Form.Control
-                type="time"
-                placeholder="Enter start time"
-                {...register("eventStart", { required: true })}
-              />
-            </Form.Group>
-            {errors.eventStart && (
-              <p className="error">
-                {"Please enter the start time of your event"}
-              </p>
-            )}
-            <div className="space-between-groups"></div>
-            <div className="space-between-groups"></div>
+              <Form.Group controlId="eventStart">
+                <Form.Label className="add-padd">Start Time</Form.Label>
+                <Form.Control
+                  type="time"
+                  placeholder="Enter start time"
+                  {...register("eventStart", { required: true })}
+                />
+              </Form.Group>
+              {errors.eventStart && (
+                <p className="error">
+                  {"Please enter the start time of your event"}
+                </p>
+              )}
+              <div className="space-between-groups"></div>
+              <div className="space-between-groups"></div>
 
-            <Form.Group controlId="eventEnd">
-              <Form.Label className="add-padd">End Time</Form.Label>
-              <Form.Control
-                type="time"
-                placeholder="Enter end time"
-                {...register("eventEnd", { required: true })}
-              />
-            </Form.Group>
-            {errors.eventEnd && (
-              <p className="error">
-                {"Please enter the end time of your event"}
-              </p>
-            )}
-            <div className="space-between-groups"></div>
-            <div className="space-between-groups"></div>
+              <Form.Group controlId="eventEnd">
+                <Form.Label className="add-padd">End Time</Form.Label>
+                <Form.Control
+                  type="time"
+                  placeholder="Enter end time"
+                  {...register("eventEnd", { required: true })}
+                />
+              </Form.Group>
+              {errors.eventEnd && (
+                <p className="error">
+                  {"Please enter the end time of your event"}
+                </p>
+              )}
+              <div className="space-between-groups"></div>
+              <div className="space-between-groups"></div>
             </div>
 
             <div class="form-row">
@@ -171,7 +171,7 @@ export default function HostPage() {
                     className="w-25"
                     type="text"
                     placeholder="#"
-                    maxLength={10}
+                    maxLength={20}
                     {...register("room", { required: true })}
                   />
                 </Form.Group>
