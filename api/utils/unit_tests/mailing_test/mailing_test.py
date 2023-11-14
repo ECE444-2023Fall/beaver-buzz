@@ -35,7 +35,7 @@ class TestEmail:
         """
         self.smtp_server = goog_smtp
         self.smtp_port = goog_ports_smtp[0]
-        self.login = (os.getenv['GMAIL_LOGIN'], os.environ.getenv['GMAIL_APP_PWD'])
+        self.login = (os.environ['GMAIL_LOGIN'], os.environ['GMAIL_APP_PWD'])
         self.mailer = Mailer(self.smtp_server, self.smtp_port, self.login)
         verif = self.mailer.server.verify(self.smtp_server)
         assert verif[0] in [250, 251, 252]
@@ -47,7 +47,7 @@ class TestEmail:
         """
         self.imap_server = goog_imap
         self.imap_port = goog_ports_imap[0]
-        self.login = (os.getenv['GMAIL_LOGIN'], os.environ.getenv['GMAIL_APP_PWD'])
+        self.login = (os.environ['GMAIL_LOGIN'], os.environ['GMAIL_APP_PWD'])
         self.inbox = Inbox(self.imap_server, self.imap_port, self.login)
         self.inbox.server.select("Inbox")
         assert self.inbox.server.check()
@@ -62,7 +62,7 @@ class TestEmail:
         """
         self.smtp_server = goog_smtp
         self.smtp_port = goog_ports_smtp[0]
-        self.login = (os.getenv['GMAIL_LOGIN'], os.environ.getenv['GMAIL_APP_PWD'])
+        self.login = (os.environ['GMAIL_LOGIN'], os.environ['GMAIL_APP_PWD'])
         self.mailer = Mailer(self.smtp_server, self.smtp_port, self.login)
 
         self.imap_server = goog_imap

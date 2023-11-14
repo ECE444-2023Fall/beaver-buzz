@@ -452,7 +452,7 @@ def register():
         interests=interests,
     )
 
-    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
+    mailer = Mailer('smtp.gmail.com', 465, (os.environ['GMAIL_LOGIN'], os.environ['GMAIL_APP_PWD']))
     subject = 'Registration Confirmation'
     i_list = [i['name'] for i in request.json["interests"]]
     i_list = str(i_list).translate({ord(i): None for i in "'[]"})
@@ -577,7 +577,7 @@ def register_event(eventid, userid):
     event.registered += 1
     db.session.commit()
 
-    mailer = Mailer('smtp.gmail.com', 465, (os.environ.get('GMAIL_LOGIN'), os.environ.get('GMAIL_APP_PWD')))
+    mailer = Mailer('smtp.gmail.com', 465, (os.environ['GMAIL_LOGIN'], os.environ['GMAIL_APP_PWD']))
     subject = 'Event Registration Confirmation'
     html = open('./utils/emails/event_registration.html').read().format(
             subject=subject, event_name=event.eventName, 
