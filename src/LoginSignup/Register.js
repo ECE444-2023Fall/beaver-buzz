@@ -63,7 +63,6 @@ const RegisterPage = () => {
     return (
         <div className="container">
             <div className="form-center">
-
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     <h1 className="form-title">Register Here</h1>
                     <h1 className="form-name">Email</h1>
@@ -73,7 +72,7 @@ const RegisterPage = () => {
                             placeholder="Email"
                             id="input"
                             className="input"
-                            {...register("email", { required: true, maxLength: 100 })} o
+                            {...register("email", { required: true, maxLength: 100 })}
                         />
                     </Form.Group>
                     {errors.email && <p className="error">{"Please enter a valid email address"}</p>}
@@ -143,17 +142,6 @@ const RegisterPage = () => {
                         }} // Function will trigger on remove event
                         displayValue="name" // Property name to display in the dropdown options
                     />
-                    {/* <Form.Group>
-                                <Form.Control as="textarea"
-                                        rows={3}
-                                        placeholder="Tell us about your interests!"
-                                        id="interests"
-                                               className="input"
-                                              resize = "none"
-                                              width = "100px"
-                                        {...register("interests", { required: false})}
-                                />
-                            </Form.Group>*/}
                     {errorAccount && <p className="error">{greeting}</p>}
                     <Button type='submit' className="submitButton" style={{ marginTop: '20px' }}><h1 className="form-button">Register</h1></Button>
 

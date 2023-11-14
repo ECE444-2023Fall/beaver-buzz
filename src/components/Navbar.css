@@ -103,7 +103,7 @@
   border: 1px solid var(--primary);
   transform: translateY(-2px);
   border-radius: 3px;
-  width: 113px;
+  width: 125px;
   font-family: 'Open Sans', sans-serif;
   &:hover{
     background-color: #dce6fa;
