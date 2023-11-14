@@ -37,7 +37,7 @@ with app.app_context():
     db.create_all()
 
 utc = pytz.UTC
-# est = pytz.timezone("US/Eastern")
+est = pytz.timezone("US/Eastern")
 
 
 @app.route("/api/health", methods=["GET"])
@@ -824,7 +824,7 @@ def get_events_by_user(userid):
 
     else:
         for event in events:
-            dt = utc.localize(datetime.now().replace(tzinfo=None))
+            dt = datetime.now(est).replace(tzinfo=utc)
             if dt <= event.eventEnd:
                 final.append(event.serialize())
 
@@ -837,7 +837,7 @@ def allevents():
     """
     Returns all events for initialization purposes. search() function is used when a search is executed.
     """
-    current_time = datetime.now()
+    current_time = datetime.now(est).replace(tzinfo=utc)
     results = [
         e.serialize() for e in Event.query.filter(Event.eventStart > current_time).all()
     ]
@@ -907,7 +907,7 @@ def search():
     print(query)
     filtered_results = []
     users_dict = {}
-    current_time = datetime.now()
+    current_time = datetime.now(est).replace(tzinfo=utc)
     # Both Query and Filters
     if query != "" and len(location_filters) != 0:
         if org_filter is False:
