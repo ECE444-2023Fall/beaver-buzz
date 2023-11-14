@@ -596,6 +596,7 @@ def create_event():
                     event_name=eventName,
                     first_name=organizer.firstname,
                     last_name=organizer.lastname,
+                    event_one_liner=oneLiner,
                     event_date=eventStart,
                     event_loc=eventBuilding + ", " + eventRoom,
                 )
@@ -730,13 +731,14 @@ def updateEvent(eventid):
         subject = f"Event Update From {organizer.firstname} {organizer.lastname}"
         for attendee_email in email_array:
             html = (
-                open("./utils/emails/event_notif.html")
+                open("./utils/emails/event_update_notif.html")
                 .read()
                 .format(
                     subject=subject,
                     event_name=n["eventName"],
                     first_name=organizer.firstname,
                     last_name=organizer.lastname,
+                    event_one_liner=event.oneLiner,
                     event_date=eventStart,
                     event_loc=n["building"] + ", " + n["room"],
                 )
