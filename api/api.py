@@ -714,6 +714,38 @@ def updateEvent(eventid):
     if n["image"] is not False:
         event.eventImg = n["image"]
     event.eventCategories = str(n["eventCategories"])
+
+    organizer = User.query.filter_by(id=n["organizerID"]).first()
+    if not organizer:
+        return jsonify({"Error": "Please log in first!"})
+
+    if organizer.subscribers:
+        email_array = [u.email for u in organizer.subscribers]
+
+        mailer = Mailer(
+            "smtp.gmail.com",
+            465,
+            (os.environ.get("GMAIL_LOGIN"), os.environ.get("GMAIL_APP_PWD")),
+        )
+        subject = f"Event Update From {organizer.firstname} {organizer.lastname}"
+        for attendee_email in email_array:
+            html = (
+                open("./utils/emails/event_notif.html")
+                .read()
+                .format(
+                    subject=subject,
+                    event_name=n["eventName"],
+                    first_name=organizer.firstname,
+                    last_name=organizer.lastname,
+                    event_date=eventStart,
+                    event_loc=n["building"] + ", " + n["room"],
+                )
+            )
+            msg = format_email(mailer.sender, attendee_email, subject, html)
+            mailer.send_mail(attendee_email, msg.as_string())
+
+        mailer.kill()
+
     db.session.commit()
     return jsonify({"event_id": event.id})
 
