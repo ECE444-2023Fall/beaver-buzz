@@ -4,7 +4,7 @@ import { useUserContext } from '../UserContext';
 import './Event.css';
 import { useParams } from "react-router-dom";
 import RateEvent from '../components/Rating';
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export function convertDate(date) {
@@ -50,6 +50,12 @@ export default function EventPage() {
         userId,
         setUserId
     } = useUserContext()
+
+
+
+
+
+
 
 
 
@@ -167,15 +173,16 @@ export default function EventPage() {
                             <img id="eventImage" src={data.eventImg} alt="Event"></img>
                             <p id="eventDescription">{data.eventDesc}</p>
                             <div id="eventInfo">
-                                <p><strong>Organizer: </strong><Link to = {'/user/' + data.organizerID}>{data.organizerName}</Link></p>
+                                <p><strong>Organizer: </strong><Link style = {{color: '#1e3765'}} to = {'/user/' + data.organizerID}>{data.organizerName}</Link></p>
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
-                                {data.eventCategories && <p><strong>Event Categories: </strong>{
-                                    data.eventCategories && data.eventCategories.map(item =>
-                                        <tr key={item}>
-                                            <td>- {item}</td>
-                                        </tr>)}
-                                </p>}
+                                <ul className="interestList">
+                                {data.eventCategories && data.eventCategories.map((item) => (
+                                <li className='interestListElement' key={item}>
+                                    {item}
+                                </li>
+                                ))}
+                                </ul>
                             </div>
                             {userAttending && !eventOwner &&
                                 <Button buttonStyle='btn--primary' onClick={register}>Unregister</Button>

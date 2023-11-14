@@ -32,6 +32,7 @@ const DiscoverPage = () => {
     return acc;
   }, {});
   initialObject["searchbar"] = "";
+  initialObject["Organizer"] = false;
   const [sendToBack, setSendToBack] = useState(initialObject);
 
   //Initially Fetch all results
@@ -39,7 +40,7 @@ const DiscoverPage = () => {
     const fetchData = async () => {
       try {
         // Your fetch request goes here
-        fetch("http://localhost:8000/api/allevents", {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/allevents`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -49,6 +50,7 @@ const DiscoverPage = () => {
           .then((data) => {
             setsearchitems(data);
           });
+        onSubmit();
         // Process the data
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -59,8 +61,11 @@ const DiscoverPage = () => {
   }, []);
 
   const onSubmit = (data) => {
+    console.log('Before set to null')
+    console.log(data)
     setSelectedItem(null);
-    //console.log(data);
+    console.log('After set to null')
+    console.log(data);
     var temp_data = { filters: [] };
     var filters = locations;
     for (const key in data) {
@@ -68,7 +73,7 @@ const DiscoverPage = () => {
       if (key === "searchbar") {
         temp_data["searchbar"] = data["searchbar"];
       }
-      if (key === "Organizer" && data[key] === true) {
+      if (key == "Organizer" && data[key] == true) {
         temp_data["Organizer"] = data["Organizer"];
       }
       if (filters.includes(key) && data[key] === true) {
@@ -167,8 +172,8 @@ const DiscoverPage = () => {
           placeholder="Start typing your search.."
           className="search"
           onChange={(e) => {
-            setQuery(e.target.value);
-            onSubmit({ searchbar: e.target.value });
+            setSendToBack({ ...sendToBack, searchbar: e.target.value });
+            onSubmit({ ...sendToBack, searchbar: e.target.value });
           }}
         ></input>
         <div className="search-icon">

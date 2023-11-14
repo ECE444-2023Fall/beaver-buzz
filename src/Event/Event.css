@@ -23,6 +23,22 @@ body {
     margin-top: 20px;
 }
 
+.interestList {
+    margin-top: 1vh;
+}
+.interestListElement {
+    display: inline-block;
+    margin-right: 4px;
+    background-color: #377ea0;
+    color: white;
+    border-radius: 12px;
+    padding: 3px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
 .editButtonContainer {
     position: absolute;
     top: 0;

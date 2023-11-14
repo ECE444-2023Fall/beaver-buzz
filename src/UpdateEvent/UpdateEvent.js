@@ -227,9 +227,9 @@ export default function EventUpdatePage() {
           <p>
             <strong>Previous Image</strong>
           </p>
-          <div class="prev-img">
-            <img src={data.eventImg} alt="Description of the image" />
-          </div>
+          {/* <div className="prev-img"> */}
+            <img className="prev-img" src={data.eventImg} alt="Description of the image" />
+          {/* </div> */}
           <Form.Group controlId="image">
             <Form.Label>Upload New Image</Form.Label>
             <Form.Control
@@ -238,19 +238,23 @@ export default function EventUpdatePage() {
               {...register("image")}
             />
           </Form.Group>
-
+        <div className="space-between-groups"></div>
+        <div className="space-between-groups"></div>
           <Form.Group controlId="tags" className="left-right">
             <Form.Label>Select related topics</Form.Label>
             <div className="dropdown">
-              <Multiselect
-                options={CATEGORIES}
-                onSelect={(e) => setTags(e)}
-                onRemove={(e) => setTags(e)}
-                selectedValues={selectedTags}
-                showCheckbox="true"
-                displayValue="name"
-                optionLabel="name"
-              />
+            <Multiselect
+                  options={CATEGORIES}
+                  onSelect={(e) => setTags(e)}
+                  onRemove={(e) => setTags(e)}
+                  selectedValues={selectedTags}
+                  showCheckbox="true"
+                  placeholder="Click to select"
+                  className="tags"
+                  hidePlaceholder="true"
+                  displayValue="name"
+                  optionLabel="name"
+                />
             </div>
           </Form.Group>
 

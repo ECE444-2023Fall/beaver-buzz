@@ -807,7 +807,8 @@ def allevents():
     """
     Returns all events for initialization purposes. search() function is used when a search is executed.
     """
-    results = [e.serialize() for e in Event.query.all()]
+    current_time = datetime.now()
+    results = [e.serialize() for e in Event.query.filter(Event.eventStart > current_time).all()]
     users = User.query.all()
     users_dict = {}
     for u in users:
@@ -856,6 +857,8 @@ def search():
     else:
         location_filters = []
     org_filter = request.args.get("Organizer")
+    if query == None:
+        query = ""
     temp_q = query.capitalize().split(" ")
     if org_filter:
         if len(temp_q) > 1:
@@ -866,8 +869,13 @@ def search():
             ln = temp_q[0]
     if not org_filter:
         org_filter = False
+    print("ORGANIZER")
+    print(org_filter)
+    print("QUERY")
+    print(query)
     filtered_results = []
     users_dict = {}
+    current_time = datetime.now()
     # Both Query and Filters
     if query != "" and len(location_filters) != 0:
         if org_filter is False:
@@ -880,6 +888,7 @@ def search():
                         ]
                     ),
                     func.lower(Event.eventName).contains(query.lower()),
+                    Event.eventStart > current_time
                 ).all()
             else:
                 filtered_results = Event.query.filter(
@@ -890,6 +899,7 @@ def search():
                         ]
                     ),
                     Event.eventCategories.contains(query.capitalize()),
+                    Event.eventStart > current_time
                 ).all()
         else:
             if fn == ln:
@@ -913,6 +923,7 @@ def search():
                     ]
                 ),
                 Event.organizerID.in_(user_ids),
+                Event.eventStart > current_time
             ).all()
 
     # No Query and Have Filter
@@ -923,7 +934,8 @@ def search():
                     Event.eventCategories.contains(location_filters[i])
                     for i in range(len(location_filters))
                 ]
-            )
+            ),
+            Event.eventStart > current_time,
         ).all()
 
     # Query but no Filter
@@ -931,11 +943,13 @@ def search():
         if org_filter is False:
             if query.capitalize() not in eventtags:
                 filtered_results = Event.query.filter(
-                    func.lower(Event.eventName).contains(query.lower())
+                    func.lower(Event.eventName).contains(query.lower()),
+                    Event.eventStart > current_time
                 ).all()
             else:
                 filtered_results = Event.query.filter(
-                    Event.eventCategories.contains(query.capitalize())
+                    Event.eventCategories.contains(query.capitalize()),
+                    Event.eventStart > current_time
                 ).all()
         else:
             if fn == ln:
@@ -951,10 +965,9 @@ def search():
             for u in users:
                 users_dict[u.id] = u.firstname + " " + u.lastname
 
-            filtered_results = Event.query.filter(Event.organizerID.in_(user_ids)).all()
+            filtered_results = Event.query.filter(Event.organizerID.in_(user_ids),Event.eventStart > current_time).all()
     else:
-        filtered_results = Event.query.all()
-
+        filtered_results = Event.query.filter(Event.eventStart > current_time).all()
     results = [e.serialize() for e in filtered_results]
     for result in results:
         result["display_time"] = str(result["eventStart"].time().strftime("%I:%M %p"))
