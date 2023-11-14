@@ -351,22 +351,25 @@ const UserPage = () => {
         <div className="event-wish-list-table">
           <div className="flexbox-horizontal-container">
             <div className="event-list-title">{firstName}'s events</div>
-            <p className="checkboxTitle">Show past events</p>
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={showPastEvents}
-              onChange={onCheck}
-            ></input>
-            <select
-              className="comboBoxOption"
-              id="option"
-              value={value}
-              onChange={(e) => onOptionChange(e.target.value)}
-            >
-              <option value="Hosting">Hosting</option>
-              <option value="Attending">Attending</option>
-            </select>
+            <div className="event-list-title-right">
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={showPastEvents}
+                onChange={onCheck}
+              ></input>
+              <p className="checkboxTitle">Show past events</p>
+
+              <select
+                className="comboBoxOption"
+                id="option"
+                value={value}
+                onChange={(e) => onOptionChange(e.target.value)}
+              >
+                <option value="Hosting">Hosting</option>
+                <option value="Attending">Attending</option>
+              </select>
+            </div>
           </div>
           {events.length == 0 ? (
             <div className="event-list-title">
