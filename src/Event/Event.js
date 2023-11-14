@@ -175,7 +175,7 @@ export default function EventPage() {
                                 <p><strong>Date and Time: </strong>{convertDate(data.eventStart)}</p>
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                                 <ul className="interestList">
-                                {data.eventCategories.map((item) => (
+                                {data.eventCategories && data.eventCategories.map((item) => (
                                 <li className='interestListElement' key={item}>
                                     {item}
                                 </li>
