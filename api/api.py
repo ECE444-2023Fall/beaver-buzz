@@ -807,7 +807,7 @@ def allevents():
     """
     Returns all events for initialization purposes. search() function is used when a search is executed.
     """
-    current_time = datetime.now()
+    current_time = utc.localize(datetime.now().replace(tzinfo=None))
     results = [e.serialize() for e in Event.query.filter(Event.eventStart > current_time).all()]
     users = User.query.all()
     users_dict = {}
@@ -875,7 +875,7 @@ def search():
     print(query)
     filtered_results = []
     users_dict = {}
-    current_time = datetime.now()
+    current_time = utc.localize(datetime.now().replace(tzinfo=None))
     # Both Query and Filters
     if query != "" and len(location_filters) != 0:
         if org_filter is False:
