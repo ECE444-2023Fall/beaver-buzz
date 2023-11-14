@@ -172,8 +172,8 @@ export default function EventPage() {
                                 <p><strong>Location: </strong>{data.eventBuilding}, Room {data.eventRoom}</p>
                                 {data.eventCategories && <p><strong>Event Categories: </strong>{
                                     data.eventCategories && data.eventCategories.map(item =>
-                                        <tr key={item.name}>
-                                            <td>- {item.name}</td>
+                                        <tr key={item}>
+                                            <td>- {item}</td>
                                         </tr>)}
                                 </p>}
                             </div>
