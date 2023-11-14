@@ -6,3 +6,7 @@ test('renders beaverbuzz on navbar', () => {
   const linkElement = screen.getByText("BeaverBuzz");
   expect(linkElement).toBeInTheDocument();
 });
+
+
+
+
