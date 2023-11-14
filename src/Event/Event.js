@@ -53,9 +53,17 @@ export default function EventPage() {
 
 
     const[buttonState, setButtonState] = useState(false);
+    let initialRender=true;
     useEffect(() => {
 
-        navigate(`/events/${id}/update-event`);
+        if(initialRender){
+            initialRender=false;
+        } 
+        else{
+            setButtonState(false)
+            navigate(`/events/${id}/update-event`);
+            
+        }
 
       }, [buttonState]);
 
