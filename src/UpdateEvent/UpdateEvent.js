@@ -238,19 +238,23 @@ export default function EventUpdatePage() {
               {...register("image")}
             />
           </Form.Group>
-
+        <div className="space-between-groups"></div>
+        <div className="space-between-groups"></div>
           <Form.Group controlId="tags" className="left-right">
             <Form.Label>Select related topics</Form.Label>
             <div className="dropdown">
-              <Multiselect
-                options={CATEGORIES}
-                onSelect={(e) => setTags(e)}
-                onRemove={(e) => setTags(e)}
-                selectedValues={selectedTags}
-                showCheckbox="true"
-                displayValue="name"
-                optionLabel="name"
-              />
+            <Multiselect
+                  options={CATEGORIES}
+                  onSelect={(e) => setTags(e)}
+                  onRemove={(e) => setTags(e)}
+                  selectedValues={selectedTags}
+                  showCheckbox="true"
+                  placeholder="Click to select"
+                  className="tags"
+                  hidePlaceholder="true"
+                  displayValue="name"
+                  optionLabel="name"
+                />
             </div>
           </Form.Group>
 
