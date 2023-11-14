@@ -224,7 +224,7 @@ const ProfilePage = () => {
         requestOptions
       )
         .then((response) => response.json())
-        .then((data) => {});
+        .then((data) => { });
       event.target.value = newValue;
       setFirstName(newValue);
     }
@@ -249,7 +249,7 @@ const ProfilePage = () => {
         requestOptions
       )
         .then((response) => response.json())
-        .then((data) => {});
+        .then((data) => { });
       //event.target.value = newValue
       setLastName(newValue);
     }
@@ -297,7 +297,7 @@ const ProfilePage = () => {
 
   const submitPhone = (event) => {
     setPhoneDisabled(true);
-    const phoneNumberRegex = /^\d{3}-\d{3}-\d{4}$/;
+    const phoneNumberRegex = /^\d{3}-\d{3}-\d{4}|\d{10}$/;
     const newValue = event.target.value;
     if (phoneNumberRegex.test(newValue) && newValue != phone) {
       const requestOptions = {
@@ -341,7 +341,7 @@ const ProfilePage = () => {
       requestOptions
     )
       .then((response) => response.json())
-      .then((data) => {});
+      .then((data) => { });
   };
 
   const [value, setValue] = useState("Attending");
