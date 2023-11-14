@@ -807,7 +807,8 @@ def allevents():
     """
     Returns all events for initialization purposes. search() function is used when a search is executed.
     """
-    results = [e.serialize() for e in Event.query.all()]
+    current_time = datetime.now()
+    results = [e.serialize() for e in Event.query.filter(Event.eventStart > current_time).all()]
     users = User.query.all()
     users_dict = {}
     for u in users:
